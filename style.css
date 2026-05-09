@@ -1,37 +1,130 @@
+@import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
+@import url('https://fonts.cdnfonts.com/css/poppins');
+
 .banner{
 	width: 100%;
 	height: 100vh;
+
 	text-align: center;
 	overflow: hidden;
 	position: relative;
+
+	perspective: 1000px;
 }
 
 .banner .slider{
 	position: absolute;
-	width: 200px;
-	height: 250px;
+
+	width: clamp(120px, 20vw, 200px);
+	height: clamp(160px, 28vw, 250px);
+
 	top: 10%;
-	left: calc(50% - 100px);
+	left: 50%;
 
 	transform-style: preserve-3d;
-	transform: perspective(1000px);
+
+	animation: autoRun 20s linear infinite;
+	z-index: 2;
+}
+
+@keyframes autoRun{
+
+	from{
+		transform:
+			translateX(-50%)
+			rotateX(-16deg)
+			rotateY(0deg);
+	}
+
+	to{
+		transform:
+			translateX(-50%)
+			rotateX(-16deg)
+			rotateY(360deg);
+	}
 }
 
 .banner .slider .item{
 	position: absolute;
-	inset: 0 0 0 0;
+	inset: 0;
 
 	transform:
 		rotateY(
 			calc(
-				(var(--position) - 1) * (360 / var(--quantity)) * 1deg
+				(var(--position) - 1)
+				* (360deg / var(--quantity))
 			)
 		)
-		translateZ(550px);
+		translateZ(clamp(220px, 40vw, 550px));
 }
 
 .banner .slider .item img{
 	width: 100%;
 	height: 100%;
+
 	object-fit: cover;
+
+	border-radius: 12px;
 }
+
+.banner .content{
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: transleteX(-50%);
+	width: min(1400px, 100vw);
+	height: max-content;
+	padding-bottom: 100px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space between;
+	align-items: center;
+	z-index: 1;
+
+}
+
+.banner .content h1{
+	font-family: 'ICA Rubrik';
+	font-size: 16em;
+	line-height: 1em;
+	color: #25283B;
+	position: relative;
+	
+}
+
+.banner .content h1:after{
+	position: absotlute;
+	inset: 0 0 0 0;
+	content: attr(data-content);
+	
+}
+
+.banner .content .author{
+	font-family: Poppins;
+	text-align: right;
+	max-width: 200px;
+	z-index: 2;
+	-webkit-text-stroke: 2px #d2d2d2;
+	color: transparent;
+
+}
+
+.banner .content h2{
+	font-size: 3em;
+
+}
+
+.banner .content .model{
+	background-image: url(images/mago.png);
+	width: 100%;
+	height: 75vh;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	background-size: auto 130%;
+	background-repeat: no-repeat;
+	background-position: top center;
+	z-index: 1;
+
+}
+	
