@@ -8,24 +8,51 @@
 }
 
 body{
-	background-color: #D2D2D2;
-	overflow-x: hidden;
+	background:
+		radial-gradient(
+			circle at center,
+			#1c1c28,
+			#09090f
+		);
+
+	overflow: hidden;
+
 	font-family: 'Poppins', sans-serif;
 }
+
+/* =========================
+   BANNER
+========================= */
 
 .banner{
 	width: 100%;
 	height: 100vh;
 
-	text-align: center;
-	overflow: hidden;
 	position: relative;
+
+	overflow: hidden;
 
 	perspective: 1000px;
 }
 
 /* =========================
-   SLIDER 3D
+   PARTICLES
+========================= */
+
+#particles{
+	position: absolute;
+	inset: 0;
+
+	width: 100%;
+	height: 100%;
+
+	z-index: 0;
+
+	pointer-events: none;
+}
+
+/* =========================
+   SLIDER
 ========================= */
 
 .banner .slider{
@@ -39,9 +66,15 @@ body{
 
 	transform-style: preserve-3d;
 
-	animation: autoRun 20s linear infinite;
+	animation: autoRun 24s linear infinite;
 
 	z-index: 3;
+}
+
+/* PAUSA AO HOVER */
+
+.banner .slider:hover{
+	animation-play-state: paused;
 }
 
 @keyframes autoRun{
@@ -61,9 +94,22 @@ body{
 	}
 }
 
+/* =========================
+   ITEMS
+========================= */
+
 .banner .slider .item{
+
 	position: absolute;
 	inset: 0;
+
+	cursor: pointer;
+
+	transform-style: preserve-3d;
+
+	transition:
+		transform 0.5s ease,
+		filter 0.5s ease;
 
 	transform:
 		rotateY(
@@ -75,16 +121,85 @@ body{
 		translateZ(clamp(220px, 38vw, 500px));
 }
 
+/* GLOW */
+
+.banner .slider .item::before{
+
+	content: "";
+
+	position: absolute;
+
+	inset: -15px;
+
+	border-radius: 20px;
+
+	background:
+		radial-gradient(
+			circle,
+			var(--glow-color),
+			transparent 70%
+		);
+
+	filter: blur(30px);
+
+	opacity: 0;
+
+	transition: 0.5s ease;
+
+	z-index: -1;
+}
+
+.banner .slider .item:hover::before{
+	opacity: 1;
+}
+
+/* =========================
+   IMAGEM
+========================= */
+
 .banner .slider .item img{
+
 	width: 100%;
 	height: 100%;
 
 	object-fit: cover;
 
-	border-radius: 12px;
+	border-radius: 14px;
+
+	transition:
+		transform 0.5s ease,
+		filter 0.5s ease,
+		box-shadow 0.5s ease;
 
 	box-shadow:
-		0 10px 30px rgba(0,0,0,0.25);
+		0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* HOVER */
+
+.banner .slider .item:hover img{
+
+	transform:
+		scale(1.08)
+		translateY(-10px);
+
+	filter:
+		brightness(1.2)
+		saturate(1.2);
+
+	box-shadow:
+		0 0 20px var(--glow-color),
+		0 0 60px var(--glow-color),
+		0 10px 40px rgba(0,0,0,0.5);
+}
+
+/* ESCURECE OUTROS */
+
+.banner .slider:hover .item:not(:hover){
+	filter:
+		brightness(0.5)
+		saturate(0.5)
+		blur(1px);
 }
 
 /* =========================
@@ -94,9 +209,6 @@ body{
 .banner .content{
 	position: absolute;
 	inset: 0;
-
-	width: 100%;
-	height: 100%;
 
 	z-index: 2;
 
@@ -108,13 +220,14 @@ body{
 ========================= */
 
 .banner .content h1{
+
 	font-family: 'ICA Rubrik';
 
 	font-size: clamp(4rem, 15vw, 16rem);
 
 	line-height: 1em;
 
-	color: #25283B;
+	color: #f3f3f3;
 
 	position: absolute;
 
@@ -123,17 +236,22 @@ body{
 
 	transform: translateX(-50%);
 
+	text-shadow:
+		0 0 20px rgba(255,255,255,0.2);
+
 	z-index: 4;
 }
 
 .banner .content h1::after{
+
 	position: absolute;
 
 	inset: 0;
 
 	content: attr(data-content);
 
-	-webkit-text-stroke: 2px #d2d2d2;
+	-webkit-text-stroke: 2px rgba(255,255,255,0.15);
+
 	color: transparent;
 }
 
@@ -142,16 +260,17 @@ body{
 ========================= */
 
 .banner .content .author{
+
 	position: absolute;
 
 	right: 30px;
 	bottom: 40px;
 
-	font-family: 'Poppins', sans-serif;
-
 	text-align: right;
 
-	max-width: 220px;
+	max-width: 240px;
+
+	color: #ffffffd7;
 
 	z-index: 4;
 }
@@ -165,10 +284,11 @@ body{
 }
 
 /* =========================
-   MAGO CENTRAL
+   MAGO
 ========================= */
 
 .banner .content .model{
+
 	background-image: url(images/mago2.png);
 
 	width: 100%;
@@ -185,47 +305,21 @@ body{
 	background-repeat: no-repeat;
 	background-position: center center;
 
+	opacity: 0.95;
+
+	filter:
+		drop-shadow(0 0 30px rgba(255,255,255,0.08));
+
 	z-index: 1;
-
-	pointer-events: none;
 }
 
 /* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1024px){
-
-	.banner .slider .item{
-		transform:
-			rotateY(
-				calc(
-					(var(--position) - 1)
-					* (360deg / var(--quantity))
-				)
-			)
-			translateZ(380px);
-	}
-
-	.banner .content .model{
-		height: 72vh;
-		background-size: auto 110%;
-	}
-
-	.banner .content .author{
-		right: 20px;
-		bottom: 25px;
-	}
-}
-
-/* =========================
-   MOBILE
+   RESPONSIVO
 ========================= */
 
 @media (max-width: 768px){
 
 	.banner .slider{
-
 		width: 140px;
 		height: 190px;
 	}
@@ -242,36 +336,17 @@ body{
 	}
 
 	.banner .content h1{
-		font-size: clamp(3rem, 14vw, 6rem);
-
-		bottom: 10px;
-	}
-
-	.banner .content .author{
-		right: 15px;
-		bottom: 15px;
-
-		max-width: 160px;
-	}
-
-	.banner .content .author h2{
-		font-size: 1.5rem;
+		font-size: 5rem;
 	}
 
 	.banner .content .model{
 		height: 65vh;
-		background-size: auto 100%;
 	}
 }
-
-/* =========================
-   SMALL MOBILE
-========================= */
 
 @media (max-width: 480px){
 
 	.banner .slider{
-
 		width: 110px;
 		height: 150px;
 	}
@@ -288,63 +363,6 @@ body{
 	}
 
 	.banner .content h1{
-		font-size: clamp(2.5rem, 16vw, 4rem);
-	}
-
-	.banner .content .author{
-		max-width: 140px;
-	}
-
-	.banner .content .author h2{
-		font-size: 1.2rem;
-	}
-
-	.banner .content .author p{
-		font-size: 0.75rem;
-	}
-
-	.banner .content .model{
-		height: 60vh;
-		background-size: auto 90%;
-	}
-}
-
-/* =========================
-   LANDSCAPE MOBILE
-========================= */
-
-@media (orientation: landscape) and (max-height: 600px){
-
-	.banner .slider{
-
-		width: 120px;
-		height: 160px;
-	}
-
-	.banner .slider .item{
-		transform:
-			rotateY(
-				calc(
-					(var(--position) - 1)
-					* (360deg / var(--quantity))
-				)
-			)
-			translateZ(250px);
-	}
-
-	.banner .content h1{
-		font-size: 5rem;
-
-		bottom: 5px;
-	}
-
-	.banner .content .author{
-		right: 15px;
-		bottom: 10px;
-	}
-
-	.banner .content .model{
-		height: 90vh;
-		background-size: auto 95%;
+		font-size: 3rem;
 	}
 }
