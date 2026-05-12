@@ -37,11 +37,13 @@ items.forEach(item => {
 
 			if (!hoverSound) return;
 
-			hoverSound.volume = 0.25;
+			hoverSound.volume = 0.12;
 
 			hoverSound.currentTime = 0;
 
-			hoverSound.play();
+			hoverSound
+				.play()
+				.catch(() => {});
 		}
 	);
 });
@@ -58,29 +60,45 @@ const canvas =
 const ctx =
 	canvas.getContext("2d");
 
-canvas.width =
-	window.innerWidth;
+// =========================
+// SIZE
+// =========================
 
-canvas.height =
-	window.innerHeight;
+function resizeCanvas(){
+
+	canvas.width =
+		window.innerWidth;
+
+	canvas.height =
+		window.innerHeight;
+}
+
+resizeCanvas();
+
+// =========================
+// PARTICLES ARRAY
+// =========================
 
 const particles = [];
 
 const particleCount = 120;
 
 // =========================
-// CREATE
+// CREATE PARTICLES
 // =========================
 
 for(let i = 0; i < particleCount; i++){
 
 	particles.push({
 
-		x: Math.random() * canvas.width,
+		x:
+			Math.random() * canvas.width,
 
-		y: Math.random() * canvas.height,
+		y:
+			Math.random() * canvas.height,
 
-		size: Math.random() * 2 + 1,
+		size:
+			Math.random() * 2 + 1,
 
 		speedX:
 			(Math.random() - 0.5) * 0.3,
@@ -94,7 +112,7 @@ for(let i = 0; i < particleCount; i++){
 }
 
 // =========================
-// DRAW
+// DRAW PARTICLES
 // =========================
 
 function drawParticles(){
@@ -123,8 +141,13 @@ function drawParticles(){
 
 		ctx.fill();
 
+		// MOVIMENTO
+
 		particle.x += particle.speedX;
+
 		particle.y += particle.speedY;
+
+		// LIMITES X
 
 		if(
 			particle.x < 0 ||
@@ -132,6 +155,8 @@ function drawParticles(){
 		){
 			particle.speedX *= -1;
 		}
+
+		// LIMITES Y
 
 		if(
 			particle.y < 0 ||
@@ -156,10 +181,49 @@ window.addEventListener(
 	"resize",
 	() => {
 
-		canvas.width =
-			window.innerWidth;
-
-		canvas.height =
-			window.innerHeight;
+		resizeCanvas();
 	}
 );
+
+// =========================
+// AMBIENT MUSIC
+// =========================
+
+const bgMusic =
+	document.getElementById(
+		"bgMusic"
+	);
+
+// =========================
+// START MUSIC
+// =========================
+
+// MOBILE E ALGUNS
+// NAVEGADORES EXIGEM
+// INTERAÇÃO DO USUÁRIO
+
+window.addEventListener(
+	"click",
+	() => {
+
+		if(
+			bgMusic &&
+			bgMusic.paused
+		){
+
+			bgMusic.volume = 0.12;
+
+			bgMusic
+				.play()
+				.catch(() => {});
+		}
+	},
+	{ once: true }
+);
+
+// =========================
+// CURSOR BASE
+// =========================
+
+document.body.style.cursor =
+	"default";
