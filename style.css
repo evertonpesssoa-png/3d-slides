@@ -595,7 +595,7 @@ and (max-height: 600px){
 
 	overflow: hidden;
 
-	z-index: 2;
+	z-index: 6;
 }
 
 /* =========================
@@ -606,8 +606,8 @@ and (max-height: 600px){
 
 	position: absolute;
 
-	width: 24px;
-	height: 24px;
+	width: 34px;
+	height: 34px;
 
 	transform-style: preserve-3d;
 
@@ -618,7 +618,7 @@ and (max-height: 600px){
 	opacity: 0;
 
 	animation:
-		butterflyFade 8s ease forwards;
+		butterflyFade 7s linear forwards;
 }
 
 /* =========================
@@ -633,73 +633,85 @@ and (max-height: 600px){
 	top: 50%;
 
 	width: 4px;
-	height: 16px;
+	height: 18px;
 
 	transform:
 		translate(-50%, -50%);
 
 	border-radius: 999px;
 
-	background: white;
+	background: rgba(255,255,255,0.9);
 
-	filter:
-		blur(1px)
-		drop-shadow(0 0 10px currentColor);
+	box-shadow:
+		0 0 12px currentColor,
+		0 0 25px currentColor;
 }
 
 /* =========================
-   ASAS
+   ASA BASE
 ========================= */
 
 .butterfly .wing{
 
 	position: absolute;
 
-	width: 14px;
-	height: 18px;
+	width: 18px;
+	height: 22px;
 
-	background: currentColor;
-
-	opacity: 0.9;
+	background:
+		radial-gradient(
+			circle at 30% 30%,
+			white,
+			currentColor 45%,
+			transparent 75%
+		);
 
 	filter:
-		blur(1px)
-		drop-shadow(0 0 12px currentColor);
+		blur(0.4px)
+		drop-shadow(0 0 10px currentColor)
+		drop-shadow(0 0 25px currentColor);
 
-	border-radius:
-		70% 30%
-		70% 30%;
-
-	top: 2px;
+	opacity: 0.95;
 }
 
-/* ESQUERDA */
+/* =========================
+   ASA ESQUERDA
+========================= */
 
 .butterfly .left{
 
 	left: -2px;
+	top: 4px;
+
+	border-radius:
+		80% 20%
+		70% 30%;
 
 	transform-origin:
 		right center;
 
 	animation:
-		wingLeft 0.18s ease-in-out infinite alternate;
+		wingLeft 0.16s ease-in-out infinite alternate;
 }
 
-/* DIREITA */
+/* =========================
+   ASA DIREITA
+========================= */
 
 .butterfly .right{
 
 	right: -2px;
+	top: 4px;
+
+	border-radius:
+		20% 80%
+		30% 70%;
 
 	transform-origin:
 		left center;
 
-	transform:
-		scaleX(-1);
-
 	animation:
-		wingRight 0.18s ease-in-out infinite alternate;
+		wingRight 0.16s ease-in-out infinite alternate;
 }
 
 /* =========================
@@ -711,13 +723,15 @@ and (max-height: 600px){
 	from{
 		transform:
 			rotateY(0deg)
-			rotateZ(-8deg);
+			rotateZ(-10deg)
+			scale(1);
 	}
 
 	to{
 		transform:
-			rotateY(70deg)
-			rotateZ(8deg);
+			rotateY(75deg)
+			rotateZ(10deg)
+			scale(1.08);
 	}
 }
 
@@ -725,16 +739,16 @@ and (max-height: 600px){
 
 	from{
 		transform:
-			scaleX(-1)
 			rotateY(0deg)
-			rotateZ(8deg);
+			rotateZ(10deg)
+			scale(1);
 	}
 
 	to{
 		transform:
-			scaleX(-1)
-			rotateY(70deg)
-			rotateZ(-8deg);
+			rotateY(-75deg)
+			rotateZ(-10deg)
+			scale(1.08);
 	}
 }
 
