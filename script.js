@@ -201,43 +201,27 @@ const bgMusic =
 	);
 
 // =========================
-// AUTO PLAY AMBIENTE
+// START MUSIC
 // =========================
 
-if(bgMusic){
+window.addEventListener(
+	"click",
+	() => {
 
-	bgMusic.volume = 0;
+		if(
+			bgMusic &&
+			bgMusic.paused
+		){
 
-	bgMusic
-		.play()
-		.then(() => {
+			bgMusic.volume = 0.12;
 
-			setTimeout(() => {
-
-				bgMusic.volume = 0.12;
-
-			}, 800);
-
-		})
-		.catch(() => {
-
-			// MOBILE FALLBACK
-
-			window.addEventListener(
-				"click",
-				() => {
-
-					bgMusic.volume = 0.12;
-
-					bgMusic
-						.play()
-						.catch(() => {});
-
-				},
-				{ once: true }
-			);
-		});
-}
+			bgMusic
+				.play()
+				.catch(() => {});
+		}
+	},
+	{ once: true }
+);
 
 // =========================
 // CURSOR BASE
@@ -322,24 +306,33 @@ function createButterfly(){
 		* window.innerWidth;
 
 	let y =
-		window.innerHeight +
-		Math.random() * 200;
-
-	butterfly.style.left =
-		x + "px";
-
-	butterfly.style.top =
-		y + "px";
+		Math.random()
+		* window.innerHeight;
 
 	// =========================
-	// ESCALA / PROFUNDIDADE
+	// PROFUNDIDADE
 	// =========================
 
 	const scale =
-		Math.random() * 1.2 + 0.5;
+		Math.random() * 1.4 + 0.6;
 
 	// =========================
-	// ADD DOM
+	// DIREÇÃO
+	// =========================
+
+	let angle =
+		Math.random()
+		* Math.PI
+		* 2;
+
+	const speed =
+		Math.random() * 1.5 + 0.6;
+
+	const drift =
+		Math.random() * 2 + 0.5;
+
+	// =========================
+	// ADD
 	// =========================
 
 	butterflyContainer.appendChild(
@@ -350,32 +343,18 @@ function createButterfly(){
 	// MOVIMENTO
 	// =========================
 
-	let angle =
-		Math.random()
-		* Math.PI
-		* 2;
+	function animate(){
 
-	const speed =
-		Math.random() * 1.2 + 0.4;
-
-	const drift =
-		Math.random() * 2 + 0.5;
-
-	const move = setInterval(() => {
-
-		angle += 0.03;
+		angle += 0.02;
 
 		x +=
 			Math.cos(angle)
 			* drift;
 
-		y -= speed;
-
-		butterfly.style.left =
-			x + "px";
-
-		butterfly.style.top =
-			y + "px";
+		y +=
+			Math.sin(angle * 0.7)
+			* drift
+			- speed;
 
 		// =========================
 		// ROTAÇÃO
@@ -383,10 +362,14 @@ function createButterfly(){
 
 		const rotate =
 			Math.sin(angle)
-			* 25;
+			* 35;
 
 		butterfly.style.transform = `
-			translateZ(${scale * 100}px)
+			translate3d(
+				${x}px,
+				${y}px,
+				${scale * 120}px
+			)
 			scale(${scale})
 			rotate(${rotate}deg)
 		`;
@@ -395,14 +378,23 @@ function createButterfly(){
 		// REMOVE
 		// =========================
 
-		if(y < -100){
-
-			clearInterval(move);
+		if(
+			y < -120 ||
+			x < -120 ||
+			x > window.innerWidth + 120
+		){
 
 			butterfly.remove();
+
+			return;
 		}
 
-	}, 16);
+		requestAnimationFrame(
+			animate
+		);
+	}
+
+	animate();
 }
 
 // =========================
@@ -413,4 +405,13 @@ setInterval(() => {
 
 	createButterfly();
 
-}, 700);
+	// =========================
+	// SPAWN EXTRA ALEATÓRIO
+	// =========================
+
+	if(Math.random() > 0.6){
+
+		createButterfly();
+	}
+
+}, 500);
