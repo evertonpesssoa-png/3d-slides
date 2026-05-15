@@ -5,6 +5,9 @@
 const items =
 	document.querySelectorAll(".item");
 
+const slider =
+	document.querySelector(".slider");
+
 // =========================
 // CORES DINÂMICAS
 // =========================
@@ -206,17 +209,11 @@ const bgMusic =
 
 if(bgMusic){
 
-	// INICIA MUTADO
-
 	bgMusic.volume = 0;
 
 	bgMusic
 		.play()
 		.then(() => {
-
-			// =========================
-			// FADE SUAVE
-			// =========================
 
 			setTimeout(() => {
 
@@ -253,3 +250,139 @@ if(bgMusic){
 
 document.body.style.cursor =
 	"default";
+
+// =========================
+// PORTAL TRANSITION
+// =========================
+
+const portalTransition =
+	document.getElementById(
+		"portalTransition"
+	);
+
+// =========================
+// CONTROLE
+// =========================
+
+let transitioning = false;
+
+// =========================
+// CLICK ASURA
+// =========================
+
+items.forEach(item => {
+
+	item.addEventListener(
+		"click",
+		() => {
+
+			if(transitioning) return;
+
+			transitioning = true;
+
+			const asura =
+				item.dataset.asura;
+
+			startAsuraTransition(
+				item,
+				asura
+			);
+		}
+	);
+});
+
+// =========================
+// START TRANSITION
+// =========================
+
+function startAsuraTransition(
+	selectedItem,
+	asura
+){
+
+	// =========================
+	// PAUSA SLIDER
+	// =========================
+
+	slider.style.animationPlayState =
+		"paused";
+
+	// =========================
+	// FADE GERAL
+	// =========================
+
+	slider.classList.add(
+		"fade-all"
+	);
+
+	// =========================
+	// ITEM ATIVO
+	// =========================
+
+	selectedItem.classList.add(
+		"active"
+	);
+
+	// =========================
+	// PORTAL
+	// =========================
+
+	if(portalTransition){
+
+		portalTransition.classList.add(
+			"active"
+		);
+	}
+
+	// =========================
+	// DEBUG
+	// =========================
+
+	console.log(
+		"Entrando no mundo:",
+		asura
+	);
+
+	// =========================
+	// TRANSIÇÃO FUTURA
+	// =========================
+
+	setTimeout(() => {
+
+		// =========================
+		// FUTURO
+		// =========================
+
+		// window.location.href =
+		// `world.html?asura=${asura}`;
+
+		alert(
+			`Entrando no reino de ${asura}`
+		);
+
+		// =========================
+		// RESET TEMPORÁRIO
+		// =========================
+
+		slider.style.animationPlayState =
+			"running";
+
+		slider.classList.remove(
+			"fade-all"
+		);
+
+		selectedItem.classList.remove(
+			"active"
+		);
+
+		if(portalTransition){
+
+			portalTransition.classList.remove(
+				"active"
+			);
+		}
+
+		transitioning = false;
+
+	}, 1600);
+}
