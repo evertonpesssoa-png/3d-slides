@@ -127,12 +127,13 @@ body{
 
 	will-change:
 		transform,
-		filter;
+		filter,
+		opacity;
 
 	transition:
-		transform 0.5s ease,
-		filter 0.5s ease,
-		opacity 0.5s ease;
+		transform 0.7s ease,
+		filter 0.7s ease,
+		opacity 0.7s ease;
 
 	transform:
 		rotateY(
@@ -171,7 +172,7 @@ body{
 
 	opacity: 0;
 
-	transition: 0.5s ease;
+	transition: opacity 0.5s ease;
 
 	z-index: -1;
 }
@@ -202,6 +203,10 @@ body{
 
 	box-shadow:
 		0 10px 30px rgba(0,0,0,0.35);
+
+	user-select: none;
+
+	-webkit-user-drag: none;
 }
 
 /* =========================
@@ -232,8 +237,7 @@ body{
 
 	filter:
 		brightness(0.45)
-		saturate(0.5)
-		blur(1px);
+		saturate(0.5);
 
 	opacity: 0.6;
 }
@@ -367,6 +371,141 @@ body{
 }
 
 /* =========================
+   PORTAL TRANSITION
+========================= */
+
+#portalTransition{
+
+	position: fixed;
+
+	inset: 0;
+
+	background:
+		radial-gradient(
+			circle,
+			rgba(120,120,255,0.12),
+			rgba(0,0,0,0.97)
+		);
+
+	backdrop-filter: blur(10px);
+
+	opacity: 0;
+
+	pointer-events: none;
+
+	transition:
+		opacity 1.2s ease;
+
+	z-index: 99999;
+}
+
+#portalTransition.active{
+
+	opacity: 1;
+}
+
+/* =========================
+   CLICK TRANSITION
+========================= */
+
+.banner .slider .item.active{
+
+	z-index: 999;
+}
+
+/* =========================
+   OUTROS CARDS SOMEM
+========================= */
+
+.banner .slider.fade-all .item{
+
+	opacity: 0;
+
+	filter:
+		brightness(0.2);
+
+	transform:
+		scale(0.6);
+}
+
+/* =========================
+   CARD SELECIONADO
+========================= */
+
+.banner .slider.fade-all .item.active{
+
+	opacity: 1;
+
+	filter:
+		brightness(1.3)
+		saturate(1.2)
+		drop-shadow(
+			0 0 25px var(--glow-color)
+		)
+		drop-shadow(
+			0 0 80px var(--glow-color)
+		);
+
+	transform:
+		rotateY(
+			calc(
+				(var(--position) - 1)
+				* (360deg / var(--quantity))
+			)
+		)
+		translateZ(
+			clamp(260px, 42vw, 560px)
+		)
+		scale(1.3);
+}
+
+/* =========================
+   FLASH CINEMATICO
+========================= */
+
+.portal-flash{
+
+	position: fixed;
+
+	inset: 0;
+
+	z-index: 9999;
+
+	pointer-events: none;
+
+	opacity: 0;
+
+	background:
+		radial-gradient(
+			circle,
+			var(--flash-color),
+			transparent 70%
+		);
+
+	transition:
+		opacity 1s ease;
+}
+
+.portal-flash.show{
+
+	opacity: 1;
+}
+
+/* =========================
+   PERFORMANCE
+========================= */
+
+.banner,
+.slider,
+.item,
+.item img{
+
+	transform-style: preserve-3d;
+
+	backface-visibility: hidden;
+}
+
+/* =========================
    RESPONSIVIDADE
 ========================= */
 
@@ -443,6 +582,11 @@ body{
 
 		transform:
 			translateY(-3%);
+	}
+
+	#portalTransition{
+
+		backdrop-filter: blur(4px);
 	}
 }
 
