@@ -78,7 +78,13 @@ body{
 
 	transform-style: preserve-3d;
 
-	animation: autoRun 24s linear infinite;
+	/* ========= FIX PRINCIPAL ========= */
+	transform:
+		translate(-50%, -50%)
+		rotateX(-16deg);
+
+	animation:
+		autoRun 24s linear infinite;
 
 	z-index: 3;
 
@@ -121,13 +127,18 @@ body{
 .banner .slider .item{
 
 	position: absolute;
+
 	inset: 0;
 
 	cursor: pointer;
 
+	/* ========= FIX CARROSSEL ========= */
 	transform-style: preserve-3d;
 
-	backface-visibility: hidden;
+	/* NÃO USAR HIDDEN AQUI */
+	backface-visibility: visible;
+
+	-webkit-backface-visibility: visible;
 
 	will-change:
 		transform,
@@ -198,7 +209,10 @@ body{
 
 	border-radius: 14px;
 
-	backface-visibility: hidden;
+	/* ========= FIX CARDS TRASEIROS ========= */
+	backface-visibility: visible;
+
+	-webkit-backface-visibility: visible;
 
 	transition:
 		transform 0.5s ease,
@@ -253,6 +267,7 @@ body{
 .banner .content{
 
 	position: absolute;
+
 	inset: 0;
 
 	z-index: 2;
@@ -521,8 +536,7 @@ body{
 
 .banner,
 .slider,
-.item,
-.item img{
+.item{
 
 	transform-style: preserve-3d;
 }
