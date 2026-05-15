@@ -38,7 +38,7 @@ items.forEach(item => {
 		"mouseenter",
 		() => {
 
-			if (!hoverSound) return;
+			if(!hoverSound) return;
 
 			hoverSound.volume = 0.12;
 
@@ -230,18 +230,31 @@ if(bgMusic){
 
 			window.addEventListener(
 				"click",
-				() => {
+				handleFirstInteraction,
+				{ once: true }
+			);
 
-					bgMusic.volume = 0.12;
-
-					bgMusic
-						.play()
-						.catch(() => {});
-
-				},
+			window.addEventListener(
+				"touchstart",
+				handleFirstInteraction,
 				{ once: true }
 			);
 		});
+}
+
+// =========================
+// PRIMEIRA INTERAÇÃO
+// =========================
+
+function handleFirstInteraction(){
+
+	if(!bgMusic) return;
+
+	bgMusic.volume = 0.12;
+
+	bgMusic
+		.play()
+		.catch(() => {});
 }
 
 // =========================
@@ -308,6 +321,46 @@ function startAsuraTransition(
 		"paused";
 
 	// =========================
+	// SOM CLICK
+	// =========================
+
+	if(hoverSound){
+
+		hoverSound.volume = 0.2;
+
+		hoverSound.currentTime = 0;
+
+		hoverSound
+			.play()
+			.catch(() => {});
+	}
+
+	// =========================
+	// FADE OUT MUSICA
+	// =========================
+
+	if(bgMusic){
+
+		const fadeAudio =
+			setInterval(() => {
+
+				if(bgMusic.volume > 0.02){
+
+					bgMusic.volume -= 0.01;
+
+				}else{
+
+					bgMusic.volume = 0;
+
+					clearInterval(
+						fadeAudio
+					);
+				}
+
+			}, 40);
+	}
+
+	// =========================
 	// FADE GERAL
 	// =========================
 
@@ -324,6 +377,16 @@ function startAsuraTransition(
 	);
 
 	// =========================
+	// ZOOM CINEMATOGRÁFICO
+	// =========================
+
+	document.body.style.transition =
+		"transform 1.6s ease";
+
+	document.body.style.transform =
+		"scale(1.03)";
+
+	// =========================
 	// PORTAL
 	// =========================
 
@@ -333,6 +396,14 @@ function startAsuraTransition(
 			"active"
 		);
 	}
+
+	// =========================
+	// FLASH
+	// =========================
+
+	createPortalFlash(
+		selectedItem.dataset.color
+	);
 
 	// =========================
 	// DEBUG
@@ -350,7 +421,7 @@ function startAsuraTransition(
 	setTimeout(() => {
 
 		// =========================
-		// FUTURO
+		// FUTURO LOAD GLB
 		// =========================
 
 		// window.location.href =
@@ -360,29 +431,115 @@ function startAsuraTransition(
 			`Entrando no reino de ${asura}`
 		);
 
-		// =========================
-		// RESET TEMPORÁRIO
-		// =========================
-
-		slider.style.animationPlayState =
-			"running";
-
-		slider.classList.remove(
-			"fade-all"
+		resetTransition(
+			selectedItem
 		);
 
-		selectedItem.classList.remove(
+	}, 2200);
+}
+
+// =========================
+// FLASH PORTAL
+// =========================
+
+function createPortalFlash(color){
+
+	const flash =
+		document.createElement(
+			"div"
+		);
+
+	flash.className =
+		"portal-flash";
+
+	flash.style.setProperty(
+		"--flash-color",
+		color
+	);
+
+	document.body.appendChild(
+		flash
+	);
+
+	requestAnimationFrame(() => {
+
+		flash.classList.add(
+			"show"
+		);
+	});
+
+	setTimeout(() => {
+
+		flash.classList.remove(
+			"show"
+		);
+
+		setTimeout(() => {
+
+			flash.remove();
+
+		}, 1000);
+
+	}, 900);
+}
+
+// =========================
+// RESET TRANSITION
+// =========================
+
+function resetTransition(
+	selectedItem
+){
+
+	// =========================
+	// SLIDER
+	// =========================
+
+	slider.style.animationPlayState =
+		"running";
+
+	slider.classList.remove(
+		"fade-all"
+	);
+
+	// =========================
+	// ITEM
+	// =========================
+
+	selectedItem.classList.remove(
+		"active"
+	);
+
+	// =========================
+	// PORTAL
+	// =========================
+
+	if(portalTransition){
+
+		portalTransition.classList.remove(
 			"active"
 		);
+	}
 
-		if(portalTransition){
+	// =========================
+	// RESET BODY
+	// =========================
 
-			portalTransition.classList.remove(
-				"active"
-			);
-		}
+	document.body.style.transform =
+		"scale(1)";
 
-		transitioning = false;
+	// =========================
+	// RESET MUSICA
+	// =========================
 
-	}, 1600);
+	if(bgMusic){
+
+		bgMusic.volume = 0.12;
+	}
+
+	// =========================
+	// LIBERA CLICK
+	// =========================
+
+	transitioning = false;
 }
