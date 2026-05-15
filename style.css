@@ -593,117 +593,170 @@ and (max-height: 600px){
 
 	pointer-events: none;
 
-	z-index: 2;
-
 	overflow: hidden;
+
+	z-index: 2;
 }
+
+/* =========================
+   BORBOLETA
+========================= */
 
 .butterfly{
 
 	position: absolute;
 
-	width: 14px;
-	height: 14px;
+	width: 24px;
+	height: 24px;
 
-	border-radius: 50%;
+	transform-style: preserve-3d;
+
+	will-change:
+		transform,
+		opacity;
+
+	opacity: 0;
+
+	animation:
+		butterflyFade 8s ease forwards;
+}
+
+/* =========================
+   CORPO
+========================= */
+
+.butterfly .body{
+
+	position: absolute;
+
+	left: 50%;
+	top: 50%;
+
+	width: 4px;
+	height: 16px;
+
+	transform:
+		translate(-50%, -50%);
+
+	border-radius: 999px;
+
+	background: white;
 
 	filter:
 		blur(1px)
 		drop-shadow(0 0 10px currentColor);
-
-	opacity: 0.9;
-
-	animation:
-		floatButterfly linear infinite,
-		pulseButterfly 2s ease-in-out infinite;
 }
 
-/* ASAS */
+/* =========================
+   ASAS
+========================= */
 
-.butterfly::before,
-.butterfly::after{
-
-	content: "";
+.butterfly .wing{
 
 	position: absolute;
 
-	width: 10px;
-	height: 14px;
+	width: 14px;
+	height: 18px;
 
 	background: currentColor;
 
-	border-radius: 50% 50% 50% 0;
+	opacity: 0.9;
 
-	opacity: 0.8;
+	filter:
+		blur(1px)
+		drop-shadow(0 0 12px currentColor);
+
+	border-radius:
+		70% 30%
+		70% 30%;
+
+	top: 2px;
 }
 
-.butterfly::before{
+/* ESQUERDA */
 
-	left: -6px;
+.butterfly .left{
+
+	left: -2px;
+
+	transform-origin:
+		right center;
+
+	animation:
+		wingLeft 0.18s ease-in-out infinite alternate;
+}
+
+/* DIREITA */
+
+.butterfly .right{
+
+	right: -2px;
+
+	transform-origin:
+		left center;
 
 	transform:
-		rotate(-25deg);
+		scaleX(-1);
+
+	animation:
+		wingRight 0.18s ease-in-out infinite alternate;
 }
 
-.butterfly::after{
+/* =========================
+   BATER ASAS
+========================= */
 
-	right: -6px;
+@keyframes wingLeft{
 
-	transform:
-		scaleX(-1)
-		rotate(-25deg);
+	from{
+		transform:
+			rotateY(0deg)
+			rotateZ(-8deg);
+	}
+
+	to{
+		transform:
+			rotateY(70deg)
+			rotateZ(8deg);
+	}
 }
 
-/* MOVIMENTO */
+@keyframes wingRight{
 
-@keyframes floatButterfly{
+	from{
+		transform:
+			scaleX(-1)
+			rotateY(0deg)
+			rotateZ(8deg);
+	}
+
+	to{
+		transform:
+			scaleX(-1)
+			rotateY(70deg)
+			rotateZ(-8deg);
+	}
+}
+
+/* =========================
+   FADE
+========================= */
+
+@keyframes butterflyFade{
 
 	0%{
-		transform:
-			translate3d(0,0,0)
-			scale(1);
+		opacity: 0;
 	}
 
-	25%{
-		transform:
-			translate3d(40px,-60px,0)
-			scale(1.1);
+	10%{
+		opacity: 1;
 	}
 
-	50%{
-		transform:
-			translate3d(-30px,-120px,0)
-			scale(0.95);
-	}
-
-	75%{
-		transform:
-			translate3d(50px,-180px,0)
-			scale(1.05);
+	90%{
+		opacity: 1;
 	}
 
 	100%{
-		transform:
-			translate3d(-20px,-260px,0)
-			scale(1);
-	}
-}
-
-/* PULSO */
-
-@keyframes pulseButterfly{
-
-	0%,100%{
-		opacity: 0.4;
-		filter:
-			blur(1px)
-			drop-shadow(0 0 6px currentColor);
-	}
-
-	50%{
-		opacity: 1;
-		filter:
-			blur(1px)
-			drop-shadow(0 0 18px currentColor);
+		opacity: 0;
 	}
 }
