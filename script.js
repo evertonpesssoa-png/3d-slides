@@ -141,13 +141,17 @@ function drawParticles(){
 
 		ctx.fill();
 
+		// =========================
 		// MOVIMENTO
+		// =========================
 
 		particle.x += particle.speedX;
 
 		particle.y += particle.speedY;
 
+		// =========================
 		// LIMITES X
+		// =========================
 
 		if(
 			particle.x < 0 ||
@@ -156,7 +160,9 @@ function drawParticles(){
 			particle.speedX *= -1;
 		}
 
+		// =========================
 		// LIMITES Y
+		// =========================
 
 		if(
 			particle.y < 0 ||
@@ -195,31 +201,51 @@ const bgMusic =
 	);
 
 // =========================
-// START MUSIC
+// AUTO PLAY AMBIENTE
 // =========================
 
-// MOBILE E ALGUNS
-// NAVEGADORES EXIGEM
-// INTERAÇÃO DO USUÁRIO
+if(bgMusic){
 
-window.addEventListener(
-	"click",
-	() => {
+	// INICIA MUTADO
 
-		if(
-			bgMusic &&
-			bgMusic.paused
-		){
+	bgMusic.volume = 0;
 
-			bgMusic.volume = 0.12;
+	bgMusic
+		.play()
+		.then(() => {
 
-			bgMusic
-				.play()
-				.catch(() => {});
-		}
-	},
-	{ once: true }
-);
+			// =========================
+			// FADE SUAVE
+			// =========================
+
+			setTimeout(() => {
+
+				bgMusic.volume = 0.12;
+
+			}, 800);
+
+		})
+		.catch(() => {
+
+			// =========================
+			// FALLBACK MOBILE
+			// =========================
+
+			window.addEventListener(
+				"click",
+				() => {
+
+					bgMusic.volume = 0.12;
+
+					bgMusic
+						.play()
+						.catch(() => {});
+
+				},
+				{ once: true }
+			);
+		});
+}
 
 // =========================
 // CURSOR BASE
