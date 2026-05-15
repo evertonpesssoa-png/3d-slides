@@ -471,3 +471,40 @@ body{
 			translateZ(300px);
 	}
 }
+
+/* =========================
+   ASURA WORLD
+========================= */
+
+#asuraWorld{
+
+	position: fixed;
+
+	inset: 0;
+
+	z-index: 9990;
+
+	opacity: 0;
+
+	pointer-events: none;
+
+	transition:
+		opacity 1.8s ease,
+		background 2s ease;
+
+	background:
+		radial-gradient(
+			circle at center,
+			#10131f,
+			#000000
+		);
+}
+
+/* =========================
+   ACTIVE
+========================= */
+
+#asuraWorld.active{
+
+	opacity: 1;
+}
