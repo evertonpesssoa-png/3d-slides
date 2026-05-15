@@ -265,19 +265,30 @@ const butterflyContainer =
 
 const asuraColors = [
 
-	"#ff4db8", // Diva
-	"#35ff9c", // Siria
-	"#00d9ff", // Merlim
-	"#287bff", // Astreia
-	"#8b2fff", // Umbra
-	"#ffd54f", // Atena
-	"#ff4444", // Vitória
-	"#fff0b3", // Héstia
-	"#00ffd5"  // Daedala
+// =========================
+// BUTTERFLIES
+// =========================
+
+const butterflyContainer =
+	document.getElementById(
+		"butterflies"
+	);
+
+const asuraColors = [
+
+	"#ff4db8",
+	"#35ff9c",
+	"#00d9ff",
+	"#287bff",
+	"#8b2fff",
+	"#ffd54f",
+	"#ff4444",
+	"#fff0b3",
+	"#00ffd5"
 ];
 
 // =========================
-// CREATE BUTTERFLY
+// CREATE
 // =========================
 
 function createButterfly(){
@@ -287,11 +298,25 @@ function createButterfly(){
 	const butterfly =
 		document.createElement("div");
 
-	butterfly.classList.add(
-		"butterfly"
-	);
+	butterfly.className =
+		"butterfly";
 
-	// COR ALEATÓRIA
+	// =========================
+	// ESTRUTURA
+	// =========================
+
+	butterfly.innerHTML = `
+
+		<div class="wing left"></div>
+
+		<div class="wing right"></div>
+
+		<div class="body"></div>
+	`;
+
+	// =========================
+	// COR
+	// =========================
 
 	const color =
 		asuraColors[
@@ -304,44 +329,93 @@ function createButterfly(){
 	butterfly.style.color =
 		color;
 
+	// =========================
 	// POSIÇÃO
+	// =========================
+
+	let x =
+		Math.random()
+		* window.innerWidth;
+
+	let y =
+		window.innerHeight +
+		Math.random() * 200;
 
 	butterfly.style.left =
-		Math.random() * 100 + "%";
+		x + "px";
 
 	butterfly.style.top =
-		Math.random() * 100 + "%";
+		y + "px";
 
-	// TAMANHO
+	// =========================
+	// PROFUNDIDADE
+	// =========================
 
-	const size =
-		Math.random() * 10 + 8;
+	const scale =
+		Math.random() * 1.2 + 0.5;
 
-	butterfly.style.width =
-		size + "px";
+	butterfly.style.transform =
+		`scale(${scale})`;
 
-	butterfly.style.height =
-		size + "px";
-
-	// DURAÇÃO
-
-	const duration =
-		Math.random() * 10 + 12;
-
-	butterfly.style.animationDuration =
-		`${duration}s, 2s`;
+	// =========================
+	// ADD
+	// =========================
 
 	butterflyContainer.appendChild(
 		butterfly
 	);
 
-	// REMOVE
+	// =========================
+	// MOVIMENTO
+	// =========================
 
-	setTimeout(() => {
+	let angle =
+		Math.random() * Math.PI * 2;
 
-		butterfly.remove();
+	const speed =
+		Math.random() * 1.2 + 0.4;
 
-	}, duration * 1000);
+	const drift =
+		Math.random() * 2;
+
+	const move = setInterval(() => {
+
+		angle += 0.03;
+
+		x +=
+			Math.cos(angle)
+			* drift;
+
+		y -= speed;
+
+		butterfly.style.left =
+			x + "px";
+
+		butterfly.style.top =
+			y + "px";
+
+		// ROTAÇÃO
+
+		const rotate =
+			Math.sin(angle)
+			* 25;
+
+		butterfly.style.transform = `
+			translateZ(${scale * 100}px)
+			scale(${scale})
+			rotate(${rotate}deg)
+		`;
+
+		// REMOVE
+
+		if(y < -100){
+
+			clearInterval(move);
+
+			butterfly.remove();
+		}
+
+	}, 16);
 }
 
 // =========================
@@ -352,4 +426,17 @@ setInterval(() => {
 
 	createButterfly();
 
-}, 900);
+}, 700);
+	"#ff4db8", // Diva
+	"#35ff9c", // Siria
+	"#00d9ff", // Merlim
+	"#287bff", // Astreia
+	"#8b2fff", // Umbra
+	"#ffd54f", // Atena
+	"#ff4444", // Vitória
+	"#fff0b3", // Héstia
+	"#00ffd5"  // Daedala
+];
+
+
+
