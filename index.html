@@ -47,12 +47,6 @@
         <canvas id="particles"></canvas>
 
         <!-- =========================
-             BORBOLETAS
-        ========================== -->
-
-        <div id="butterflies"></div>
-
-        <!-- =========================
              SLIDER 3D
         ========================== -->
 
@@ -74,7 +68,6 @@
                 <img
                     src="images/diva.png"
                     alt="Diva"
-                    draggable="false"
                 >
             </div>
 
@@ -91,7 +84,6 @@
                 <img
                     src="images/siria.png"
                     alt="Siria"
-                    draggable="false"
                 >
             </div>
 
@@ -108,7 +100,6 @@
                 <img
                     src="images/merlim.png"
                     alt="Merlim"
-                    draggable="false"
                 >
             </div>
 
@@ -125,7 +116,6 @@
                 <img
                     src="images/astreia.png"
                     alt="Astreia"
-                    draggable="false"
                 >
             </div>
 
@@ -142,7 +132,6 @@
                 <img
                     src="images/umbra.png"
                     alt="Umbra"
-                    draggable="false"
                 >
             </div>
 
@@ -159,24 +148,22 @@
                 <img
                     src="images/atena.png"
                     alt="Atena"
-                    draggable="false"
                 >
             </div>
 
             <!-- =========================
-                 VICTORIA
+                 VITORIA
             ========================== -->
 
             <div
                 class="item"
-                data-asura="victoria"
+                data-asura="vitoria"
                 data-color="#ff4444"
                 style="--position: 7"
             >
                 <img
                     src="images/victoria.png"
                     alt="Victoria"
-                    draggable="false"
                 >
             </div>
 
@@ -193,7 +180,6 @@
                 <img
                     src="images/hestia.png"
                     alt="Hestia"
-                    draggable="false"
                 >
             </div>
 
@@ -210,17 +196,46 @@
                 <img
                     src="images/daedala.png"
                     alt="Daedala"
-                    draggable="false"
                 >
             </div>
 
         </div>
 
         <!-- =========================
-             MAGO CENTRAL
+             CONTENT
         ========================== -->
 
         <div class="content">
+
+            <!-- =========================
+                 TITULO
+            ========================== -->
+
+            <h1 data-content="ASURAS">
+                ASURAS
+            </h1>
+
+            <!-- =========================
+                 AUTHOR
+            ========================== -->
+
+            <div class="author">
+
+                <h2>Mestre</h2>
+
+                <p>
+                    <b>Grimório Digital</b>
+                </p>
+
+                <p>
+                    Sistema Modular Asura
+                </p>
+
+            </div>
+
+            <!-- =========================
+                 MAGO CENTRAL
+            ========================== -->
 
             <div class="model"></div>
 
@@ -244,17 +259,10 @@
 
     <audio
         id="bgMusic"
+        src="sounds/ambient.mp3"
         loop
-        autoplay
-        muted
-        playsinline
         preload="auto"
-    >
-        <source
-            src="sounds/ambient.mp3"
-            type="audio/mpeg"
-        >
-    </audio>
+    ></audio>
 
     <!-- =========================
          SCRIPT
