@@ -206,17 +206,11 @@ const bgMusic =
 
 if(bgMusic){
 
-	// INICIA MUTADO
-
 	bgMusic.volume = 0;
 
 	bgMusic
 		.play()
 		.then(() => {
-
-			// =========================
-			// FADE SUAVE
-			// =========================
 
 			setTimeout(() => {
 
@@ -227,9 +221,7 @@ if(bgMusic){
 		})
 		.catch(() => {
 
-			// =========================
-			// FALLBACK MOBILE
-			// =========================
+			// MOBILE FALLBACK
 
 			window.addEventListener(
 				"click",
@@ -263,32 +255,25 @@ const butterflyContainer =
 		"butterflies"
 	);
 
-const asuraColors = [
-
 // =========================
-// BUTTERFLIES
+// CORES ASURAS
 // =========================
-
-const butterflyContainer =
-	document.getElementById(
-		"butterflies"
-	);
 
 const asuraColors = [
 
-	"#ff4db8",
-	"#35ff9c",
-	"#00d9ff",
-	"#287bff",
-	"#8b2fff",
-	"#ffd54f",
-	"#ff4444",
-	"#fff0b3",
-	"#00ffd5"
+	"#ff4db8", // Diva
+	"#35ff9c", // Siria
+	"#00d9ff", // Merlim
+	"#287bff", // Astreia
+	"#8b2fff", // Umbra
+	"#ffd54f", // Atena
+	"#ff4444", // Vitória
+	"#fff0b3", // Héstia
+	"#00ffd5"  // Daedala
 ];
 
 // =========================
-// CREATE
+// CREATE BUTTERFLY
 // =========================
 
 function createButterfly(){
@@ -308,10 +293,9 @@ function createButterfly(){
 	butterfly.innerHTML = `
 
 		<div class="wing left"></div>
-
 		<div class="wing right"></div>
-
 		<div class="body"></div>
+
 	`;
 
 	// =========================
@@ -330,7 +314,7 @@ function createButterfly(){
 		color;
 
 	// =========================
-	// POSIÇÃO
+	// POSIÇÃO INICIAL
 	// =========================
 
 	let x =
@@ -348,17 +332,14 @@ function createButterfly(){
 		y + "px";
 
 	// =========================
-	// PROFUNDIDADE
+	// ESCALA / PROFUNDIDADE
 	// =========================
 
 	const scale =
 		Math.random() * 1.2 + 0.5;
 
-	butterfly.style.transform =
-		`scale(${scale})`;
-
 	// =========================
-	// ADD
+	// ADD DOM
 	// =========================
 
 	butterflyContainer.appendChild(
@@ -370,13 +351,15 @@ function createButterfly(){
 	// =========================
 
 	let angle =
-		Math.random() * Math.PI * 2;
+		Math.random()
+		* Math.PI
+		* 2;
 
 	const speed =
 		Math.random() * 1.2 + 0.4;
 
 	const drift =
-		Math.random() * 2;
+		Math.random() * 2 + 0.5;
 
 	const move = setInterval(() => {
 
@@ -394,7 +377,9 @@ function createButterfly(){
 		butterfly.style.top =
 			y + "px";
 
+		// =========================
 		// ROTAÇÃO
+		// =========================
 
 		const rotate =
 			Math.sin(angle)
@@ -406,7 +391,9 @@ function createButterfly(){
 			rotate(${rotate}deg)
 		`;
 
+		// =========================
 		// REMOVE
+		// =========================
 
 		if(y < -100){
 
@@ -419,7 +406,7 @@ function createButterfly(){
 }
 
 // =========================
-// LOOP
+// LOOP BORBOLETAS
 // =========================
 
 setInterval(() => {
@@ -427,16 +414,3 @@ setInterval(() => {
 	createButterfly();
 
 }, 700);
-	"#ff4db8", // Diva
-	"#35ff9c", // Siria
-	"#00d9ff", // Merlim
-	"#287bff", // Astreia
-	"#8b2fff", // Umbra
-	"#ffd54f", // Atena
-	"#ff4444", // Vitória
-	"#fff0b3", // Héstia
-	"#00ffd5"  // Daedala
-];
-
-
-
