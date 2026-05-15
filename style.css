@@ -578,3 +578,132 @@ and (max-height: 600px){
 			100% auto;
 	}
 }
+
+/* =========================
+   BUTTERFLIES
+========================= */
+
+#butterflies{
+
+	position: absolute;
+	inset: 0;
+
+	width: 100%;
+	height: 100%;
+
+	pointer-events: none;
+
+	z-index: 2;
+
+	overflow: hidden;
+}
+
+.butterfly{
+
+	position: absolute;
+
+	width: 14px;
+	height: 14px;
+
+	border-radius: 50%;
+
+	filter:
+		blur(1px)
+		drop-shadow(0 0 10px currentColor);
+
+	opacity: 0.9;
+
+	animation:
+		floatButterfly linear infinite,
+		pulseButterfly 2s ease-in-out infinite;
+}
+
+/* ASAS */
+
+.butterfly::before,
+.butterfly::after{
+
+	content: "";
+
+	position: absolute;
+
+	width: 10px;
+	height: 14px;
+
+	background: currentColor;
+
+	border-radius: 50% 50% 50% 0;
+
+	opacity: 0.8;
+}
+
+.butterfly::before{
+
+	left: -6px;
+
+	transform:
+		rotate(-25deg);
+}
+
+.butterfly::after{
+
+	right: -6px;
+
+	transform:
+		scaleX(-1)
+		rotate(-25deg);
+}
+
+/* MOVIMENTO */
+
+@keyframes floatButterfly{
+
+	0%{
+		transform:
+			translate3d(0,0,0)
+			scale(1);
+	}
+
+	25%{
+		transform:
+			translate3d(40px,-60px,0)
+			scale(1.1);
+	}
+
+	50%{
+		transform:
+			translate3d(-30px,-120px,0)
+			scale(0.95);
+	}
+
+	75%{
+		transform:
+			translate3d(50px,-180px,0)
+			scale(1.05);
+	}
+
+	100%{
+		transform:
+			translate3d(-20px,-260px,0)
+			scale(1);
+	}
+}
+
+/* PULSO */
+
+@keyframes pulseButterfly{
+
+	0%,100%{
+		opacity: 0.4;
+		filter:
+			blur(1px)
+			drop-shadow(0 0 6px currentColor);
+	}
+
+	50%{
+		opacity: 1;
+		filter:
+			blur(1px)
+			drop-shadow(0 0 18px currentColor);
+	}
+}
