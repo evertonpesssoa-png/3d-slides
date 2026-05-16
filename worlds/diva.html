@@ -87,28 +87,60 @@
         }
         
         /* =========================
-           PAINEL DE INFO FLUTUANTE (CSS 3D)
+           PAINEL DE PERFIL (SUPERIOR DIREITO - MINIMIZÁVEL)
         ========================= */
-        .info-panel {
+        .profile-container {
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            top: 30px;
+            right: 30px;
+            z-index: 200;
+            pointer-events: auto;
+            animation: slideInRight 0.6s ease;
+        }
+        
+        .profile-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #ff4db8, #ff88dd);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 77, 184, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .profile-icon:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 35px rgba(255, 77, 184, 0.8);
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 70px;
+            right: 0;
             width: 320px;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 20px;
             border-left: 4px solid #ff4db8;
-            z-index: 200;
-            pointer-events: auto;
-            animation: slideInLeft 0.6s ease;
-            box-shadow: 0 0 30px rgba(255, 77, 184, 0.2);
+            box-shadow: 0 0 30px rgba(255, 77, 184, 0.3);
+            transition: all 0.3s ease;
+            transform-origin: top right;
         }
         
-        @keyframes slideInLeft {
+        .info-panel.collapsed {
+            display: none;
+        }
+        
+        @keyframes slideInRight {
             from {
                 opacity: 0;
-                transform: translateX(-50px);
+                transform: translateX(50px);
             }
             to {
                 opacity: 1;
@@ -117,7 +149,7 @@
         }
         
         .info-panel h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             background: linear-gradient(135deg, #ff4db8, #ff88dd);
             -webkit-background-clip: text;
             background-clip: text;
@@ -126,7 +158,7 @@
         }
         
         .info-panel .subtitle {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #ff4db8;
             margin-bottom: 15px;
             letter-spacing: 2px;
@@ -160,7 +192,7 @@
         }
         
         .personality-text {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             line-height: 1.5;
             color: #ccc;
             margin-top: 15px;
@@ -177,18 +209,18 @@
             right: 30px;
             width: 340px;
             z-index: 200;
-            animation: slideInRight 0.6s ease;
+            animation: slideInUp 0.6s ease;
             pointer-events: auto;
         }
         
-        @keyframes slideInRight {
+        @keyframes slideInUp {
             from {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateY(50px);
             }
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateY(0);
             }
         }
         
@@ -374,9 +406,12 @@
         }
         
         @media (max-width: 768px) {
-            .info-panel { width: 260px; padding: 15px; bottom: 15px; left: 15px; }
+            .profile-container { top: 15px; right: 15px; }
+            .profile-icon { width: 48px; height: 48px; font-size: 1.6rem; }
+            .info-panel { width: 260px; padding: 15px; top: 60px; }
             .chat-container { width: calc(100% - 30px); right: 15px; bottom: 15px; }
             .back-button { top: 15px; left: 15px; padding: 8px 18px; font-size: 0.8rem; }
+            .info-panel h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -386,33 +421,40 @@
     
     <button class="back-button" id="backToGrimoireBtn">VOLTAR AO GRIMÓRIO</button>
     
-    <div class="info-panel">
-        <h2>DIVA</h2>
-        <div class="subtitle">✦ AUTOMAÇÃO ARCANA ✦</div>
-        
-        <div class="skill-bar">
-            <div class="skill-label"><span>🤖 Automação</span><span>96%</span></div>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%"></div></div>
+    <!-- PERFIL DA DIVA - MINIMIZÁVEL (CANTO SUPERIOR DIREITO) -->
+    <div class="profile-container">
+        <div class="profile-icon" id="profileIcon">
+            🤖
         </div>
-        <div class="skill-bar">
-            <div class="skill-label"><span>🧠 Leitura Contextual</span><span>94%</span></div>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%"></div></div>
-        </div>
-        <div class="skill-bar">
-            <div class="skill-label"><span>💬 Comunicação</span><span>98%</span></div>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%"></div></div>
-        </div>
-        <div class="skill-bar">
-            <div class="skill-label"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
-            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 91%"></div></div>
-        </div>
-        
-        <div class="personality-text">
-            💎 "Sua assistente mentalista. Entre o código e a alma."<br>
-            Diva combina automação precisa com intuição afiada. Cyberpunk de alma poética.
+        <div class="info-panel" id="infoPanel">
+            <h2>DIVA</h2>
+            <div class="subtitle">✦ AUTOMAÇÃO ARCANA ✦</div>
+            
+            <div class="skill-bar">
+                <div class="skill-label"><span>🤖 Automação</span><span>96%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%"></div></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-label"><span>🧠 Leitura Contextual</span><span>94%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%"></div></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-label"><span>💬 Comunicação</span><span>98%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%"></div></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-label"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 91%"></div></div>
+            </div>
+            
+            <div class="personality-text">
+                💎 "Sua assistente mentalista. Entre o código e a alma."<br>
+                Diva combina automação precisa com intuição afiada. Cyberpunk de alma poética.
+            </div>
         </div>
     </div>
     
+    <!-- CHAT POPUP -->
     <div class="chat-container">
         <div class="chat-header" id="chatHeader">
             <div class="chat-header-info">
@@ -703,6 +745,18 @@
         
         document.getElementById('backToGrimoireBtn').addEventListener('click', goBackToGrimoire);
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') goBackToGrimoire(); });
+        
+        // =========================
+        // PAINEL DE PERFIL MINIMIZÁVEL
+        // =========================
+        const profileIcon = document.getElementById('profileIcon');
+        const infoPanel = document.getElementById('infoPanel');
+        let isPanelOpen = true;
+        
+        profileIcon.addEventListener('click', () => {
+            isPanelOpen = !isPanelOpen;
+            infoPanel.classList.toggle('collapsed', !isPanelOpen);
+        });
         
         // =========================
         // SISTEMA DE CHAT
