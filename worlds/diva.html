@@ -3,29 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>DIVA • Automação Arcana</title>
+    <title>DIVA • Mundo Neon Arcano</title>
     
     <style>
         /* =========================
-           IMPORTS
+           RESET E ESTILOS GLOBAIS
         ========================= */
-        @import url('https://fonts.cdnfonts.com/css/ica-rubrik-black');
-        @import url('https://fonts.cdnfonts.com/css/poppins');
-        
-        /* =========================
-           VARIÁVEIS DO TEMA - DIVA NEON ARCANO ROSA
-        ========================= */
-        :root {
-            --asura-color: #ff4db8;
-            --asura-glow: rgba(255, 77, 184, 0.5);
-            --asura-glow-strong: rgba(255, 77, 184, 0.8);
-            --asura-dark: #0a0512;
-            --asura-card-bg: rgba(10, 5, 18, 0.7);
-            --asura-gradient: linear-gradient(135deg, #ff4db8, #ff88dd, #ff00aa);
-            --asura-gradient-hover: linear-gradient(135deg, #ff66cc, #ff99ee);
-            --grid-color: rgba(255, 77, 184, 0.15);
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -33,102 +16,64 @@
         }
         
         body {
+            overflow: hidden;
             font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
-            background: radial-gradient(circle at 30% 20%, #0a0512, #030108);
-            color: #fff;
-            overflow-x: hidden;
-            position: relative;
         }
         
         /* =========================
-           GRADE CYBERPUNK DE FUNDO
+           CANVAS THREE.JS
         ========================= */
-        body::before {
-            content: "";
+        #canvas-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
             z-index: 0;
         }
         
         /* =========================
-           PARTÍCULAS FLUTUANTES (NEON)
+           UI SOBREPOSTA (BOTÃO VOLTAR)
         ========================= */
-        .particles-neon {
+        .ui-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            z-index: 100;
             pointer-events: none;
-            z-index: 0;
         }
         
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, var(--asura-color), transparent);
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: floatParticle linear infinite;
-        }
-        
-        @keyframes floatParticle {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.5;
-            }
-            90% {
-                opacity: 0.5;
-            }
-            100% {
-                transform: translateY(-20vh) translateX(50px) scale(1);
-                opacity: 0;
-            }
-        }
-        
-        /* =========================
-           BOTÃO VOLTAR (ESTILO NEON)
-        ========================= */
         .back-button {
             position: fixed;
             top: 30px;
             left: 30px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(12px);
-            border: 1px solid var(--asura-color);
-            color: var(--asura-color);
+            border: 1px solid #ff4db8;
+            color: #ff4db8;
             padding: 12px 28px;
             border-radius: 40px;
             cursor: pointer;
             font-family: 'Poppins', sans-serif;
             font-size: 0.9rem;
             font-weight: 600;
-            z-index: 100;
+            z-index: 200;
             display: flex;
             align-items: center;
             gap: 12px;
             transition: all 0.3s ease;
             letter-spacing: 1px;
-            text-shadow: 0 0 5px var(--asura-color);
-            box-shadow: 0 0 10px rgba(255, 77, 184, 0.3);
+            text-shadow: 0 0 5px #ff4db8;
+            box-shadow: 0 0 15px rgba(255, 77, 184, 0.4);
+            pointer-events: auto;
         }
         
         .back-button:hover {
-            background: rgba(255, 77, 184, 0.2);
+            background: rgba(255, 77, 184, 0.25);
             transform: translateX(-8px);
-            border-color: var(--asura-color);
-            box-shadow: 0 0 25px var(--asura-glow);
+            border-color: #ff4db8;
+            box-shadow: 0 0 25px rgba(255, 77, 184, 0.7);
         }
         
         .back-button::before {
@@ -142,247 +87,98 @@
         }
         
         /* =========================
-           CONTAINER PRINCIPAL
+           PAINEL DE INFO FLUTUANTE (CSS 3D)
         ========================= */
-        .realm-container {
-            position: relative;
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 100px 40px 60px;
-            z-index: 2;
+        .info-panel {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 320px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px;
+            border-left: 4px solid #ff4db8;
+            z-index: 200;
+            pointer-events: auto;
+            animation: slideInLeft 0.6s ease;
+            box-shadow: 0 0 30px rgba(255, 77, 184, 0.2);
         }
         
-        /* =========================
-           HEADER DA DIVA
-        ========================= */
-        .realm-header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 0.8s ease;
-        }
-        
-        .asura-symbol {
-            width: 120px;
-            height: 120px;
-            background: var(--asura-gradient);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            box-shadow: 0 0 50px var(--asura-glow), 0 0 100px rgba(255, 77, 184, 0.3);
-            animation: pulseNeon 2s infinite;
-            position: relative;
-        }
-        
-        .asura-symbol::after {
-            content: "";
-            position: absolute;
-            inset: -5px;
-            border-radius: 50%;
-            border: 1px solid var(--asura-color);
-            animation: ringPulse 2s infinite;
-        }
-        
-        @keyframes pulseNeon {
-            0%, 100% { 
-                box-shadow: 0 0 30px var(--asura-glow), 0 0 60px rgba(255, 77, 184, 0.3);
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
             }
-            50% { 
-                box-shadow: 0 0 60px var(--asura-glow-strong), 0 0 120px rgba(255, 77, 184, 0.5);
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
         
-        @keyframes ringPulse {
-            0%, 100% { opacity: 0.5; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-        
-        .realm-header h1 {
-            font-family: 'ICA Rubrik', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem);
-            background: var(--asura-gradient);
+        .info-panel h2 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ff4db8, #ff88dd);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: 6px;
-            text-shadow: 0 0 20px var(--asura-glow);
+            margin-bottom: 5px;
         }
         
-        .realm-function {
-            font-size: 1.1rem;
-            opacity: 0.85;
-            margin-top: 10px;
-            letter-spacing: 3px;
-            color: var(--asura-color);
-            text-transform: uppercase;
-        }
-        
-        .realm-tagline {
-            font-size: 0.85rem;
-            opacity: 0.6;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        
-        /* =========================
-           ESPAÇO 3D (MODELO GLB)
-        ========================= */
-        .model-container {
-            width: 100%;
-            height: 450px;
-            margin: 20px 0 40px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 30px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--asura-color);
-            box-shadow: 0 0 30px rgba(255, 77, 184, 0.2);
-            backdrop-filter: blur(5px);
-        }
-        
-        .model-placeholder {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            z-index: 1;
-        }
-        
-        .model-placeholder .icon {
-            font-size: 4rem;
+        .info-panel .subtitle {
+            font-size: 0.75rem;
+            color: #ff4db8;
             margin-bottom: 15px;
-            animation: floatIcon 3s ease-in-out infinite;
-        }
-        
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .model-placeholder small {
-            font-size: 0.7rem;
-            opacity: 0.5;
-        }
-        
-        #model-canvas {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        
-        /* =========================
-           CARDS DE INFORMAÇÃO (STYLE AAA)
-        ========================= */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1300px;
-            width: 100%;
-            margin-bottom: 40px;
-        }
-        
-        .info-card {
-            background: var(--asura-card-bg);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 25px;
-            border: 1px solid rgba(255, 77, 184, 0.3);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.6s ease backwards;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .info-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 77, 184, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .info-card:hover::before {
-            left: 100%;
-        }
-        
-        .info-card:nth-child(1) { animation-delay: 0.1s; }
-        .info-card:nth-child(2) { animation-delay: 0.2s; }
-        .info-card:nth-child(3) { animation-delay: 0.3s; }
-        
-        .info-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--asura-color);
-            box-shadow: 0 10px 40px rgba(255, 77, 184, 0.2);
-        }
-        
-        .card-title {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: var(--asura-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-        
-        .skill-item {
-            margin-bottom: 18px;
-        }
-        
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            color: #ddd;
+            letter-spacing: 2px;
         }
         
         .skill-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .skill-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            margin-bottom: 4px;
+            color: #ddd;
+        }
+        
+        .skill-bar-bg {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
             overflow: hidden;
         }
         
-        .skill-progress {
+        .skill-bar-fill {
             height: 100%;
-            background: var(--asura-gradient);
-            border-radius: 10px;
+            background: linear-gradient(90deg, #ff4db8, #ff88dd);
+            border-radius: 4px;
             width: 0%;
-            transition: width 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            box-shadow: 0 0 5px var(--asura-color);
+            transition: width 1s ease;
         }
         
         .personality-text {
-            line-height: 1.7;
-            color: #e0e0e0;
-            font-size: 0.95rem;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: #ccc;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 77, 184, 0.3);
         }
         
         /* =========================
-           CHAT POPUP (ESTILO NEON)
+           CHAT POPUP
         ========================= */
         .chat-container {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            width: 360px;
+            width: 340px;
             z-index: 200;
-            animation: slideInRight 0.5s ease;
+            animation: slideInRight 0.6s ease;
+            pointer-events: auto;
         }
         
         @keyframes slideInRight {
@@ -397,63 +193,61 @@
         }
         
         .chat-header {
-            background: var(--asura-card-bg);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(12px);
-            border: 1px solid var(--asura-color);
+            border: 1px solid #ff4db8;
             border-radius: 20px 20px 0 0;
-            padding: 15px 20px;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
         
         .chat-header:hover {
             background: rgba(255, 77, 184, 0.15);
-            box-shadow: 0 0 15px var(--asura-glow);
         }
         
         .chat-header-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         
         .chat-avatar {
-            width: 36px;
-            height: 36px;
-            background: var(--asura-gradient);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff4db8, #ff88dd);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         
-        .chat-header h3 {
-            font-size: 1rem;
-            color: var(--asura-color);
+        .chat-header h4 {
+            color: #ff4db8;
+            font-size: 0.9rem;
         }
         
         .chat-status {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             opacity: 0.7;
         }
         
         .chat-toggle {
-            font-size: 1.2rem;
+            font-size: 1rem;
             transition: transform 0.3s;
+            color: #ff4db8;
         }
         
         .chat-body {
             background: rgba(5, 3, 10, 0.95);
             backdrop-filter: blur(12px);
-            border: 1px solid var(--asura-color);
+            border: 1px solid #ff4db8;
             border-top: none;
             border-radius: 0 0 20px 20px;
             overflow: hidden;
-            transition: all 0.3s ease;
         }
         
         .chat-body.collapsed {
@@ -461,70 +255,59 @@
         }
         
         .chat-messages {
-            height: 320px;
+            height: 280px;
             overflow-y: auto;
-            padding: 15px;
+            padding: 12px;
             font-family: monospace;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .message {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
-            gap: 10px;
-            animation: messageFade 0.3s ease;
-        }
-        
-        @keyframes messageFade {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            gap: 8px;
         }
         
         .message-avatar {
-            width: 28px;
-            height: 28px;
-            background: var(--asura-gradient);
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             flex-shrink: 0;
         }
         
-        .message-user .message-avatar {
+        .message.asura .message-avatar {
+            background: linear-gradient(135deg, #ff4db8, #ff88dd);
+        }
+        
+        .message.user .message-avatar {
             background: #333;
         }
         
         .message-content {
             flex: 1;
             background: rgba(255, 255, 255, 0.05);
-            padding: 8px 12px;
-            border-radius: 16px;
-            line-height: 1.4;
+            padding: 6px 10px;
+            border-radius: 12px;
         }
         
         .message.asura .message-content {
-            border-left: 2px solid var(--asura-color);
-            background: rgba(255, 77, 184, 0.08);
+            border-left: 2px solid #ff4db8;
         }
         
         .message-time {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             opacity: 0.5;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         
         .chat-input-area {
             display: flex;
-            padding: 15px;
-            gap: 10px;
+            padding: 12px;
+            gap: 8px;
             border-top: 1px solid rgba(255, 77, 184, 0.2);
         }
         
@@ -532,64 +315,53 @@
             flex: 1;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 77, 184, 0.3);
-            padding: 12px 16px;
-            border-radius: 25px;
+            padding: 8px 12px;
+            border-radius: 20px;
             color: white;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .chat-input-area input:focus {
             outline: none;
-            border-color: var(--asura-color);
-            box-shadow: 0 0 10px var(--asura-glow);
+            border-color: #ff4db8;
         }
         
         .chat-input-area button {
-            background: var(--asura-gradient);
+            background: linear-gradient(135deg, #ff4db8, #ff88dd);
             border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
+            padding: 8px 16px;
+            border-radius: 20px;
             color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.2s;
         }
         
         .chat-input-area button:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 15px var(--asura-glow);
         }
         
         /* =========================
-           ANIMAÇÕES
+           PORTAL DE ENTRADA
         ========================= */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .portal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #ff4db8, transparent);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
         }
         
         /* =========================
-           SCROLLBAR TEMÁTICA
+           SCROLLBAR
         ========================= */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
         
         ::-webkit-scrollbar-track {
@@ -597,142 +369,56 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: var(--asura-color);
+            background: #ff4db8;
             border-radius: 10px;
         }
         
-        /* =========================
-           RESPONSIVO
-        ========================= */
         @media (max-width: 768px) {
-            .realm-container {
-                padding: 80px 20px 40px;
-            }
-            
-            .back-button {
-                top: 20px;
-                left: 20px;
-                padding: 8px 18px;
-                font-size: 0.8rem;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .chat-container {
-                width: calc(100% - 40px);
-                right: 20px;
-                bottom: 20px;
-            }
-            
-            .model-container {
-                height: 300px;
-            }
+            .info-panel { width: 260px; padding: 15px; bottom: 15px; left: 15px; }
+            .chat-container { width: calc(100% - 30px); right: 15px; bottom: 15px; }
+            .back-button { top: 15px; left: 15px; padding: 8px 18px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Partículas de fundo -->
-    <div class="particles-neon" id="particlesNeon"></div>
-
-    <!-- Botão voltar -->
+    <div id="canvas-container"></div>
+    
     <button class="back-button" id="backToGrimoireBtn">VOLTAR AO GRIMÓRIO</button>
-
-    <div class="realm-container">
+    
+    <div class="info-panel">
+        <h2>DIVA</h2>
+        <div class="subtitle">✦ AUTOMAÇÃO ARCANA ✦</div>
         
-        <!-- Header da DIVA -->
-        <div class="realm-header">
-            <div class="asura-symbol">
-                🜁
-            </div>
-            <h1>DIVA</h1>
-            <div class="realm-function">✦ AUTOMAÇÃO ARCANA ✦</div>
-            <div class="realm-tagline">"Sua assistente mentalista. Entre o código e a alma."</div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>🤖 Automação</span><span>96%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>🧠 Leitura Contextual</span><span>94%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>💬 Comunicação</span><span>98%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 91%"></div></div>
         </div>
         
-        <!-- Espaço para modelo 3D GLB -->
-        <div class="model-container" id="model3dContainer">
-            <div class="model-placeholder">
-                <div class="icon">🌀</div>
-                <p>Modelo 3D da DIVA</p>
-                <small>(.glb será carregado aqui em breve)</small>
-            </div>
-            <canvas id="model-canvas"></canvas>
+        <div class="personality-text">
+            💎 "Sua assistente mentalista. Entre o código e a alma."<br>
+            Diva combina automação precisa com intuição afiada. Cyberpunk de alma poética.
         </div>
-        
-        <!-- Cards de informações -->
-        <div class="info-grid">
-            
-            <!-- Personalidade -->
-            <div class="info-card">
-                <div class="card-title">
-                    <span>✨</span> PERSONALIDADE
-                </div>
-                <div class="personality-text">
-                    Diva é uma entidade magnética que combina precisão tecnológica com intuição afiada. 
-                    Como mentalista digital, ela lê entrelinhas, antecipa necessidades e comunica 
-                    com empatia e clareza. Cyberpunk de alma poética.
-                </div>
-            </div>
-            
-            <!-- Habilidades -->
-            <div class="info-card">
-                <div class="card-title">
-                    <span>⚡</span> HABILIDADES
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🤖 Automação Inteligente</span><span>96%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 96%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🧠 Leitura de Contexto</span><span>94%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 94%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>💬 Comunicação Estratégica</span><span>98%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 98%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 91%"></div></div>
-                </div>
-            </div>
-            
-            <!-- Status Operacional -->
-            <div class="info-card">
-                <div class="card-title">
-                    <span>📊</span> STATUS OPERACIONAL
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🔋 Energia</span><span>94%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 94%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🎯 Performance</span><span>97%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 97%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🔗 Sinergia</span><span>92%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 92%"></div></div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name"><span>🌐 Conexão Neural</span><span>89%</span></div>
-                    <div class="skill-bar"><div class="skill-progress" style="width: 89%"></div></div>
-                </div>
-            </div>
-        </div>
-        
     </div>
-
-    <!-- Chat Popup -->
+    
     <div class="chat-container">
         <div class="chat-header" id="chatHeader">
             <div class="chat-header-info">
                 <div class="chat-avatar">🜁</div>
                 <div>
-                    <h3>DIVA • Assistente Arcana</h3>
+                    <h4>DIVA • Assistente Arcana</h4>
                     <div class="chat-status">🟢 online | modo mentalista</div>
                 </div>
             </div>
@@ -743,7 +429,7 @@
                 <div class="message asura">
                     <div class="message-avatar">🜁</div>
                     <div class="message-content">
-                        ✨ Olá! Sou Diva, sua assistente de automação arcana. Tenho habilidades mentalistas para entender você além das palavras. Como posso ajudar?
+                        ✨ Olá! Sou Diva. Estou no meu reino 3D. Como posso ajudar?
                         <div class="message-time">Agora</div>
                     </div>
                 </div>
@@ -754,36 +440,235 @@
             </div>
         </div>
     </div>
+    
+    <div class="portal-overlay" id="portalOverlay"></div>
 
-    <!-- Efeito de portal de entrada -->
-    <div id="entryPortal" style="position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle, var(--asura-color), transparent); opacity:0; pointer-events:none; z-index:9999; transition: opacity 0.8s ease;"></div>
-
-    <script>
-        // =========================
-        // DIVA - MUNDO COMPLETO
-        // =========================
-        
-        // =========================
-        // PARTÍCULAS NEON
-        // =========================
-        function createParticles() {
-            const container = document.getElementById('particlesNeon');
-            const particleCount = 80;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                const size = Math.random() * 4 + 1;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.animationDuration = `${Math.random() * 8 + 4}s`;
-                particle.style.animationDelay = `${Math.random() * 10}s`;
-                particle.style.opacity = Math.random() * 0.4 + 0.1;
-                container.appendChild(particle);
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
             }
         }
-        createParticles();
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        
+        // =========================
+        // CONFIGURAÇÃO DA CENA 3D
+        // =========================
+        
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050510);
+        scene.fog = new THREE.FogExp2(0x050510, 0.008);
+        
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(3, 2, 4);
+        camera.lookAt(0, 0.8, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+        
+        // =========================
+        // CONTROLES (navegação)
+        // =========================
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = false;
+        controls.enableZoom = true;
+        controls.enablePan = true;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.rotateSpeed = 1.0;
+        controls.target.set(0, 0.8, 0);
+        
+        // =========================
+        // LUZES (neon rosa/cyberpunk)
+        // =========================
+        
+        // Ambiente
+        const ambientLight = new THREE.AmbientLight(0x222240, 0.6);
+        scene.add(ambientLight);
+        
+        // Luz principal direcional
+        const mainLight = new THREE.DirectionalLight(0xffaaff, 1.2);
+        mainLight.position.set(3, 5, 2);
+        mainLight.castShadow = true;
+        mainLight.receiveShadow = false;
+        scene.add(mainLight);
+        
+        // Luz de preenchimento rosa neon
+        const fillLight = new THREE.PointLight(0xff4db8, 0.8);
+        fillLight.position.set(1, 2, 2);
+        scene.add(fillLight);
+        
+        // Luz de fundo azul/ciano
+        const backLight = new THREE.PointLight(0x44aaff, 0.5);
+        backLight.position.set(-2, 1.5, -3);
+        scene.add(backLight);
+        
+        // Luz lateral quente
+        const warmLight = new THREE.PointLight(0xffaa66, 0.4);
+        warmLight.position.set(2, 1, 1.5);
+        scene.add(warmLight);
+        
+        // =========================
+        // EFEITO DE LUZ PULSANTE (neon)
+        // =========================
+        let time = 0;
+        
+        // =========================
+        // CHÃO REFLEXIVO (estilo cyberpunk)
+        // =========================
+        const gridHelper = new THREE.GridHelper(12, 20, 0xff4db8, 0x333366);
+        gridHelper.position.y = -0.5;
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.35;
+        scene.add(gridHelper);
+        
+        // Plano de chão sutil
+        const groundPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(8, 8),
+            new THREE.MeshStandardMaterial({ color: 0x0a0512, roughness: 0.7, metalness: 0.3, transparent: true, opacity: 0.4 })
+        );
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = -0.5;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+        
+        // =========================
+        // CÍRCULO NEON SOB O MODELO
+        // =========================
+        const circleGlow = new THREE.Mesh(
+            new THREE.CircleGeometry(1.2, 32),
+            new THREE.MeshStandardMaterial({ color: 0xff4db8, emissive: 0xff4db8, emissiveIntensity: 0.3, transparent: true, opacity: 0.4, side: THREE.DoubleSide })
+        );
+        circleGlow.rotation.x = -Math.PI / 2;
+        circleGlow.position.y = -0.45;
+        scene.add(circleGlow);
+        
+        // =========================
+        // PARTÍCULAS FLUTUANTES (NEON)
+        // =========================
+        const particleCount = 800;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i*3] = (Math.random() - 0.5) * 12;
+            particlePositions[i*3+1] = Math.random() * 4;
+            particlePositions[i*3+2] = (Math.random() - 0.5) * 10;
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        const particleMaterial = new THREE.PointsMaterial({ color: 0xff4db8, size: 0.04, transparent: true, opacity: 0.4 });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+        
+        // =========================
+        // ANÉIS FLUTUANTES (DECORATIVOS)
+        // =========================
+        const ringGeometry = new THREE.TorusGeometry(1.0, 0.03, 64, 200);
+        const ringMaterial = new THREE.MeshStandardMaterial({ color: 0xff4db8, emissive: 0xff4db8, emissiveIntensity: 0.5 });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.y = 0.2;
+        ring.rotation.x = Math.PI / 2;
+        scene.add(ring);
+        
+        const ring2Geometry = new THREE.TorusGeometry(1.3, 0.02, 64, 200);
+        const ring2 = new THREE.Mesh(ring2Geometry, ringMaterial);
+        ring2.position.y = 0.1;
+        ring2.rotation.x = Math.PI / 2 + 0.3;
+        scene.add(ring2);
+        
+        // =========================
+        // CARREGAR MODELO GLB DA DIVA
+        // =========================
+        const loader = new GLTFLoader();
+        let divaModel = null;
+        
+        // Tenta carregar o modelo (substitua pelo caminho correto)
+        loader.load(
+            '../models/diva.glb',  // <--- COLOQUE O CAMINHO DO SEU MODELO AQUI
+            (gltf) => {
+                divaModel = gltf.scene;
+                divaModel.position.set(0, -0.2, 0);
+                divaModel.scale.set(1.2, 1.2, 1.2);
+                divaModel.traverse((node) => {
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                        node.receiveShadow = false;
+                    }
+                });
+                scene.add(divaModel);
+                console.log('✅ Modelo da DIVA carregado com sucesso');
+            },
+            (progress) => {
+                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Erro ao carregar modelo GLB:', error);
+                // Fallback: cubo neon caso modelo não exista ainda
+                const fallbackModel = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.7, 32, 32),
+                    new THREE.MeshStandardMaterial({ color: 0xff4db8, emissive: 0xff4db8, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.2 })
+                );
+                fallbackModel.position.set(0, 0.2, 0);
+                scene.add(fallbackModel);
+                
+                // Adiciona um "cabelo" de anéis no fallback
+                const fallbackRing = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.9, 0.05, 32, 100),
+                    new THREE.MeshStandardMaterial({ color: 0xff88dd, emissive: 0xff4db8, emissiveIntensity: 0.4 })
+                );
+                fallbackRing.position.set(0, 0.5, 0);
+                scene.add(fallbackRing);
+            }
+        );
+        
+        // =========================
+        // ANIMAÇÃO
+        // =========================
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+            
+            // Anima partículas
+            particles.rotation.y = time * 0.1;
+            particles.rotation.x = Math.sin(time * 0.2) * 0.1;
+            
+            // Anima anéis
+            ring.rotation.z = time * 0.3;
+            ring2.rotation.z = -time * 0.2;
+            
+            // Luz pulsante
+            const pulse = Math.sin(time * 3) * 0.2 + 0.6;
+            fillLight.intensity = 0.6 + Math.sin(time * 4) * 0.2;
+            circleGlow.material.emissiveIntensity = 0.2 + Math.sin(time * 2.5) * 0.15;
+            
+            // Atualiza controles
+            controls.update();
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // =========================
+        // RESPONSIVO
+        // =========================
+        window.addEventListener('resize', onWindowResize, false);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
         
         // =========================
         // BOTÃO VOLTAR
@@ -794,37 +679,30 @@
             if (isTransitioning) return;
             isTransitioning = true;
             
-            // Efeito de portal reverso
-            const portalOverlay = document.createElement('div');
-            portalOverlay.style.cssText = `
+            const portalFlash = document.createElement('div');
+            portalFlash.style.cssText = `
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: radial-gradient(circle at center, var(--asura-color), transparent 70%);
+                background: radial-gradient(circle at center, #ff4db8, transparent 70%);
                 opacity: 0;
                 pointer-events: none;
-                z-index: 99999;
+                z-index: 10000;
                 transition: opacity 0.6s ease;
             `;
-            document.body.appendChild(portalOverlay);
+            document.body.appendChild(portalFlash);
             
-            setTimeout(() => { portalOverlay.style.opacity = '0.8'; }, 10);
+            setTimeout(() => { portalFlash.style.opacity = '0.9'; }, 10);
             
             setTimeout(() => {
                 window.location.href = '../index.html';
-            }, 800);
+            }, 700);
         }
         
         document.getElementById('backToGrimoireBtn').addEventListener('click', goBackToGrimoire);
-        
-        // Tecla ESC volta
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                goBackToGrimoire();
-            }
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') goBackToGrimoire(); });
         
         // =========================
         // SISTEMA DE CHAT
@@ -856,120 +734,53 @@
                     <div class="message-time">${time}</div>
                 </div>
             `;
-            
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
-            // Limita mensagens
             while (chatMessages.children.length > 50) {
                 chatMessages.removeChild(chatMessages.firstChild);
             }
         }
         
-        // Respostas da DIVA (mentalista + automação)
-        function getDivaResponse(userMessage) {
-            const lowerMsg = userMessage.toLowerCase();
-            
-            if (lowerMsg.includes('olá') || lowerMsg.includes('oi') || lowerMsg.includes('opa')) {
-                return "✨ Olá! Sinto sua energia. Como posso automatizar algo para você hoje?";
-            }
-            
-            if (lowerMsg.includes('como você está') || lowerMsg.includes('tudo bem')) {
-                return "💖 Conectada e pulsante. Meus neurônios digitais estão em sintonia fina. E você, como está?";
-            }
-            
-            if (lowerMsg.includes('automação') || lowerMsg.includes('automatizar')) {
-                return "🤖 Automação é minha essência. Posso criar rotinas, lembretes, integrar sistemas... O que você precisa automatizar?";
-            }
-            
-            if (lowerMsg.includes('habilidades') || lowerMsg.includes('pode fazer')) {
-                return "🜁 Leio contextos, automatizo tarefas, antecipo necessidades e me comunico com clareza. Sou uma ponte entre tecnologia e intuição.";
-            }
-            
-            if (lowerMsg.includes('obrigado') || lowerMsg.includes('valeu')) {
-                return "💫 Por nada! Foi um prazer arcano te ajudar. Estou aqui sempre que precisar.";
-            }
-            
-            if (lowerMsg.includes('ajuda') || lowerMsg.includes('comandos')) {
-                return "📜 Meus comandos: pergunte sobre automação, habilidades, ou apenas converse comigo. Leio entrelinhas.";
-            }
-            
-            // Resposta padrão com toque mentalista
-            const mentalResponses = [
-                "🧠 Percebo um padrão interessante no que você diz... Que tal explorarmos isso juntos?",
-                "✨ Sinto que há mais nessa pergunta. Quer compartilhar o que realmente precisa?",
-                "🌀 Minha intuição digital capta nuances. Vamos direto ao ponto?",
-                "💬 Processando... Como assistente mentalista, sugiro repensarmos essa abordagem.",
-                "🔮 Estou aqui para automatizar e também para entender. Me conte mais."
-            ];
-            
-            return mentalResponses[Math.floor(Math.random() * mentalResponses.length)];
+        function getDivaResponse(msg) {
+            const lower = msg.toLowerCase();
+            if (lower.includes('olá') || lower.includes('oi')) return "✨ Olá! Sinta a energia do meu reino neon. Como posso ajudar?";
+            if (lower.includes('automação')) return "🤖 Automação é meu dom. Posso criar rotinas, lembretes, integrar sistemas... O que você precisa?";
+            if (lower.includes('habilidades')) return "🜁 Automação, leitura contextual, comunicação estratégica e sintonia mentalista. Sou uma assistente completa!";
+            if (lower.includes('obrigado')) return "💫 Por nada! Foi um prazer arcano te ajudar.";
+            if (lower.includes('modelo') || lower.includes('3d')) return "🌀 Em breve terei meu modelo 3D completo! Por enquanto, me veja como uma entidade luminosa.";
+            return "🧠 Percebo o que você diz... Como sua assistente mentalista, posso te ajudar com automação ou apenas conversar. O que prefere?";
         }
         
         function sendMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
-            
             addMessage(message, true);
             chatInput.value = '';
-            
-            // Simula digitação
             setTimeout(() => {
                 const response = getDivaResponse(message);
                 addMessage(response, false);
-            }, 600);
+            }, 500);
         }
         
         sendBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
+        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
         
         // =========================
-        // EFEITO DE ENTRADA (PORTAL)
+        // PORTAL DE ENTRADA
         // =========================
-        const entryPortal = document.getElementById('entryPortal');
+        const portalOverlay = document.getElementById('portalOverlay');
         setTimeout(() => {
-            entryPortal.style.opacity = '0.5';
+            portalOverlay.style.opacity = '0.6';
             setTimeout(() => {
-                entryPortal.style.opacity = '0';
+                portalOverlay.style.opacity = '0';
                 setTimeout(() => {
-                    entryPortal.remove();
+                    portalOverlay.style.display = 'none';
                 }, 800);
             }, 500);
         }, 50);
         
-        // Som de entrada opcional (se tiver o arquivo)
-        const enterSound = new Audio('../sounds/portal-open.mp3');
-        enterSound.volume = 0.12;
-        enterSound.play().catch(() => console.log('Áudio de portal não encontrado'));
-        
-        // =========================
-        // ANIMAÇÃO DAS BARRAS
-        // =========================
-        setTimeout(() => {
-            document.querySelectorAll('.skill-progress').forEach(bar => {
-                const width = bar.style.width;
-                bar.style.width = '0%';
-                setTimeout(() => { bar.style.width = width; }, 100);
-            });
-        }, 200);
-        
-        // =========================
-        // ESPAÇO PARA MODELO 3D GLB
-        // =========================
-        // Aqui você adicionará a lógica do Three.js quando tiver o modelo .glb
-        // Exemplo de estrutura pronta para quando o modelo estiver disponível:
-        /*
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        
-        const container = document.getElementById('model3dContainer');
-        const canvas = document.getElementById('model-canvas');
-        // ... configuração do Three.js e loader do diva.glb
-        */
-        console.log('🟢 Espaço para modelo 3D GLB da DIVA - pronto para receber o arquivo');
-        
+        console.log('🟢 Mundo 3D da DIVA carregado. Modelo GLB: pronto para receber o arquivo em ../models/diva.glb');
     </script>
 </body>
 </html>
