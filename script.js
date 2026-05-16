@@ -144,17 +144,8 @@ function drawParticles(){
 
 		ctx.fill();
 
-		// =========================
-		// MOVIMENTO
-		// =========================
-
 		particle.x += particle.speedX;
-
 		particle.y += particle.speedY;
-
-		// =========================
-		// LIMITES X
-		// =========================
 
 		if(
 			particle.x < 0 ||
@@ -162,10 +153,6 @@ function drawParticles(){
 		){
 			particle.speedX *= -1;
 		}
-
-		// =========================
-		// LIMITES Y
-		// =========================
 
 		if(
 			particle.y < 0 ||
@@ -175,9 +162,7 @@ function drawParticles(){
 		}
 	});
 
-	requestAnimationFrame(
-		drawParticles
-	);
+	requestAnimationFrame(drawParticles);
 }
 
 drawParticles();
@@ -189,7 +174,6 @@ drawParticles();
 window.addEventListener(
 	"resize",
 	() => {
-
 		resizeCanvas();
 	}
 );
@@ -202,10 +186,6 @@ const bgMusic =
 	document.getElementById(
 		"bgMusic"
 	);
-
-// =========================
-// AUTO PLAY AMBIENTE
-// =========================
 
 if(bgMusic){
 
@@ -224,10 +204,6 @@ if(bgMusic){
 		})
 		.catch(() => {
 
-			// =========================
-			// FALLBACK MOBILE
-			// =========================
-
 			window.addEventListener(
 				"click",
 				handleFirstInteraction,
@@ -241,10 +217,6 @@ if(bgMusic){
 			);
 		});
 }
-
-// =========================
-// PRIMEIRA INTERAÇÃO
-// =========================
 
 function handleFirstInteraction(){
 
@@ -313,72 +285,34 @@ function startAsuraTransition(
 	asura
 ){
 
-	// =========================
-	// PAUSA SLIDER
-	// =========================
-
 	slider.style.animationPlayState =
 		"paused";
-
-	// =========================
-	// SOM CLICK
-	// =========================
 
 	if(hoverSound){
 
 		hoverSound.volume = 0.2;
-
 		hoverSound.currentTime = 0;
-
-		hoverSound
-			.play()
-			.catch(() => {});
+		hoverSound.play().catch(() => {});
 	}
 
-	// =========================
-	// FADE OUT MUSICA
-	// =========================
-
+	// fade audio
 	if(bgMusic){
 
 		const fadeAudio =
 			setInterval(() => {
 
 				if(bgMusic.volume > 0.02){
-
 					bgMusic.volume -= 0.01;
-
 				}else{
-
 					bgMusic.volume = 0;
-
-					clearInterval(
-						fadeAudio
-					);
+					clearInterval(fadeAudio);
 				}
 
 			}, 40);
 	}
 
-	// =========================
-	// FADE GERAL
-	// =========================
-
-	slider.classList.add(
-		"fade-all"
-	);
-
-	// =========================
-	// ITEM ATIVO
-	// =========================
-
-	selectedItem.classList.add(
-		"active"
-	);
-
-	// =========================
-	// ZOOM CINEMATOGRÁFICO
-	// =========================
+	slider.classList.add("fade-all");
+	selectedItem.classList.add("active");
 
 	document.body.style.transition =
 		"transform 1.6s ease";
@@ -386,54 +320,22 @@ function startAsuraTransition(
 	document.body.style.transform =
 		"scale(1.03)";
 
-	// =========================
-	// PORTAL
-	// =========================
-
 	if(portalTransition){
-
-		portalTransition.classList.add(
-			"active"
-		);
+		portalTransition.classList.add("active");
 	}
 
-	// =========================
-	// FLASH
-	// =========================
+	createPortalFlash(selectedItem.dataset.color);
 
-	createPortalFlash(
-		selectedItem.dataset.color
-	);
+	console.log("Entrando no mundo:", asura);
 
 	// =========================
-	// DEBUG
-	// =========================
-
-	console.log(
-		"Entrando no mundo:",
-		asura
-	);
-
-	// =========================
-	// TRANSIÇÃO FUTURA
+	// REDIRECIONAMENTO REAL
 	// =========================
 
 	setTimeout(() => {
 
-		// =========================
-		// FUTURO LOAD GLB
-		// =========================
-
-		// window.location.href =
-		// `world.html?asura=${asura}`;
-
-		alert(
-			`Entrando no reino de ${asura}`
-		);
-
-		resetTransition(
-			selectedItem
-		);
+		window.location.href =
+			`worlds/${asura}.html`;
 
 	}, 2200);
 }
@@ -445,101 +347,28 @@ function startAsuraTransition(
 function createPortalFlash(color){
 
 	const flash =
-		document.createElement(
-			"div"
-		);
+		document.createElement("div");
 
-	flash.className =
-		"portal-flash";
+	flash.className = "portal-flash";
 
 	flash.style.setProperty(
 		"--flash-color",
 		color
 	);
 
-	document.body.appendChild(
-		flash
-	);
+	document.body.appendChild(flash);
 
 	requestAnimationFrame(() => {
-
-		flash.classList.add(
-			"show"
-		);
+		flash.classList.add("show");
 	});
 
 	setTimeout(() => {
 
-		flash.classList.remove(
-			"show"
-		);
+		flash.classList.remove("show");
 
 		setTimeout(() => {
-
 			flash.remove();
-
 		}, 1000);
 
 	}, 900);
-}
-
-// =========================
-// RESET TRANSITION
-// =========================
-
-function resetTransition(
-	selectedItem
-){
-
-	// =========================
-	// SLIDER
-	// =========================
-
-	slider.style.animationPlayState =
-		"running";
-
-	slider.classList.remove(
-		"fade-all"
-	);
-
-	// =========================
-	// ITEM
-	// =========================
-
-	selectedItem.classList.remove(
-		"active"
-	);
-
-	// =========================
-	// PORTAL
-	// =========================
-
-	if(portalTransition){
-
-		portalTransition.classList.remove(
-			"active"
-		);
-	}
-
-	// =========================
-	// RESET BODY
-	// =========================
-
-	document.body.style.transform =
-		"scale(1)";
-
-	// =========================
-	// RESET MUSICA
-	// =========================
-
-	if(bgMusic){
-
-		bgMusic.volume = 0.12;
-	}
-
-	// =========================
-	// LIBERA CLICK
-	// =========================
-
-	transitioning = false;
 }
