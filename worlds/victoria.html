@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victoria Realm</title>
+<style>
+body{
+	margin:0;
+	overflow:hidden;
+	height:100vh;
+	background:
+		radial-gradient(circle,
+		#ff4444,
+		#250000,
+		#000000);
+}
+
+.fire{
+	position:absolute;
+	inset:0;
+	background:
+		linear-gradient(to top,
+		rgba(255,100,0,0.2),
+		transparent);
+	animation:flicker 0.2s infinite;
+}
+
+.title{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	font-size:6rem;
+	color:white;
+	text-shadow:0 0 50px #ff4444;
+}
+
+@keyframes flicker{
+	0%{opacity:0.7;}
+	50%{opacity:1;}
+	100%{opacity:0.8;}
+}
+</style>
+</head>
+<body>
+<div class="fire"></div>
+<h1 class="title">VICTORIA</h1>
+</body>
+</html>
