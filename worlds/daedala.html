@@ -589,7 +589,7 @@
         scene.add(circleGlow);
         
         // =========================
-        // ENGRENAGENS E TUBOS DE ENSAIO FLUTUANTES
+        // ENGRENAGENS FLUTUANTES
         // =========================
         const gearMaterial = new THREE.MeshStandardMaterial({ color: 0x44ccaa, metalness: 0.8, roughness: 0.2 });
         
@@ -616,24 +616,21 @@
         });
         
         // =========================
-        // FRASCOS E RECIPIENTES DE LABORATÓRIO
+        // FRASCOS DE LABORATÓRIO
         // =========================
         function createFlask(x, z, yOffset, color) {
             const group = new THREE.Group();
-            
             const body = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.1, 0.07, 0.22, 8),
                 new THREE.MeshStandardMaterial({ color: color, transparent: true, opacity: 0.7 })
             );
             group.add(body);
-            
             const liquid = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.07, 0.05, 0.12, 8),
                 new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.2, transparent: true, opacity: 0.8 })
             );
             liquid.position.y = -0.03;
             group.add(liquid);
-            
             group.position.set(x, yOffset, z);
             return group;
         }
@@ -650,7 +647,7 @@
         });
         
         // =========================
-        // PARTÍCULAS DE FÓRMULAS MÁGICAS (CIANO)
+        // PARTÍCULAS DE FÓRMULAS MÁGICAS
         // =========================
         const particleCount = 2200;
         const particleGeometry = new THREE.BufferGeometry();
@@ -703,57 +700,29 @@
         scene.add(ring2);
         
         // =========================
-        // ROLOS DE PLANTAS ARCANAS (DECORATIVAS)
-        // =========================
-        function createScroll(x, z, yOffset) {
-            const group = new THREE.Group();
-            const scroll = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.1, 0.1, 0.25, 8),
-                new THREE.MeshStandardMaterial({ color: 0xddcc88, roughness: 0.6 })
-            );
-            group.add(scroll);
-            group.position.set(x, yOffset, z);
-            group.rotation.z = Math.random() * Math.PI;
-            return group;
-        }
-        
-        const scrollPositions = [
-            [-1.8, 0.5, 1.5], [1.8, 0.5, 1.5], [-1.9, 0.45, -1.4], [1.9, 0.45, -1.4]
-        ];
-        
-        scrollPositions.forEach(pos => {
-            const scroll = createScroll(pos[0], pos[2], pos[1]);
-            scene.add(scroll);
-        });
-        
-        // =========================
-        // BOTÕES E PAINÉIS DE CONTROLE
+        // PAINÉIS DE CONTROLE
         // =========================
         const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0xff4488, emissive: 0xff2266, emissiveIntensity: 0.3 });
         
         function createControlPanel(x, z, yOffset) {
             const group = new THREE.Group();
-            
             const panel = new THREE.Mesh(
                 new THREE.BoxGeometry(0.35, 0.08, 0.25),
                 new THREE.MeshStandardMaterial({ color: 0x226666, metalness: 0.7 })
             );
             group.add(panel);
-            
             const button1 = new THREE.Mesh(
                 new THREE.SphereGeometry(0.045, 6, 6),
                 buttonMaterial
             );
             button1.position.set(0.08, 0.05, 0.1);
             group.add(button1);
-            
             const button2 = new THREE.Mesh(
                 new THREE.SphereGeometry(0.045, 6, 6),
                 new THREE.MeshStandardMaterial({ color: 0x66ff88, emissive: 0x44ff66, emissiveIntensity: 0.2 })
             );
             button2.position.set(-0.08, 0.05, 0.1);
             group.add(button2);
-            
             group.position.set(x, yOffset, z);
             return group;
         }
@@ -768,10 +737,11 @@
         });
         
         // =========================
-        // CARREGAR MODELO GLB DA DAEDALA
+        // CARREGAR MODELO GLB DA DAEDALA COM ANIMAÇÃO
         // =========================
         const loader = new GLTFLoader();
         let daedalaModel = null;
+        let mixer = null;
         
         loader.load(
             '../models/daedala.glb',
@@ -786,10 +756,26 @@
                     }
                 });
                 scene.add(daedalaModel);
+                
+                // =========================
+                // ATIVAR ANIMAÇÕES DO MODELO
+                // =========================
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(daedalaModel);
+                    gltf.animations.forEach((clip) => {
+                        const action = mixer.clipAction(clip);
+                        action.play();
+                        console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                    });
+                    console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                } else {
+                    console.log('ℹ️ Modelo não possui animações');
+                }
+                
                 console.log('✅ Modelo da DAEDALA carregado com sucesso');
             },
             (progress) => {
-                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+                console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('❌ Erro ao carregar modelo GLB:', error);
@@ -799,7 +785,6 @@
                 );
                 fallbackModel.position.set(0, 0.2, 0);
                 scene.add(fallbackModel);
-                
                 const crazyRing = new THREE.Mesh(
                     new THREE.TorusGeometry(0.98, 0.045, 32, 60),
                     new THREE.MeshStandardMaterial({ color: 0x66ffdd, emissive: 0x00ffd5, emissiveIntensity: 0.4 })
@@ -811,38 +796,49 @@
         );
         
         // =========================
-        // ANIMAÇÃO (CAÓTICA E DINÂMICA)
+        // ANIMAÇÃO DA CENA
         // =========================
         let time = 0;
+        let deltaTime = 0.016;
         
         function animate() {
             requestAnimationFrame(animate);
             time += 0.01;
             
+            // Atualiza animações do modelo 3D
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
+            
             particles.rotation.y = time * 0.08;
             particles.rotation.x = Math.sin(time * 0.2) * 0.12;
-            
             ring.rotation.z = time * 0.45;
             ring2.rotation.z = -time * 0.35;
-            
-            // Luz pulsante caótica (estilo laboratório maluco)
             fillLight.intensity = 0.6 + Math.sin(time * 4) * 0.25;
             circleGlow.material.emissiveIntensity = 0.3 + Math.sin(time * 3.2) * 0.2;
             labLight.intensity = 0.35 + Math.sin(time * 2.5) * 0.15;
             
             controls.update();
-            
             renderer.render(scene, camera);
         }
         
         animate();
         
-        window.addEventListener('resize', onWindowResize, false);
-        function onWindowResize() {
+        // Delta time real para animações suaves
+        let lastTime = performance.now();
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
+        
+        window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        }
+        });
         
         // =========================
         // BOTÃO VOLTAR
@@ -891,7 +887,7 @@
         });
         
         // =========================
-        // SISTEMA DE CHAT (ESTILO LOUCO E CRIATIVO)
+        // SISTEMA DE CHAT
         // =========================
         const chatMessages = document.getElementById('chatMessages');
         const chatInput = document.getElementById('chatInput');
@@ -970,7 +966,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da DAEDALA carregado. Modelo GLB: pronto para receber o arquivo em ../models/daedala.glb');
+        console.log('🟢 Mundo 3D da DAEDALA carregado. Modelo GLB: pronto para receber o arquivo em ../models/daedala.glb com animações');
         console.log('🤪 Daedala: A arquiteta da loucura criativa. Onde as regras não se aplicam!');
     </script>
 </body>
