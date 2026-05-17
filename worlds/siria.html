@@ -716,13 +716,14 @@
         });
         
         // =========================
-        // CARREGAR MODELO GLB DA SIRIA
+        // CARREGAR MODELO GLB DA SIRIA COM ANIMAÇÃO
         // =========================
         const loader = new GLTFLoader();
         let siriaModel = null;
+        let mixer = null;
         
         loader.load(
-            '../models/siria.glb',  // <--- COLOQUE O CAMINHO DO SEU MODELO AQUI
+            '../models/siria.glb',
             (gltf) => {
                 siriaModel = gltf.scene;
                 siriaModel.position.set(0, -0.25, 0);
@@ -734,10 +735,26 @@
                     }
                 });
                 scene.add(siriaModel);
+                
+                // =========================
+                // ATIVAR ANIMAÇÕES DO MODELO
+                // =========================
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(siriaModel);
+                    gltf.animations.forEach((clip) => {
+                        const action = mixer.clipAction(clip);
+                        action.play();
+                        console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                    });
+                    console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                } else {
+                    console.log('ℹ️ Modelo não possui animações');
+                }
+                
                 console.log('✅ Modelo da SIRIA carregado com sucesso');
             },
             (progress) => {
-                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+                console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('❌ Erro ao carregar modelo GLB:', error);
@@ -761,13 +778,19 @@
         );
         
         // =========================
-        // ANIMAÇÃO
+        // ANIMAÇÃO DA CENA
         // =========================
         let time = 0;
+        let deltaTime = 0.016;
         
         function animate() {
             requestAnimationFrame(animate);
             time += 0.008;
+            
+            // Atualiza animações do modelo 3D
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
             
             // Anima partículas flutuantes
             particles.rotation.y = time * 0.05;
@@ -778,7 +801,6 @@
             ring2.rotation.z = -time * 0.2;
             
             // Luz pulsante (ritmo da floresta)
-            const pulse = 0.5 + Math.sin(time * 1.5) * 0.2;
             fillLight.intensity = 0.5 + Math.sin(time * 2) * 0.15;
             circleGlow.material.emissiveIntensity = 0.2 + Math.sin(time * 1.8) * 0.15;
             
@@ -789,6 +811,16 @@
         }
         
         animate();
+        
+        // Delta time real para animações suaves
+        let lastTime = performance.now();
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
         
         // =========================
         // RESPONSIVO
@@ -924,7 +956,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da SIRIA carregado. Modelo GLB: pronto para receber o arquivo em ../models/siria.glb');
+        console.log('🟢 Mundo 3D da SIRIA carregado. Modelo GLB: pronto para receber o arquivo em ../models/siria.glb com animações');
     </script>
 </body>
 </html>
