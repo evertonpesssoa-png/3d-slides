@@ -630,18 +630,19 @@
         scene.add(ring2);
         
         // =========================
-        // CARREGAR MODELO GLB DA DIVA
+        // CARREGAR MODELO GLB DA DIVA COM ANIMAÇÃO E ESCALA REDUZIDA
         // =========================
         const loader = new GLTFLoader();
         let divaModel = null;
+        let mixer = null;
         
-        // Tenta carregar o modelo (substitua pelo caminho correto)
         loader.load(
-            '../models/diva.glb',  // <--- COLOQUE O CAMINHO DO SEU MODELO AQUI
+            '../models/diva.glb',
             (gltf) => {
                 divaModel = gltf.scene;
-                divaModel.position.set(0, -0.2, 0);
-                divaModel.scale.set(1.2, 1.2, 1.2);
+                divaModel.position.set(0, -0.25, 0);
+                // ESCALA REDUZIDA (era 1.2, agora 0.5)
+                divaModel.scale.set(0.5, 0.5, 0.5);
                 divaModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
@@ -649,14 +650,29 @@
                     }
                 });
                 scene.add(divaModel);
-                console.log('✅ Modelo da DIVA carregado com sucesso');
+                
+                // =========================
+                // ATIVAR ANIMAÇÕES DO MODELO
+                // =========================
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(divaModel);
+                    gltf.animations.forEach((clip) => {
+                        const action = mixer.clipAction(clip);
+                        action.play();
+                        console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                    });
+                    console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                } else {
+                    console.log('ℹ️ Modelo não possui animações');
+                }
+                
+                console.log('✅ Modelo da DIVA carregado com sucesso (escala reduzida para 0.5)');
             },
             (progress) => {
-                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+                console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('❌ Erro ao carregar modelo GLB:', error);
-                // Fallback: cubo neon caso modelo não exista ainda
                 const fallbackModel = new THREE.Mesh(
                     new THREE.SphereGeometry(0.7, 32, 32),
                     new THREE.MeshStandardMaterial({ color: 0xff4db8, emissive: 0xff4db8, emissiveIntensity: 0.6, metalness: 0.8, roughness: 0.2 })
@@ -664,7 +680,6 @@
                 fallbackModel.position.set(0, 0.2, 0);
                 scene.add(fallbackModel);
                 
-                // Adiciona um "cabelo" de anéis no fallback
                 const fallbackRing = new THREE.Mesh(
                     new THREE.TorusGeometry(0.9, 0.05, 32, 100),
                     new THREE.MeshStandardMaterial({ color: 0xff88dd, emissive: 0xff4db8, emissiveIntensity: 0.4 })
@@ -675,11 +690,18 @@
         );
         
         // =========================
-        // ANIMAÇÃO
+        // ANIMAÇÃO DA CENA
         // =========================
+        let deltaTime = 0.016;
+        
         function animate() {
             requestAnimationFrame(animate);
             time += 0.008;
+            
+            // Atualiza animações do modelo 3D
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
             
             // Anima partículas
             particles.rotation.y = time * 0.1;
@@ -690,7 +712,6 @@
             ring2.rotation.z = -time * 0.2;
             
             // Luz pulsante
-            const pulse = Math.sin(time * 3) * 0.2 + 0.6;
             fillLight.intensity = 0.6 + Math.sin(time * 4) * 0.2;
             circleGlow.material.emissiveIntensity = 0.2 + Math.sin(time * 2.5) * 0.15;
             
@@ -701,6 +722,16 @@
         }
         
         animate();
+        
+        // Delta time real para animações suaves
+        let lastTime = performance.now();
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
         
         // =========================
         // RESPONSIVO
@@ -834,7 +865,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da DIVA carregado. Modelo GLB: pronto para receber o arquivo em ../models/diva.glb');
+        console.log('🟢 Mundo 3D da DIVA carregado. Modelo GLB: pronto para receber o arquivo em ../models/diva.glb com animações e escala 0.5');
     </script>
 </body>
 </html>
