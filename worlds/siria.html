@@ -726,7 +726,7 @@
             (gltf) => {
                 siriaModel = gltf.scene;
                 siriaModel.position.set(0, -0.25, 0);
-                siriaModel.scale.set(1.2, 1.2, 1.2);
+                siriaModel.scale.set(0.02, 0.02, 0.02);
                 siriaModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
