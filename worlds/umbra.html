@@ -737,17 +737,19 @@
         });
         
         // =========================
-        // CARREGAR MODELO GLB DA UMBRA
+        // CARREGAR MODELO GLB DA UMBRA COM ANIMAÇÃO E ESCALA 0.1
         // =========================
         const loader = new GLTFLoader();
         let umbraModel = null;
+        let mixer = null;
         
         loader.load(
             '../models/umbra.glb',
             (gltf) => {
                 umbraModel = gltf.scene;
                 umbraModel.position.set(0, -0.25, 0);
-                umbraModel.scale.set(0.3, 0.3, 0.3);
+                // ESCALA AJUSTADA PARA 0.5
+                umbraModel.scale.set(0.1, 0.1, 0.1);
                 umbraModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
@@ -755,10 +757,26 @@
                     }
                 });
                 scene.add(umbraModel);
-                console.log('✅ Modelo da UMBRA carregado com sucesso');
+                
+                // =========================
+                // ATIVAR ANIMAÇÕES DO MODELO
+                // =========================
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(umbraModel);
+                    gltf.animations.forEach((clip) => {
+                        const action = mixer.clipAction(clip);
+                        action.play();
+                        console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                    });
+                    console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                } else {
+                    console.log('ℹ️ Modelo não possui animações');
+                }
+                
+                console.log('✅ Modelo da UMBRA carregado com sucesso (escala 0.5)');
             },
             (progress) => {
-                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+                console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('❌ Erro ao carregar modelo GLB:', error);
@@ -780,13 +798,19 @@
         );
         
         // =========================
-        // ANIMAÇÃO
+        // ANIMAÇÃO DA CENA
         // =========================
         let time = 0;
+        let deltaTime = 0.016;
         
         function animate() {
             requestAnimationFrame(animate);
             time += 0.008;
+            
+            // Atualiza animações do modelo 3D
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
             
             particles.rotation.y = time * 0.04;
             particles.rotation.x = Math.sin(time * 0.1) * 0.05;
@@ -803,6 +827,16 @@
         }
         
         animate();
+        
+        // Delta time real para animações suaves
+        let lastTime = performance.now();
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
         
         window.addEventListener('resize', onWindowResize, false);
         function onWindowResize() {
@@ -937,7 +971,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da UMBRA carregado. Modelo GLB: pronto para receber o arquivo em ../models/umbra.glb');
+        console.log('🟢 Mundo 3D da UMBRA carregado. Modelo GLB: pronto para receber o arquivo em ../models/umbra.glb com animações e escala 0.5');
     </script>
 </body>
 </html>
