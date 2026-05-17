@@ -769,17 +769,18 @@
         scene.add(scaleGroup2);
         
         // =========================
-        // CARREGAR MODELO GLB DA HESTIA
+        // CARREGAR MODELO GLB DA HESTIA COM ANIMAÇÃO
         // =========================
         const loader = new GLTFLoader();
         let hestiaModel = null;
+        let mixer = null;
         
         loader.load(
             '../models/hestia.glb',
             (gltf) => {
                 hestiaModel = gltf.scene;
                 hestiaModel.position.set(0, -0.25, 0);
-                hestiaModel.scale.set(100.2, 100.2, 100.2);
+                hestiaModel.scale.set(0.5, 0.5, 0.5);
                 hestiaModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
@@ -787,10 +788,26 @@
                     }
                 });
                 scene.add(hestiaModel);
+                
+                // =========================
+                // ATIVAR ANIMAÇÕES DO MODELO
+                // =========================
+                if (gltf.animations && gltf.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(hestiaModel);
+                    gltf.animations.forEach((clip) => {
+                        const action = mixer.clipAction(clip);
+                        action.play();
+                        console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                    });
+                    console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                } else {
+                    console.log('ℹ️ Modelo não possui animações');
+                }
+                
                 console.log('✅ Modelo da HESTIA carregado com sucesso');
             },
             (progress) => {
-                console.log('⏳ Carregando modelo:', (progress.loaded / progress.total * 100) + '%');
+                console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('❌ Erro ao carregar modelo GLB:', error);
@@ -812,13 +829,19 @@
         );
         
         // =========================
-        // ANIMAÇÃO
+        // ANIMAÇÃO DA CENA
         // =========================
         let time = 0;
+        let deltaTime = 0.016;
         
         function animate() {
             requestAnimationFrame(animate);
             time += 0.007;
+            
+            // Atualiza animações do modelo 3D
+            if (mixer) {
+                mixer.update(deltaTime);
+            }
             
             particles.rotation.y = time * 0.05;
             particles.rotation.x = Math.sin(time * 0.1) * 0.06;
@@ -840,6 +863,16 @@
         }
         
         animate();
+        
+        // Delta time real para animações suaves
+        let lastTime = performance.now();
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
         
         window.addEventListener('resize', onWindowResize, false);
         function onWindowResize() {
@@ -975,7 +1008,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da HESTIA carregado. Modelo GLB: pronto para receber o arquivo em ../models/hestia.glb');
+        console.log('🟢 Mundo 3D da HESTIA carregado. Modelo GLB: pronto para receber o arquivo em ../models/hestia.glb com animações');
         console.log('✨ Hestia: Guardiã dos princípios. Equilíbrio entre regras e essência.');
     </script>
 </body>
