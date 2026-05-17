@@ -630,7 +630,7 @@
         scene.add(ring2);
         
         // =========================
-        // CARREGAR MODELO GLB DA DIVA COM ANIMAÇÃO E ESCALA REDUZIDA
+        // CARREGAR MODELO GLB DA DIVA COM ANIMAÇÃO
         // =========================
         const loader = new GLTFLoader();
         let divaModel = null;
@@ -641,7 +641,7 @@
             (gltf) => {
                 divaModel = gltf.scene;
                 divaModel.position.set(0, -0.25, 0);
-                // ESCALA REDUZIDA (era 1.2, agora 0.5)
+                // ESCALA MANTIDA COMO VOCÊ AJUSTOU
                 divaModel.scale.set(100.5, 100.5, 100.5);
                 divaModel.traverse((node) => {
                     if (node.isMesh) {
@@ -666,7 +666,7 @@
                     console.log('ℹ️ Modelo não possui animações');
                 }
                 
-                console.log('✅ Modelo da DIVA carregado com sucesso (escala reduzida para 0.5)');
+                console.log('✅ Modelo da DIVA carregado com sucesso');
             },
             (progress) => {
                 console.log('⏳ Carregando modelo:', Math.round(progress.loaded / progress.total * 100) + '%');
@@ -865,7 +865,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 Mundo 3D da DIVA carregado. Modelo GLB: pronto para receber o arquivo em ../models/diva.glb com animações e escala 0.5');
+        console.log('🟢 Mundo 3D da DIVA carregado. Modelo GLB: pronto para receber o arquivo em ../models/diva.glb com animações');
     </script>
 </body>
 </html>
