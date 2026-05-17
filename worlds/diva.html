@@ -33,83 +33,119 @@
         }
         
         /* =========================
-           UI SOBREPOSTA (BOTÃO VOLTAR)
+           ICONES DO TOPO (UNIFICADOS)
         ========================= */
-        .back-button {
+        .top-icons {
             position: fixed;
-            top: 30px;
-            left: 30px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid #ff4db8;
-            color: #ff4db8;
-            padding: 12px 28px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
+            top: 20px;
+            right: 20px;
             z-index: 200;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            letter-spacing: 1px;
-            text-shadow: 0 0 5px #ff4db8;
-            box-shadow: 0 0 15px rgba(255, 77, 184, 0.4);
+            gap: 15px;
             pointer-events: auto;
         }
         
-        .back-button:hover {
-            background: rgba(255, 77, 184, 0.25);
-            transform: translateX(-8px);
-            border-color: #ff4db8;
-            box-shadow: 0 0 25px rgba(255, 77, 184, 0.7);
-        }
-        
-        .back-button::before {
-            content: "←";
-            font-size: 1.2rem;
-            transition: transform 0.3s;
-        }
-        
-        .back-button:hover::before {
-            transform: translateX(-4px);
-        }
-        
-        /* =========================
-           PAINEL DE PERFIL (SUPERIOR DIREITO - MINIMIZÁVEL)
-        ========================= */
-        .profile-container {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 200;
-            pointer-events: auto;
-            animation: slideInRight 0.6s ease;
-        }
-        
-        .profile-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #ff4db8, #ff88dd);
+        /* Estilo base para todos os ícones */
+        .top-icon {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #ff4db8;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(255, 77, 184, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ff4db8;
+            box-shadow: 0 0 10px rgba(255, 77, 184, 0.3);
+            position: relative;
         }
         
-        .profile-icon:hover {
+        .top-icon:hover {
             transform: scale(1.08);
-            box-shadow: 0 0 35px rgba(255, 77, 184, 0.8);
+            background: rgba(255, 77, 184, 0.2);
+            box-shadow: 0 0 20px rgba(255, 77, 184, 0.6);
         }
         
-        .info-panel {
+        /* Ícone de voz com efeito especial */
+        .voice-icon {
+            position: relative;
+        }
+        
+        /* Ondas mentais para o ícone de voz quando ativo */
+        .voice-icon.listening::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+            animation: voice-pulse 1.2s infinite;
+        }
+        
+        @keyframes voice-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 77, 184, 0.6);
+                width: 48px;
+                height: 48px;
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(255, 77, 184, 0);
+                width: 88px;
+                height: 88px;
+            }
+        }
+        
+        /* Indicador de pensamento para o ícone de voz */
+        .voice-thinking {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 12px;
+            height: 12px;
+            background: #ff4db8;
+            border-radius: 50%;
+            animation: think-pulse 1s infinite;
+        }
+        
+        @keyframes think-pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+        
+        /* Tooltip ao passar o mouse */
+        .top-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ff4db8;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .top-icon:hover::after {
+            opacity: 1;
+        }
+        
+        /* =========================
+           PAINEL DE PERFIL (agora popup, não mais fixo)
+        ========================= */
+        .profile-panel {
             position: absolute;
             top: 70px;
             right: 0;
@@ -121,25 +157,19 @@
             border-left: 4px solid #ff4db8;
             box-shadow: 0 0 30px rgba(255, 77, 184, 0.3);
             transition: all 0.3s ease;
-            transform-origin: top right;
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+            z-index: 199;
         }
         
-        .info-panel.collapsed {
-            display: none;
+        .profile-panel.open {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
         }
         
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .info-panel h2 {
+        .profile-panel h2 {
             font-size: 1.6rem;
             background: linear-gradient(135deg, #ff4db8, #ff88dd);
             -webkit-background-clip: text;
@@ -148,7 +178,7 @@
             margin-bottom: 5px;
         }
         
-        .info-panel .subtitle {
+        .profile-panel .subtitle {
             font-size: 0.7rem;
             color: #ff4db8;
             margin-bottom: 15px;
@@ -192,7 +222,7 @@
         }
         
         /* =========================
-           CHAT POPUP
+           CHAT POPUP (mesma posição)
         ========================= */
         .chat-container {
             position: fixed;
@@ -365,141 +395,6 @@
         }
         
         /* =========================
-           BOTÃO DE VOZ - ESTILO DIVA (NEON ROSA / MENTALISTA)
-        ========================= */
-        .voice-container {
-            position: fixed;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 250;
-            text-align: center;
-            pointer-events: auto;
-        }
-        
-        .mic-button {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff4db8, #ff88dd);
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(255, 77, 184, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .mic-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 35px rgba(255, 77, 184, 0.8);
-        }
-        
-        /* Ondas mentais (efeito de radar) */
-        .mental-wave {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: transparent;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .voice-container.listening .mental-wave {
-            animation: mental-pulse 1.2s infinite;
-        }
-        
-        @keyframes mental-pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(255, 77, 184, 0.6);
-                width: 80px;
-                height: 80px;
-            }
-            100% {
-                box-shadow: 0 0 0 30px rgba(255, 77, 184, 0);
-                width: 140px;
-                height: 140px;
-            }
-        }
-        
-        /* Barras de onda cerebral */
-        .brain-waves {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
-            margin-top: 15px;
-        }
-        
-        .brain-waves span {
-            width: 4px;
-            height: 20px;
-            background: #ff4db8;
-            border-radius: 2px;
-            animation: brain-wave 1s ease-in-out infinite;
-        }
-        
-        .brain-waves span:nth-child(1) { animation-delay: 0s; }
-        .brain-waves span:nth-child(2) { animation-delay: 0.1s; }
-        .brain-waves span:nth-child(3) { animation-delay: 0.2s; }
-        .brain-waves span:nth-child(4) { animation-delay: 0.3s; }
-        .brain-waves span:nth-child(5) { animation-delay: 0.4s; }
-        
-        @keyframes brain-wave {
-            0%, 100% { height: 10px; opacity: 0.5; }
-            50% { height: 30px; opacity: 1; }
-        }
-        
-        .voice-container.listening .brain-waves span {
-            background: #ff88dd;
-            animation: brain-wave-active 0.6s ease-in-out infinite;
-        }
-        
-        @keyframes brain-wave-active {
-            0%, 100% { height: 15px; opacity: 0.7; }
-            50% { height: 35px; opacity: 1; }
-        }
-        
-        /* Texto de status */
-        .voice-status {
-            margin-top: 10px;
-            font-size: 0.7rem;
-            color: #ff4db8;
-            text-shadow: 0 0 5px #ff4db8;
-            letter-spacing: 1px;
-            font-weight: 300;
-        }
-        
-        .voice-container.listening .voice-status {
-            animation: text-pulse 0.8s infinite;
-        }
-        
-        @keyframes text-pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; text-shadow: 0 0 10px #ff4db8; }
-        }
-        
-        /* Partículas flutuantes de pensamento */
-        .thought-particle {
-            position: fixed;
-            width: 4px;
-            height: 4px;
-            background: #ff4db8;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 300;
-            opacity: 0;
-        }
-        
-        /* =========================
            PORTAL DE ENTRADA
         ========================= */
         .portal-overlay {
@@ -531,15 +426,15 @@
             border-radius: 10px;
         }
         
+        /* =========================
+           RESPONSIVO
+        ========================= */
         @media (max-width: 768px) {
-            .profile-container { top: 15px; right: 15px; }
-            .profile-icon { width: 48px; height: 48px; font-size: 1.6rem; }
-            .info-panel { width: 260px; padding: 15px; top: 60px; }
+            .top-icons { top: 15px; right: 15px; gap: 10px; }
+            .top-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+            .profile-panel { width: 260px; padding: 15px; top: 65px; }
             .chat-container { width: calc(100% - 30px); right: 15px; bottom: 15px; }
-            .back-button { top: 15px; left: 15px; padding: 8px 18px; font-size: 0.8rem; }
-            .info-panel h2 { font-size: 1.4rem; }
-            .mic-button { width: 60px; height: 60px; font-size: 2rem; }
-            .voice-container { bottom: 100px; }
+            .profile-panel h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -547,40 +442,48 @@
 
     <div id="canvas-container"></div>
     
-    <button class="back-button" id="backToGrimoireBtn">VOLTAR AO GRIMÓRIO</button>
-    
-    <!-- PERFIL DA DIVA -->
-    <div class="profile-container">
-        <div class="profile-icon" id="profileIcon">
+    <!-- =========================
+         ICONES DO TOPO (UNIFICADOS)
+    ========================= -->
+    <div class="top-icons">
+        <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">
+            ←
+        </div>
+        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (Voz)">
+            🧠
+        </div>
+        <div class="top-icon" id="profileButton" data-tooltip="Perfil da Diva">
             🤖
         </div>
-        <div class="info-panel" id="infoPanel">
-            <h2>DIVA</h2>
-            <div class="subtitle">✦ AUTOMAÇÃO ARCANA • ASSISTENTE MENTALISTA ✦</div>
-            
-            <div class="skill-bar">
-                <div class="skill-label"><span>🤖 Automação</span><span>96%</span></div>
-                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%"></div></div>
-            </div>
-            <div class="skill-bar">
-                <div class="skill-label"><span>🧠 Leitura Contextual</span><span>94%</span></div>
-                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%"></div></div>
-            </div>
-            <div class="skill-bar">
-                <div class="skill-label"><span>💬 Comunicação</span><span>98%</span></div>
-                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%"></div></div>
-            </div>
-            <div class="skill-bar">
-                <div class="skill-label"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
-                <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 91%"></div></div>
-            </div>
-            
-            <div class="personality-text">
-                💎 "Sua assistente mentalista. Entre o código e a alma."<br>
-                Diva combina automação precisa com intuição afiada. Cyberpunk de alma poética.
-                <br><br>
-                🎤 <strong>Comandos de voz:</strong> Clique no microfone e fale naturalmente!
-            </div>
+    </div>
+    
+    <!-- PAINEL DE PERFIL (POPUP) -->
+    <div class="profile-panel" id="profilePanel">
+        <h2>DIVA</h2>
+        <div class="subtitle">✦ AUTOMAÇÃO ARCANA • ASSISTENTE MENTALISTA ✦</div>
+        
+        <div class="skill-bar">
+            <div class="skill-label"><span>🤖 Automação</span><span>96%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 96%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>🧠 Leitura Contextual</span><span>94%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 94%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>💬 Comunicação</span><span>98%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%"></div></div>
+        </div>
+        <div class="skill-bar">
+            <div class="skill-label"><span>🌀 Sintonia Mentalista</span><span>91%</span></div>
+            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 91%"></div></div>
+        </div>
+        
+        <div class="personality-text">
+            💎 "Sua assistente mentalista. Entre o código e a alma."<br>
+            Diva combina automação precisa com intuição afiada. Cyberpunk de alma poética.
+            <br><br>
+            🎤 <strong>Comandos de voz:</strong> Clique no ícone 🧠 e fale naturalmente!
         </div>
     </div>
     
@@ -601,7 +504,7 @@
                 <div class="message asura">
                     <div class="message-avatar">🜁</div>
                     <div class="message-content">
-                        ✨ Olá! Sou Diva. Estou no meu reino 3D. Fale comigo pelo microfone ou digite sua mensagem. Como posso ajudar?
+                        ✨ Olá! Sou Diva. Estou no meu reino 3D. Use o ícone 🧠 no topo para falar comigo ou digite sua mensagem. Como posso ajudar?
                         <div class="message-time">Agora</div>
                     </div>
                 </div>
@@ -611,18 +514,6 @@
                 <button id="sendChatBtn">➤</button>
             </div>
         </div>
-    </div>
-    
-    <!-- BOTÃO DE VOZ - ESTILO DIVA MENTALISTA -->
-    <div class="voice-container" id="voiceContainer">
-        <div class="mental-wave"></div>
-        <button class="mic-button" id="micButton">
-            🧠
-        </button>
-        <div class="brain-waves">
-            <span></span><span></span><span></span><span></span><span></span>
-        </div>
-        <div class="voice-status" id="voiceStatus">🎤 clique para falar</div>
     </div>
     
     <div class="portal-overlay" id="portalOverlay"></div>
@@ -766,7 +657,7 @@
         let mixer = null;
         
         loader.load(
-            '../models/diva2.glb',
+            '../models/diva.glb',
             (gltf) => {
                 divaModel = gltf.scene;
                 divaModel.position.set(0, -0.25, 0);
@@ -843,32 +734,39 @@
         });
         
         // =========================
-        // BOTÃO VOLTAR
+        // UI INTERACTIONS
         // =========================
-        let isTransitioning = false;
         
-        function goBackToGrimoire() {
-            if (isTransitioning) return;
-            isTransitioning = true;
+        // Botão voltar
+        const backButton = document.getElementById('backButton');
+        backButton.addEventListener('click', () => {
             const portalFlash = document.createElement('div');
             portalFlash.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #ff4db8, transparent 70%); opacity: 0; pointer-events: none; z-index: 10000; transition: opacity 0.6s ease;`;
             document.body.appendChild(portalFlash);
             setTimeout(() => { portalFlash.style.opacity = '0.9'; }, 10);
             setTimeout(() => { window.location.href = '../index.html'; }, 700);
-        }
+        });
         
-        document.getElementById('backToGrimoireBtn').addEventListener('click', goBackToGrimoire);
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') goBackToGrimoire(); });
+        // Botão perfil (toggle)
+        const profileButton = document.getElementById('profileButton');
+        const profilePanel = document.getElementById('profilePanel');
+        let isProfileOpen = false;
         
-        // =========================
-        // PAINEL DE PERFIL MINIMIZÁVEL
-        // =========================
-        const profileIcon = document.getElementById('profileIcon');
-        const infoPanel = document.getElementById('infoPanel');
-        let isPanelOpen = true;
-        profileIcon.addEventListener('click', () => {
-            isPanelOpen = !isPanelOpen;
-            infoPanel.classList.toggle('collapsed', !isPanelOpen);
+        profileButton.addEventListener('click', () => {
+            isProfileOpen = !isProfileOpen;
+            if (isProfileOpen) {
+                profilePanel.classList.add('open');
+            } else {
+                profilePanel.classList.remove('open');
+            }
+        });
+        
+        // Fechar perfil ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (isProfileOpen && !profilePanel.contains(e.target) && e.target !== profileButton) {
+                profilePanel.classList.remove('open');
+                isProfileOpen = false;
+            }
         });
         
         // =========================
@@ -881,9 +779,7 @@
         const chatHeader = document.getElementById('chatHeader');
         const chatBody = document.getElementById('chatBody');
         const chatToggle = document.getElementById('chatToggle');
-        const micButton = document.getElementById('micButton');
-        const voiceContainer = document.getElementById('voiceContainer');
-        const voiceStatus = document.getElementById('voiceStatus');
+        const voiceButton = document.getElementById('voiceButton');
         
         let isChatOpen = true;
         let isListening = false;
@@ -896,33 +792,13 @@
             chatToggle.textContent = isChatOpen ? '▼' : '▲';
         });
         
-        // Função para criar partículas de pensamento
-        function createThoughtParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'thought-particle';
-            particle.style.left = Math.random() * window.innerWidth + 'px';
-            particle.style.top = Math.random() * window.innerHeight + 'px';
-            particle.style.animation = `float-particle ${Math.random() * 2 + 1}s ease-out forwards`;
-            document.body.appendChild(particle);
-            setTimeout(() => particle.remove(), 2000);
-        }
-        
-        // Adicionar estilo da animação de partículas
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes float-particle {
-                0% { opacity: 0.8; transform: scale(1); }
-                100% { opacity: 0; transform: scale(2) translateY(-50px); }
-            }
-        `;
-        document.head.appendChild(style);
-        
         // Inicializar reconhecimento de voz
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                console.warn('Reconhecimento de voz não suportado neste navegador');
-                voiceStatus.textContent = '🎤 voz não suportada';
+                console.warn('Reconhecimento de voz não suportado');
+                voiceButton.style.opacity = '0.5';
+                voiceButton.style.cursor = 'not-allowed';
                 return false;
             }
             
@@ -930,18 +806,14 @@
             recognition.lang = 'pt-BR';
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
             
             recognition.onstart = () => {
                 isListening = true;
-                voiceContainer.classList.add('listening');
-                voiceStatus.innerHTML = '🧠 ouvindo sua mente...';
-                
-                // Criar partículas de pensamento enquanto ouve
-                const particleInterval = setInterval(() => {
-                    if (isListening) createThoughtParticle();
-                    else clearInterval(particleInterval);
-                }, 300);
+                voiceButton.classList.add('listening');
+                // Adicionar indicador visual
+                const thinkingDot = document.createElement('span');
+                thinkingDot.className = 'voice-thinking';
+                voiceButton.appendChild(thinkingDot);
             };
             
             recognition.onresult = (event) => {
@@ -952,19 +824,14 @@
             };
             
             recognition.onerror = (event) => {
-                console.error('Erro no reconhecimento:', event.error);
-                voiceStatus.innerHTML = '🎤 erro, tente novamente';
-                setTimeout(() => {
-                    if (!isListening) voiceStatus.innerHTML = '🎤 clique para falar';
-                }, 2000);
+                console.error('Erro:', event.error);
             };
             
             recognition.onend = () => {
                 isListening = false;
-                voiceContainer.classList.remove('listening');
-                if (voiceStatus.innerHTML.includes('ouvindo')) {
-                    voiceStatus.innerHTML = '🎤 clique para falar';
-                }
+                voiceButton.classList.remove('listening');
+                const thinkingDot = voiceButton.querySelector('.voice-thinking');
+                if (thinkingDot) thinkingDot.remove();
             };
             
             return true;
@@ -974,7 +841,6 @@
         function speakResponse(text) {
             if (!window.speechSynthesis) return;
             
-            // Cancela qualquer fala em andamento
             window.speechSynthesis.cancel();
             
             const utterance = new SpeechSynthesisUtterance(text);
@@ -982,15 +848,10 @@
             utterance.rate = 0.9;
             utterance.pitch = 1.1;
             
-            // Tentar usar voz feminina (mais adequada para DIVA)
-            const voices = window.speechSynthesis.getVoices();
-            const femaleVoice = voices.find(v => v.lang === 'pt-BR' && v.name.includes('Google') || v.name.includes('Samantha'));
-            if (femaleVoice) utterance.voice = femaleVoice;
-            
             window.speechSynthesis.speak(utterance);
         }
         
-        // Função de resposta da DIVA (simulada - aqui você conecta com sua LLM)
+        // Função de resposta da DIVA (simulada - conecte com sua LLM)
         function getDivaResponse(message) {
             const lower = message.toLowerCase();
             
@@ -1032,7 +893,6 @@
                 chatMessages.removeChild(chatMessages.firstChild);
             }
             
-            // Se não for mensagem do usuário, fala a resposta
             if (!isUser) {
                 speakResponse(text);
             }
@@ -1045,7 +905,6 @@
             addMessage(message, true);
             chatInput.value = '';
             
-            // Mostrar indicador de "pensando" (opcional)
             const thinkingDiv = document.createElement('div');
             thinkingDiv.className = 'message asura';
             thinkingDiv.innerHTML = `<div class="message-avatar">🜁</div><div class="message-content"><em>🧠 processando...</em></div>`;
@@ -1053,7 +912,6 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
             setTimeout(() => {
-                // Remover indicador de pensamento
                 if (chatMessages.lastChild === thinkingDiv) {
                     chatMessages.removeChild(thinkingDiv);
                 }
@@ -1063,35 +921,25 @@
             }, 800);
         }
         
-        // Eventos do chat
         sendBtn.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
         
-        // Eventos do microfone
+        // Evento do botão de voz
         if (initSpeechRecognition()) {
-            micButton.addEventListener('click', () => {
+            voiceButton.addEventListener('click', () => {
                 if (isListening) {
                     recognition.stop();
                 } else {
                     try {
                         recognition.start();
                     } catch (e) {
-                        console.log('Reconhecimento já estava ativo');
+                        console.log('Recognition already started');
                     }
                 }
             });
-        } else {
-            micButton.style.opacity = '0.5';
-            micButton.style.cursor = 'not-allowed';
-            micButton.title = 'Reconhecimento de voz não suportado neste navegador';
         }
         
-        // Carregar vozes disponíveis
-        window.speechSynthesis.getVoices();
-        
-        // =========================
-        // PORTAL DE ENTRADA
-        // =========================
+        // Portal de entrada
         const portalOverlay = document.getElementById('portalOverlay');
         setTimeout(() => {
             portalOverlay.style.opacity = '0.6';
@@ -1103,7 +951,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 DIVA com sistema de voz (Jarvis) carregado! 🎤');
+        console.log('🟢 DIVA com sistema de voz (Jarvis) carregado! 🧠');
     </script>
 </body>
 </html>
