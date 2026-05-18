@@ -14,7 +14,7 @@
     <style>
         :root {
             --asura-color: #ff4db8;
-            --asura-glow: rgba(255, 77, 184, 0.6);
+            --asura-glow: rgba(255, 77, 184, 0.8);
             --asura-gradient: linear-gradient(135deg, #ff4db8, #ff88dd);
         }
         body { background: radial-gradient(circle at 30% 20%, #0a0512, #030108); }
@@ -82,7 +82,7 @@
             modelScale: 0.5,
             modelPositionY: -0.25,
             bgColor: 0x050510,
-            cameraPosition: { x: 3, y: 2, z: 4 },
+            cameraPosition: { x: 3, y: 2.2, z: 4.5 },
             welcomeMessage: '✨ Olá! Sou Diva. Clique no ícone 🧠 para ativar o modo Jarvis (escuta contínua) ou digite sua mensagem. Como posso ajudar?',
             skills: [
                 { name: '🤖 Automação', value: 96 },
@@ -127,20 +127,40 @@
         controls.target.set(0, 0.8, 0);
         
         // =========================
-        // LUZES
+        // LUZES CORRIGIDAS (MAIS BRILHO E TOM ROSADO)
         // =========================
-        const ambientLight = new THREE.AmbientLight(0x222240, 0.6);
+        
+        // Luz ambiente mais forte e rosada
+        const ambientLight = new THREE.AmbientLight(0x332233, 0.85);
         scene.add(ambientLight);
-        const mainLight = new THREE.DirectionalLight(0xffaaff, 1.2);
+        
+        // Luz principal direcional mais intensa
+        const mainLight = new THREE.DirectionalLight(0xffaaff, 1.5);
         mainLight.position.set(3, 5, 2);
         mainLight.castShadow = true;
         scene.add(mainLight);
-        const fillLight = new THREE.PointLight(config.color, 0.8);
+        
+        // Luz de preenchimento rosa neon (mais forte)
+        const fillLight = new THREE.PointLight(0xff4db8, 1.2);
         fillLight.position.set(1, 2, 2);
         scene.add(fillLight);
+        
+        // Segunda luz rosa vindo de baixo (para iluminar o rosto)
+        const bottomLight = new THREE.PointLight(0xff66cc, 0.7);
+        bottomLight.position.set(0, -1, 0);
+        scene.add(bottomLight);
+        
+        // Luz frontal suave (para os olhos)
+        const frontLight = new THREE.PointLight(0xffaacc, 0.5);
+        frontLight.position.set(0, 1, 2);
+        scene.add(frontLight);
+        
+        // Luz de fundo azul (contraste)
         const backLight = new THREE.PointLight(0x44aaff, 0.5);
         backLight.position.set(-2, 1.5, -3);
         scene.add(backLight);
+        
+        // Luz lateral quente
         const warmLight = new THREE.PointLight(0xffaa66, 0.4);
         warmLight.position.set(2, 1, 1.5);
         scene.add(warmLight);
@@ -165,16 +185,30 @@
         
         const circleGlow = new THREE.Mesh(
             new THREE.CircleGeometry(1.2, 32),
-            new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.4, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
+            new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, transparent: true, opacity: 0.5, side: THREE.DoubleSide })
         );
         circleGlow.rotation.x = -Math.PI / 2;
         circleGlow.position.y = -0.45;
         scene.add(circleGlow);
         
         // =========================
+        // GLOW/HALO AO REDOR DA DIVA
+        // =========================
+        const glowGeometry = new THREE.SphereGeometry(1.1, 16, 16);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: config.color,
+            transparent: true,
+            opacity: 0.1,
+            side: THREE.BackSide
+        });
+        const glowHalo = new THREE.Mesh(glowGeometry, glowMaterial);
+        glowHalo.position.set(0, 0.5, 0);
+        scene.add(glowHalo);
+        
+        // =========================
         // PARTÍCULAS ROSAS
         // =========================
-        const particleCount = 1000;
+        const particleCount = 1200;
         const particleGeometry = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount; i++) {
@@ -183,7 +217,7 @@
             particlePositions[i*3+2] = (Math.random() - 0.5) * 10;
         }
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        const particleMaterial = new THREE.PointsMaterial({ color: config.color, size: 0.04, transparent: true, opacity: 0.5 });
+        const particleMaterial = new THREE.PointsMaterial({ color: config.color, size: 0.045, transparent: true, opacity: 0.55 });
         const particles = new THREE.Points(particleGeometry, particleMaterial);
         scene.add(particles);
         
@@ -191,7 +225,7 @@
         // ANÉIS FLUTUANTES
         // =========================
         const ringGeometry1 = new THREE.TorusGeometry(1.0, 0.03, 64, 200);
-        const ringMaterial1 = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 });
+        const ringMaterial1 = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.6 });
         const ring1 = new THREE.Mesh(ringGeometry1, ringMaterial1);
         ring1.position.y = 0.2;
         ring1.rotation.x = Math.PI / 2;
@@ -204,7 +238,7 @@
         scene.add(ring2);
         
         // =========================
-        // MODELO 3D
+        // MODELO 3D COM AJUSTE NOS OLHOS
         // =========================
         const loader = new GLTFLoader();
         let model = null;
@@ -214,21 +248,58 @@
             model = gltf.scene;
             model.position.set(0, config.modelPositionY, 0);
             model.scale.set(config.modelScale, config.modelScale, config.modelScale);
-            model.traverse((node) => { if (node.isMesh) { node.castShadow = true; } });
+            
+            // PERCORRE O MODELO PARA AJUSTAR MATERIAIS
+            model.traverse((node) => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    
+                    // Verifica se é um olho (pelo nome do material ou do objeto)
+                    const isEye = node.name && (
+                        node.name.toLowerCase().includes('eye') || 
+                        node.name.toLowerCase().includes('olho') ||
+                        node.name.toLowerCase().includes('face')
+                    );
+                    
+                    if (node.material) {
+                        // Ajusta materiais para ficarem mais brilhantes
+                        node.material.roughness = 0.3;
+                        node.material.metalness = 0.6;
+                        
+                        // Se for olho, adiciona emissão própria (brilho)
+                        if (isEye) {
+                            node.material.emissive = new THREE.Color(0xff66cc);
+                            node.material.emissiveIntensity = 0.6;
+                            node.material.roughness = 0.2;
+                            console.log('✨ Olhos da DIVA com brilho ativado');
+                        }
+                    }
+                }
+            });
+            
             scene.add(model);
+            
+            // ANIMAÇÕES DO MODELO
             if (gltf.animations && gltf.animations.length > 0) {
                 mixer = new THREE.AnimationMixer(model);
-                gltf.animations.forEach(clip => mixer.clipAction(clip).play());
+                gltf.animations.forEach(clip => {
+                    const action = mixer.clipAction(clip);
+                    action.play();
+                    console.log(`🎬 Animação "${clip.name}" reproduzindo`);
+                });
             }
+            
+            console.log('✅ Modelo da DIVA carregado com iluminação corrigida!');
+            
         }, undefined, (error) => {
-            console.error('Erro:', error);
-            const fallback = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.6 }));
+            console.error('Erro ao carregar modelo:', error);
+            const fallback = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.7 }));
             fallback.position.set(0, 0.2, 0);
             scene.add(fallback);
         });
         
         // =========================
-        // ANIMAÇÃO
+        // ANIMAÇÃO DO HALO E PARTÍCULAS
         // =========================
         let time = 0;
         let deltaTime = 0.016;
@@ -245,13 +316,30 @@
         function animate() {
             requestAnimationFrame(animate);
             time += 0.008;
+            
+            // Atualiza animações do modelo 3D
             if (mixer) mixer.update(deltaTime);
+            
+            // Anima partículas
             particles.rotation.y = time * 0.1;
             particles.rotation.x = Math.sin(time * 0.2) * 0.1;
+            
+            // Anima anéis
             ring1.rotation.z = time * 0.3;
             ring2.rotation.z = -time * 0.2;
-            fillLight.intensity = 0.6 + Math.sin(time * 4) * 0.2;
-            circleGlow.material.emissiveIntensity = 0.25 + Math.sin(time * 2.5) * 0.15;
+            
+            // Luz pulsante
+            const pulse = 0.5 + Math.sin(time * 3) * 0.2;
+            fillLight.intensity = 0.9 + Math.sin(time * 4) * 0.25;
+            circleGlow.material.emissiveIntensity = 0.3 + Math.sin(time * 2.5) * 0.2;
+            bottomLight.intensity = 0.5 + Math.sin(time * 3) * 0.2;
+            frontLight.intensity = 0.4 + Math.sin(time * 2) * 0.15;
+            
+            // Anima o halo (pulsação suave)
+            const scale = 1 + Math.sin(time * 2) * 0.03;
+            glowHalo.scale.set(scale, scale, scale);
+            glowMaterial.opacity = 0.08 + Math.sin(time * 1.5) * 0.04;
+            
             controls.update();
             renderer.render(scene, camera);
         }
@@ -283,7 +371,7 @@
         portalOverlay.style.setProperty('--asura-color', config.color);
         setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
         
-        console.log('🟢 DIVA carregada com todos os efeitos neon e Modo Jarvis!');
+        console.log('🟢 DIVA carregada com ILUMINAÇÃO CORRIGIDA (olhos brilhantes, glow e neon rosa)!');
     </script>
 </body>
 </html>
