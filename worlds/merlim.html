@@ -14,7 +14,7 @@
     <style>
         :root {
             --asura-color: #00d9ff;
-            --asura-glow: rgba(0, 217, 255, 0.5);
+            --asura-glow: rgba(0, 217, 255, 0.6);
             --asura-gradient: linear-gradient(135deg, #00d9ff, #00aaff);
         }
         body { background: radial-gradient(circle at 30% 20%, #050a18, #030108); }
@@ -25,7 +25,13 @@
     
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
-        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (Voz)">💻</div>
+        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
+            <span class="brain-icon">💻</span>
+            <span class="mic-icon">🎤</span>
+            <div class="mental-wave"></div>
+            <div class="brain-waves left"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="brain-waves right"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
         <div class="top-icon" id="profileButton" data-tooltip="Perfil do Merlim">🔧</div>
     </div>
     
@@ -60,7 +66,16 @@
     </script>
 
     <script type="module">
-        import { initWorld } from '../shared/js/asura-base.js';
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { initUI } from '../shared/js/ui.js';
+        import { ChatSystem } from '../shared/js/chat.js';
+        import { VoiceAssistant } from '../shared/js/voice-assistant.js';
+        
+        // =========================
+        // CONFIGURAÇÃO ESPECÍFICA DO MERLIM
+        // =========================
         
         const config = {
             name: 'MERLIM',
@@ -72,25 +87,399 @@
             modelPositionY: -0.25,
             bgColor: 0x050a18,
             cameraPosition: { x: 3.2, y: 2.2, z: 4.2 },
-            welcomeMessage: '✨ Bem-vindo ao meu reino tecnológico. Sou Merlim, a engenheira mágica. Código, sistemas e arquitetura são meus encantamentos. Como posso auxiliar na sua construção hoje?',
+            welcomeMessage: '✨ Bem-vindo ao meu reino tecnológico. Sou Merlim, a engenheira mágica. Código, sistemas e arquitetura são meus encantamentos.',
             skills: [
                 { name: '🔧 Arquitetura de Sistemas', value: 97 },
                 { name: '⚡ Programação & Código', value: 96 },
                 { name: '🛠️ Mecânica do Sistema', value: 94 },
                 { name: '✨ Magia da Engenharia', value: 98 }
             ],
-            personalityText: '🔧 "Código é magia, engenharia é arte. Eu construo mundos."<br>Merlim é a arquiteta do sistema, une tecnologia e misticismo para criar soluções engenhosas.',
+            personalityText: '🔧 "Código é magia, engenharia é arte. Eu construo mundos."<br>Merlim é a arquiteta do sistema, une tecnologia e misticismo.',
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
                 if (lower.includes('olá') || lower.includes('oi')) return "✨ Olá! Sou Merlim, a engenheira mágica. Código é minha poesia. Como posso te ajudar a construir algo incrível?";
                 if (lower.includes('código') || lower.includes('programação')) return "🔧 Código é magia pura! Posso ajudar com arquitetura de sistemas, debug, otimização. Qual linguagem ou projeto você está trabalhando?";
-                if (lower.includes('bug') || lower.includes('erro')) return "🐛 Um bug? Deixe-me analisar... Como engenheira mágica, consigo rastrear e resolver problemas com eficiência. Me conte mais detalhes.";
+                if (lower.includes('arquitetura') || lower.includes('sistema')) return "🏗️ Arquitetura de sistemas é minha especialidade. Posso ajudar a estruturar projetos robustos e escaláveis.";
+                if (lower.includes('bug') || lower.includes('erro')) return "🐛 Um bug? Deixe-me analisar... Como engenheira mágica, consigo rastrear e resolver problemas com eficiência.";
                 if (lower.includes('obrigado')) return "💙 Por nada! Foi um prazer mágico te ajudar. Estou sempre aqui para construir e reparar o que for necessário.";
                 return "🔮 Como arquiteta deste reino tecnológico, vejo padrões e soluções onde outros veem caos. Me conte seu desafio, e juntos vamos construir a resposta.";
             }
         };
         
-        initWorld(config);
+        // =========================
+        // SETUP 3D COMPLETO COM EFEITOS
+        // =========================
+        
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(config.bgColor);
+        scene.fog = new THREE.FogExp2(config.bgColor, 0.01);
+        
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(config.cameraPosition.x, config.cameraPosition.y, config.cameraPosition.z);
+        camera.lookAt(0, 0.8, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+        
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = false;
+        controls.enableZoom = true;
+        controls.enablePan = true;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+        controls.rotateSpeed = 1.0;
+        controls.target.set(0, 0.8, 0);
+        
+        // =========================
+        // LUZES
+        // =========================
+        const ambientLight = new THREE.AmbientLight(0x112244, 0.6);
+        scene.add(ambientLight);
+        
+        const mainLight = new THREE.DirectionalLight(0xaaddff, 1.1);
+        mainLight.position.set(3, 5, 2);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+        
+        const fillLight = new THREE.PointLight(config.color, 0.8);
+        fillLight.position.set(1, 2, 2);
+        scene.add(fillLight);
+        
+        const backLight = new THREE.PointLight(0x3388ff, 0.5);
+        backLight.position.set(-2, 1.5, -3);
+        scene.add(backLight);
+        
+        const techLight = new THREE.PointLight(0x66eeff, 0.4);
+        techLight.position.set(2, 1.5, 1.5);
+        scene.add(techLight);
+        
+        // =========================
+        // CHÃO TECNOLÓGICO COM GRADE DIGITAL
+        // =========================
+        const gridHelper = new THREE.GridHelper(14, 24, config.color, 0x2266aa);
+        gridHelper.position.y = -0.5;
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.45;
+        scene.add(gridHelper);
+        
+        const groundPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(9, 9),
+            new THREE.MeshStandardMaterial({ color: 0x0a1030, roughness: 0.4, metalness: 0.5, transparent: true, opacity: 0.5 })
+        );
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = -0.5;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+        
+        // =========================
+        // CÍRCULO DE ENERGIA TECNOLÓGICA (HOLOGRAMA)
+        // =========================
+        const circleGlow = new THREE.Mesh(
+            new THREE.CircleGeometry(1.3, 32),
+            new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, transparent: true, opacity: 0.6, side: THREE.DoubleSide })
+        );
+        circleGlow.rotation.x = -Math.PI / 2;
+        circleGlow.position.y = -0.45;
+        scene.add(circleGlow);
+        
+        // Anel holográfico maior
+        const hologramRingGeometry = new THREE.TorusGeometry(1.5, 0.03, 64, 200);
+        const hologramMaterial = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.4, transparent: true, opacity: 0.7 });
+        const hologramRing = new THREE.Mesh(hologramRingGeometry, hologramMaterial);
+        hologramRing.position.y = 0.1;
+        hologramRing.rotation.x = Math.PI / 2;
+        scene.add(hologramRing);
+        
+        // =========================
+        // TORRES TECNOLÓGICAS
+        // =========================
+        const towerMaterial = new THREE.MeshStandardMaterial({ color: 0x2288cc, emissive: 0x1155aa, emissiveIntensity: 0.2, metalness: 0.8, roughness: 0.2 });
+        
+        function createTechTower(x, z, height = 1.3) {
+            const group = new THREE.Group();
+            const tower = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, height, 8), towerMaterial);
+            tower.position.y = 0;
+            group.add(tower);
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.025, 16, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.3 }));
+            ring.position.y = height / 2;
+            ring.rotation.x = Math.PI / 2;
+            group.add(ring);
+            const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.02, 16, 32), new THREE.MeshStandardMaterial({ color: 0x66eeff, emissive: config.color, emissiveIntensity: 0.3 }));
+            ring2.position.y = height / 3;
+            ring2.rotation.x = Math.PI / 2;
+            group.add(ring2);
+            group.position.set(x, -0.4, z);
+            return group;
+        }
+        
+        const towerPositions = [
+            [-2.8, -2.5], [2.8, -2.5], [-2.8, 2.5], [2.8, 2.5],
+            [-2, -3.2], [2, -3.2], [-3.2, -1.8], [3.2, -1.8],
+            [-3.2, 1.8], [3.2, 1.8], [-2, 3.2], [2, 3.2]
+        ];
+        
+        towerPositions.forEach(pos => {
+            const tower = createTechTower(pos[0], pos[1], 1.0 + Math.random() * 0.4);
+            scene.add(tower);
+        });
+        
+        // =========================
+        // PARTÍCULAS DIGITAIS (CÓDIGO FLUTUANTE)
+        // =========================
+        const particleCount = 1800;
+        const particleGeometry = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i*3] = (Math.random() - 0.5) * 15;
+            particlePositions[i*3+1] = Math.random() * 5;
+            particlePositions[i*3+2] = (Math.random() - 0.5) * 13;
+        }
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        
+        const particleColors = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+            const colorType = Math.random();
+            if (colorType < 0.5) {
+                particleColors[i*3] = 0.0;
+                particleColors[i*3+1] = 0.7 + Math.random() * 0.3;
+                particleColors[i*3+2] = 0.8 + Math.random() * 0.2;
+            } else if (colorType < 0.75) {
+                particleColors[i*3] = 0.8 + Math.random() * 0.2;
+                particleColors[i*3+1] = 0.8 + Math.random() * 0.2;
+                particleColors[i*3+2] = 1.0;
+            } else {
+                particleColors[i*3] = 0.5 + Math.random() * 0.5;
+                particleColors[i*3+1] = 0.5 + Math.random() * 0.5;
+                particleColors[i*3+2] = 0.8 + Math.random() * 0.2;
+            }
+        }
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.55 });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+        
+        // =========================
+        // ANÉIS DE ENERGIA MÚLTIPLOS
+        // =========================
+        const ringGeometry1 = new THREE.TorusGeometry(1.2, 0.035, 64, 200);
+        const ringMaterial1 = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 });
+        const ring1 = new THREE.Mesh(ringGeometry1, ringMaterial1);
+        ring1.position.y = 0.15;
+        ring1.rotation.x = Math.PI / 2;
+        scene.add(ring1);
+        
+        const ringGeometry2 = new THREE.TorusGeometry(1.5, 0.03, 64, 200);
+        const ringMaterial2 = new THREE.MeshStandardMaterial({ color: 0x66eeff, emissive: config.color, emissiveIntensity: 0.4 });
+        const ring2 = new THREE.Mesh(ringGeometry2, ringMaterial2);
+        ring2.position.y = 0.05;
+        ring2.rotation.x = Math.PI / 2 + 0.3;
+        scene.add(ring2);
+        
+        const ringGeometry3 = new THREE.TorusGeometry(0.9, 0.025, 64, 200);
+        const ring3 = new THREE.Mesh(ringGeometry3, ringMaterial1);
+        ring3.position.y = 0.25;
+        ring3.rotation.x = Math.PI / 2 - 0.2;
+        scene.add(ring3);
+        
+        // =========================
+        // SÍMBOLOS DE CÓDIGO FLUTUANTES (TEXTOS)
+        // =========================
+        const codeSymbols = ['{', '}', '</>', '[]', '()', ';', '#', '~', 'const', 'let', 'function', '=>', 'class'];
+        const symbols = [];
+        
+        for (let i = 0; i < 40; i++) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 128;
+            context.fillStyle = config.color;
+            context.font = 'Bold 36px monospace';
+            context.textAlign = 'center';
+            context.fillText(codeSymbols[Math.floor(Math.random() * codeSymbols.length)], canvas.width/2, canvas.height/2);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.3 });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(0.4, 0.2, 1);
+            sprite.position.set(
+                (Math.random() - 0.5) * 6,
+                Math.random() * 3,
+                (Math.random() - 0.5) * 6
+            );
+            scene.add(sprite);
+            symbols.push(sprite);
+        }
+        
+        // =========================
+        // ENGRENAGENS FLUTUANTES
+        // =========================
+        const gearMaterial = new THREE.MeshStandardMaterial({ color: 0x44aaff, metalness: 0.9, roughness: 0.2 });
+        
+        function createGear(x, z, yOffset, size = 0.15) {
+            const gear = new THREE.Mesh(new THREE.CylinderGeometry(size, size, 0.05, 12), gearMaterial);
+            gear.position.set(x, yOffset, z);
+            return gear;
+        }
+        
+        const gearPositions = [
+            [-1.2, 0.4, 1.5], [1.2, 0.4, 1.5], [-1.5, 0.6, -1.2], [1.5, 0.6, -1.2],
+            [-0.8, 0.3, 2.2], [0.8, 0.3, 2.2], [2.2, 0.5, -0.8], [-2.2, 0.5, 0.8]
+        ];
+        
+        gearPositions.forEach(pos => {
+            const gear = createGear(pos[0], pos[2], pos[1], 0.12 + Math.random() * 0.08);
+            scene.add(gear);
+        });
+        
+        // =========================
+        // CARREGAR MODELO GLB DO MERLIM
+        // =========================
+        const loader = new GLTFLoader();
+        let merlimModel = null;
+        let mixer = null;
+        
+        loader.load(config.modelPath, (gltf) => {
+            merlimModel = gltf.scene;
+            merlimModel.position.set(0, config.modelPositionY, 0);
+            merlimModel.scale.set(config.modelScale, config.modelScale, config.modelScale);
+            merlimModel.traverse((node) => {
+                if (node.isMesh) {
+                    node.castShadow = true;
+                    node.receiveShadow = false;
+                }
+            });
+            scene.add(merlimModel);
+            
+            if (gltf.animations && gltf.animations.length > 0) {
+                mixer = new THREE.AnimationMixer(merlimModel);
+                gltf.animations.forEach((clip) => {
+                    mixer.clipAction(clip).play();
+                });
+                console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+            }
+            
+            console.log('✅ Modelo do MERLIM carregado');
+        }, undefined, (error) => {
+            console.error('❌ Erro ao carregar modelo:', error);
+            const fallbackModel = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.2 }));
+            fallbackModel.position.set(0, 0.2, 0);
+            scene.add(fallbackModel);
+            const techRing = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.04, 32, 60), new THREE.MeshStandardMaterial({ color: 0x66eeff, emissive: config.color, emissiveIntensity: 0.4 }));
+            techRing.position.set(0, 0.5, 0);
+            techRing.rotation.x = Math.PI / 2;
+            scene.add(techRing);
+        });
+        
+        // =========================
+        // ANIMAÇÃO DA CENA
+        // =========================
+        let time = 0;
+        let deltaTime = 0.016;
+        let lastTime = performance.now();
+        
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.008;
+            
+            if (mixer) mixer.update(deltaTime);
+            
+            particles.rotation.y = time * 0.06;
+            particles.rotation.x = Math.sin(time * 0.12) * 0.08;
+            
+            ring1.rotation.z = time * 0.35;
+            ring2.rotation.z = -time * 0.28;
+            ring3.rotation.z = time * 0.2;
+            hologramRing.rotation.z = time * 0.15;
+            
+            symbols.forEach((symbol, idx) => {
+                symbol.material.opacity = 0.25 + Math.sin(time * 1.5 + idx) * 0.15;
+                symbol.position.y += 0.001;
+                if (symbol.position.y > 2.5) symbol.position.y = 0;
+            });
+            
+            fillLight.intensity = 0.6 + Math.sin(time * 2.8) * 0.2;
+            circleGlow.material.emissiveIntensity = 0.3 + Math.sin(time * 2.2) * 0.2;
+            hologramRing.material.emissiveIntensity = 0.3 + Math.sin(time * 1.5) * 0.15;
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // =========================
+        // UI E CHAT
+        // =========================
+        
+        // Inicializar UI (perfil, botão voltar)
+        initUI(config);
+        
+        // Inicializar Chat
+        const chat = new ChatSystem('chatContainer', config, (response) => {
+            if (voice && voice.isJarvisActive && voice.isJarvisActive()) {
+                voice.speak(response);
+            }
+        });
+        
+        // Inicializar Voice Assistant
+        const voiceButton = document.getElementById('voiceButton');
+        let voice = null;
+        
+        if (voiceButton) {
+            voice = new VoiceAssistant(
+                voiceButton,
+                (text, isContinuous) => {
+                    document.getElementById('chatInput').value = text;
+                    chat.send();
+                },
+                null,
+                { asuraName: config.name, continuous: true }
+            );
+        }
+        
+        // Mensagem de boas-vindas
+        setTimeout(() => {
+            chat.addMessage(config.welcomeMessage, false);
+            setTimeout(() => {
+                chat.addMessage("🎤 Dica: Clique no ícone 💻 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
+            }, 2000);
+        }, 500);
+        
+        // Efeito de portal de entrada
+        const portalOverlay = document.getElementById('portalOverlay');
+        portalOverlay.style.setProperty('--asura-color', config.color);
+        setTimeout(() => {
+            portalOverlay.style.opacity = '0.6';
+            setTimeout(() => {
+                portalOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    portalOverlay.style.display = 'none';
+                }, 800);
+            }, 500);
+        }, 50);
+        
+        console.log('🟢 MERLIM carregado com todos os efeitos visuais!');
     </script>
 </body>
 </html>
