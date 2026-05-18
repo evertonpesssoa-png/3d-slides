@@ -15,22 +15,41 @@ export async function initWorld(config) {
     // Carregar modelo
     const { mixer } = await loadModel(scene, config);
     
-    // UI
+    // UI (ícones do topo, perfil, etc.)
     initUI(config);
     
     // Chat
     const chat = new ChatSystem('chatContainer', config, (response) => {
-        voice.speak(response);
+        if (voice && voice.isJarvisActive && voice.isJarvisActive()) {
+            voice.speak(response);
+        }
     });
     
-    // Voz
+    // Voice Assistant (Modo Jarvis REAL)
     const voiceButton = document.getElementById('voiceButton');
-    const voice = new VoiceAssistant(voiceButton, (text) => {
-        document.getElementById('chatInput').value = text;
-        chat.send();
-    });
+    let voice = null;
     
-    // Animação
+    if (voiceButton) {
+        voice = new VoiceAssistant(
+            voiceButton,
+            (text, isContinuous) => {
+                // Callback quando um comando de voz é reconhecido
+                console.log('🎤 Comando de voz recebido:', text, 'Modo contínuo:', isContinuous);
+                document.getElementById('chatInput').value = text;
+                chat.send();
+            },
+            (interimText) => {
+                // Feedback enquanto fala (opcional)
+                // console.log('🎤 Ouvindo:', interimText);
+            },
+            {
+                asuraName: config.name,
+                continuous: true
+            }
+        );
+    }
+    
+    // Animação 3D
     startAnimation(scene, camera, renderer, controls, {
         mixer,
         particles,
@@ -40,5 +59,7 @@ export async function initWorld(config) {
         circleGlow
     });
     
-    console.log(`🟢 Mundo da ${config.name} carregado com sucesso!`);
+    console.log(`🟢 Mundo da ${config.name} carregado com MODO JARVIS REAL!`);
+    
+    return { scene, camera, renderer, controls, chat, voice };
 }
