@@ -1,0 +1,91 @@
+/* =========================
+   ICONES DO TOPO (UNIFICADOS)
+   ========================= */
+.top-icons {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    gap: 15px;
+    pointer-events: auto;
+}
+
+.top-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--asura-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--asura-color);
+    box-shadow: 0 0 10px var(--asura-glow);
+    position: relative;
+}
+
+.top-icon:hover {
+    transform: scale(1.08);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px var(--asura-glow);
+}
+
+/* Tooltip */
+.top-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--asura-color);
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.top-icon:hover::after {
+    opacity: 1;
+}
+
+/* Ícone de voz com efeito especial */
+.voice-icon.listening::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: transparent;
+    transform: translate(-50%, -50%);
+    animation: voice-pulse 1.2s infinite;
+}
+
+@keyframes voice-pulse {
+    0% {
+        box-shadow: 0 0 0 0 var(--asura-glow);
+        width: 48px;
+        height: 48px;
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+        width: 88px;
+        height: 88px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-icons { top: 15px; right: 15px; gap: 10px; }
+    .top-icon { width: 40px; height: 40px; font-size: 1.2rem; }
+}
