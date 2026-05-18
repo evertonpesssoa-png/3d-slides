@@ -657,11 +657,11 @@
         let mixer = null;
         
         loader.load(
-            '../models/diva.glb',
+            '../models/diva2.glb',
             (gltf) => {
                 divaModel = gltf.scene;
                 divaModel.position.set(0, -0.25, 0);
-                divaModel.scale.set(0.5, 0.5, 0.5);
+                divaModel.scale.set(100.5, 100.5, 100.5);
                 divaModel.traverse((node) => {
                     if (node.isMesh) {
                         node.castShadow = true;
