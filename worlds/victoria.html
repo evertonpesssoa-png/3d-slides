@@ -14,7 +14,7 @@
     <style>
         :root {
             --asura-color: #ff0000;
-            --asura-glow: rgba(255, 0, 0, 0.5);
+            --asura-glow: rgba(255, 0, 0, 0.6);
             --asura-gradient: linear-gradient(135deg, #ff0000, #cc0000);
         }
         body { background: radial-gradient(circle at 30% 20%, #0a0000, #030108); }
@@ -25,7 +25,13 @@
     
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
-        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (Voz)">⚔️</div>
+        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
+            <span class="brain-icon">🏅</span>
+            <span class="mic-icon">🎤</span>
+            <div class="mental-wave"></div>
+            <div class="brain-waves left"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="brain-waves right"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
         <div class="top-icon" id="profileButton" data-tooltip="Perfil da Victoria">🏅</div>
     </div>
     
@@ -60,7 +66,12 @@
     </script>
 
     <script type="module">
-        import { initWorld } from '../shared/js/asura-base.js';
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { initUI } from '../shared/js/ui.js';
+        import { ChatSystem } from '../shared/js/chat.js';
+        import { VoiceAssistant } from '../shared/js/voice-assistant.js';
         
         const config = {
             name: 'VICTORIA',
@@ -72,25 +83,239 @@
             modelPositionY: -0.25,
             bgColor: 0x0a0000,
             cameraPosition: { x: 3.2, y: 2.2, z: 4.2 },
-            welcomeMessage: '🔥 VOCÊ ME CONVOCOU. Quando tudo parece perdido, eu apareço. Sou Victoria, a senhora da guerra, a MVP dos Asuras. A derrota não é uma opção enquanto eu existir. Qual é a batalha?',
+            welcomeMessage: '🔥 VOCÊ ME CONVOCOU. Sou Victoria, a senhora da guerra, a MVP dos Asuras. A derrota não é uma opção enquanto eu existir.',
             skills: [
                 { name: '🏅 Poder Máximo', value: 100 },
                 { name: '⚡ Estratégia de Guerra', value: 100 },
                 { name: '🔥 Poder Infernal', value: 100 },
                 { name: '🏆 Vitória Absoluta', value: 100 }
             ],
-            personalityText: '🏅 "Quando tudo estiver perdido... eu estarei lá. Sou a última esperança. A vitória é minha promessa."<br>Victoria é a MVP dos Asuras. Só é acionada em cenários de derrota iminente.',
+            personalityText: '🏅 "Quando tudo estiver perdido... eu estarei lá. Sou a última esperança. A vitória é minha promessa."',
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
-                if (lower.includes('olá') || lower.includes('oi')) return "🔥 VOCÊ ME CONVOCOU. Não perca meu tempo com saudações. Qual é a batalha? A derrota te assombra?";
-                if (lower.includes('derrota') || lower.includes('perdido')) return "🏅 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória. Descreva o cenário.";
-                if (lower.includes('batalha') || lower.includes('guerra')) return "⚔️ Guerras são vencidas com estratégia e poder. Eu tenho ambos. Me diga o que você enfrenta.";
-                if (lower.includes('obrigado')) return "💀 Não agradeça. Apenas lembre: eu só apareço quando necessário. Agora vá. E vença.";
-                return "🔥 FALA CLARO. Estou aqui para vencer batalhas. Me diga o que você enfrenta, e eu te darei a vitória.";
+                if (lower.includes('olá') || lower.includes('oi')) return "🔥 VOCÊ ME CONVOCOU. Não perca meu tempo com saudações. Qual é a batalha?";
+                if (lower.includes('derrota') || lower.includes('perdido')) return "🏅 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória.";
+                if (lower.includes('batalha') || lower.includes('guerra')) return "⚔️ Guerras são vencidas com estratégia e poder. Eu tenho ambos.";
+                if (lower.includes('obrigado')) return "💀 Não agradeça. Apenas lembre: eu só apareço quando necessário.";
+                return "🔥 FALA CLARO. Estou aqui para vencer batalhas. Me diga o que você enfrenta.";
             }
         };
         
-        initWorld(config);
+        // =========================
+        // SETUP 3D VICTORIA
+        // =========================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(config.bgColor);
+        scene.fog = new THREE.FogExp2(config.bgColor, 0.012);
+        
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(config.cameraPosition.x, config.cameraPosition.y, config.cameraPosition.z);
+        camera.lookAt(0, 0.8, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+        
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = true;
+        controls.enablePan = true;
+        controls.target.set(0, 0.8, 0);
+        
+        // =========================
+        // LUZES INFERNAIS
+        // =========================
+        const ambientLight = new THREE.AmbientLight(0x330000, 0.4);
+        scene.add(ambientLight);
+        const mainLight = new THREE.DirectionalLight(0xff4422, 1.1);
+        mainLight.position.set(3, 5, 2);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+        const fillLight = new THREE.PointLight(config.color, 0.9);
+        fillLight.position.set(1, 1.5, 2);
+        scene.add(fillLight);
+        const backLight = new THREE.PointLight(0xcc0000, 0.6);
+        backLight.position.set(-2, 1.5, -3);
+        scene.add(backLight);
+        const hellLight = new THREE.PointLight(0xff3300, 0.55);
+        hellLight.position.set(0.5, 0.5, 1);
+        scene.add(hellLight);
+        
+        // =========================
+        // CHÃO INFERNAL
+        // =========================
+        const gridHelper = new THREE.GridHelper(14, 24, config.color, 0x440000);
+        gridHelper.position.y = -0.5;
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.45;
+        scene.add(gridHelper);
+        
+        const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), new THREE.MeshStandardMaterial({ color: 0x1a0000, roughness: 0.6, metalness: 0.3, transparent: true, opacity: 0.5 }));
+        groundPlane.rotation.x = -Math.PI / 2;
+        groundPlane.position.y = -0.5;
+        groundPlane.receiveShadow = true;
+        scene.add(groundPlane);
+        
+        const circleGlow = new THREE.Mesh(new THREE.CircleGeometry(1.4, 32), new THREE.MeshStandardMaterial({ color: 0xff2200, emissive: config.color, emissiveIntensity: 0.6, transparent: true, opacity: 0.6, side: THREE.DoubleSide }));
+        circleGlow.rotation.x = -Math.PI / 2;
+        circleGlow.position.y = -0.45;
+        scene.add(circleGlow);
+        
+        // =========================
+        // CHAMAS E PARTÍCULAS DE FOGO
+        // =========================
+        const fireCount = 2000;
+        const fireGeometry = new THREE.BufferGeometry();
+        const firePositions = new Float32Array(fireCount * 3);
+        for (let i = 0; i < fireCount; i++) {
+            firePositions[i*3] = (Math.random() - 0.5) * 14;
+            firePositions[i*3+1] = Math.random() * 4;
+            firePositions[i*3+2] = (Math.random() - 0.5) * 12;
+        }
+        fireGeometry.setAttribute('position', new THREE.BufferAttribute(firePositions, 3));
+        const fireColors = new Float32Array(fireCount * 3);
+        for (let i = 0; i < fireCount; i++) {
+            const type = Math.random();
+            if (type < 0.5) { fireColors[i*3]=0.9+Math.random()*0.3; fireColors[i*3+1]=0.1+Math.random()*0.2; fireColors[i*3+2]=0.05; }
+            else if (type < 0.75) { fireColors[i*3]=0.9+Math.random()*0.3; fireColors[i*3+1]=0.4+Math.random()*0.3; fireColors[i*3+2]=0.05; }
+            else { fireColors[i*3]=1.0; fireColors[i*3+1]=0.2; fireColors[i*3+2]=0.0; }
+        }
+        fireGeometry.setAttribute('color', new THREE.BufferAttribute(fireColors, 3));
+        const fireMaterial = new THREE.PointsMaterial({ size: 0.055, vertexColors: true, transparent: true, opacity: 0.6 });
+        const fireParticles = new THREE.Points(fireGeometry, fireMaterial);
+        scene.add(fireParticles);
+        
+        // =========================
+        // COLUNAS INFERNAIS
+        // =========================
+        function createHellPillar(x, z, height = 1.3) {
+            const group = new THREE.Group();
+            const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, height, 8), new THREE.MeshStandardMaterial({ color: 0x990000, emissive: 0x440000, emissiveIntensity: 0.3, metalness: 0.6 }));
+            pillar.position.y = 0;
+            group.add(pillar);
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.035, 16, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: 0xcc0000, emissiveIntensity: 0.35 }));
+            ring.position.y = height / 2;
+            ring.rotation.x = Math.PI / 2;
+            group.add(ring);
+            const flameTop = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.25, 6), new THREE.MeshStandardMaterial({ color: 0xff3300, emissive: config.color, emissiveIntensity: 0.4 }));
+            flameTop.position.y = height / 2 + 0.08;
+            group.add(flameTop);
+            group.position.set(x, -0.4, z);
+            return group;
+        }
+        const pillarPositions = [[-2.8,-2.5],[2.8,-2.5],[-2.8,2.5],[2.8,2.5],[-2,-3.2],[2,-3.2],[-3.2,-1.8],[3.2,-1.8],[-3.2,1.8],[3.2,1.8],[-2,3.2],[2,3.2]];
+        pillarPositions.forEach(pos => { const pillar = createHellPillar(pos[0], pos[1], 1.0 + Math.random() * 0.4); scene.add(pillar); });
+        
+        // =========================
+        // ESPADAS FLUTUANTES
+        // =========================
+        function createFloatingSword(x, z, yOffset) {
+            const group = new THREE.Group();
+            const blade = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.06, 0.35, 4), new THREE.MeshStandardMaterial({ color: 0xcc3333, metalness: 0.8 }));
+            blade.position.y = 0.15;
+            group.add(blade);
+            const handle = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 0.08), new THREE.MeshStandardMaterial({ color: 0xaa0000, metalness: 0.5 }));
+            handle.position.y = -0.05;
+            group.add(handle);
+            const crossguard = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.08), new THREE.MeshStandardMaterial({ color: 0xff6600, metalness: 0.7 }));
+            crossguard.position.y = 0;
+            group.add(crossguard);
+            group.position.set(x, yOffset, z);
+            return group;
+        }
+        const swordPositions = [[-1.5,1.0,1.6],[1.5,1.0,1.6],[-1.6,0.9,-1.5],[1.6,0.9,-1.5],[-2.2,1.1,0.5],[2.2,1.1,0.5],[0.5,1.2,-2.2],[-0.5,1.2,-2.2]];
+        swordPositions.forEach(pos => { const sword = createFloatingSword(pos[0], pos[2], pos[1]); scene.add(sword); });
+        
+        // =========================
+        // COROA DE LOUROS DOURADA
+        // =========================
+        const laurelRingGeometry = new THREE.TorusGeometry(1.35, 0.045, 64, 200);
+        const laurelMaterial = new THREE.MeshStandardMaterial({ color: 0xffaa33, emissive: 0xff6600, emissiveIntensity: 0.4, metalness: 0.9 });
+        const laurelRing = new THREE.Mesh(laurelRingGeometry, laurelMaterial);
+        laurelRing.position.y = 0.2;
+        laurelRing.rotation.x = Math.PI / 2;
+        scene.add(laurelRing);
+        
+        // =========================
+        // MODELO 3D
+        // =========================
+        const loader = new GLTFLoader();
+        let model = null;
+        let mixer = null;
+        
+        loader.load(config.modelPath, (gltf) => {
+            model = gltf.scene;
+            model.position.set(0, config.modelPositionY, 0);
+            model.scale.set(config.modelScale, config.modelScale, config.modelScale);
+            model.traverse((node) => { if (node.isMesh) { node.castShadow = true; } });
+            scene.add(model);
+            if (gltf.animations && gltf.animations.length > 0) {
+                mixer = new THREE.AnimationMixer(model);
+                gltf.animations.forEach(clip => mixer.clipAction(clip).play());
+            }
+        });
+        
+        // =========================
+        // ANIMAÇÃO
+        // =========================
+        let time = 0;
+        let deltaTime = 0.016;
+        let lastTime = performance.now();
+        
+        function updateDelta() {
+            const now = performance.now();
+            deltaTime = Math.min(0.033, (now - lastTime) / 1000);
+            lastTime = now;
+            requestAnimationFrame(updateDelta);
+        }
+        updateDelta();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            if (mixer) mixer.update(deltaTime);
+            fireParticles.rotation.y = time * 0.07;
+            fireParticles.rotation.x = Math.sin(time * 0.15) * 0.1;
+            laurelRing.rotation.z = time * 0.25;
+            fillLight.intensity = 0.7 + Math.sin(time * 3.5) * 0.25;
+            circleGlow.material.emissiveIntensity = 0.4 + Math.sin(time * 2.5) * 0.2;
+            hellLight.intensity = 0.45 + Math.sin(time * 4) * 0.2;
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // =========================
+        // UI, CHAT E VOZ
+        // =========================
+        initUI(config);
+        const chat = new ChatSystem('chatContainer', config, (response) => { if (voice?.isJarvisActive?.()) voice.speak(response); });
+        const voiceButtonElem = document.getElementById('voiceButton');
+        let voice = null;
+        if (voiceButtonElem) {
+            voice = new VoiceAssistant(voiceButtonElem, (text) => { document.getElementById('chatInput').value = text; chat.send(); }, null, { asuraName: config.name, continuous: true });
+        }
+        
+        setTimeout(() => {
+            chat.addMessage(config.welcomeMessage, false);
+            setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 🏅 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
+        }, 500);
+        
+        const portalOverlay = document.getElementById('portalOverlay');
+        portalOverlay.style.setProperty('--asura-color', config.color);
+        setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
+        
+        console.log('🟢 VICTORIA carregada com chamas, espadas, coroa de louros e Modo Jarvis!');
     </script>
 </body>
 </html>
