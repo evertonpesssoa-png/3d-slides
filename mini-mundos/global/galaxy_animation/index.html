@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Galaxy Azura | @Code_Spectre</title>
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+</head>
+
+<body>
+
+    <!-- Canvas -->
+    <canvas class="webgl"></canvas>
+
+    <!-- Botão de voltar -->
+    <button
+        id="backToAsura"
+        style="
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid #44aaff;
+            color: #44aaff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        "
+    >
+        ← VOLTAR PARA O ASURA
+    </button>
+
+    <!-- Script principal -->
+    <script
+        type="module"
+        src="script2.js"
+    ></script>
+
+    <!-- Sistema de retorno -->
+    <script>
+        document
+            .getElementById('backToAsura')
+            .addEventListener('click', () => {
+
+                const returnTo =
+                    localStorage.getItem('returnToAsura')
+                    || '../diva.html';
+
+                // Criar efeito de portal reverso
+                const portalFlash = document.createElement('div');
+
+                portalFlash.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(circle, #44aaff, transparent);
+                    opacity: 0;
+                    pointer-events: none;
+                    z-index: 10000;
+                    transition: opacity 0.6s ease;
+                `;
+
+                document.body.appendChild(portalFlash);
+
+                setTimeout(() => {
+                    portalFlash.style.opacity = '0.8';
+                }, 10);
+
+                setTimeout(() => {
+                    window.location.href = returnTo;
+                }, 600);
+            });
+    </script>
+
+</body>
+
+</html>
