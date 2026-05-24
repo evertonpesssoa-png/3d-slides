@@ -46,7 +46,6 @@
             gap: 20px;
         }
         
-        /* Mapa 3D */
         .map-container {
             background: rgba(0,0,0,0.5);
             border-radius: 20px;
@@ -65,7 +64,6 @@
         
         .map-header h2 {
             font-size: 1.2rem;
-            color: var(--asura-color);
         }
         
         .asura-selector {
@@ -107,7 +105,6 @@
             cursor: grabbing;
         }
         
-        /* Painel de controles */
         .controls-panel {
             background: rgba(0,0,0,0.5);
             border-radius: 20px;
@@ -294,10 +291,9 @@
 <body>
     <div class="container">
         <h1>🗺️ PORTAL PLANNER</h1>
-        <div class="subtitle">Planeje a posição dos portais ao redor de cada Asura</div>
+        <div class="subtitle">Clique duas vezes em um portal para viajar até o mini-mundo</div>
         
         <div class="dashboard">
-            <!-- Mapa 3D -->
             <div class="map-container">
                 <div class="map-header">
                     <h2 id="mapTitle">📍 DIVA - Posição dos Portais</h2>
@@ -306,24 +302,23 @@
                 <canvas id="canvas-map"></canvas>
                 <div class="legend">
                     <div><span style="background: #ff4db8;"></span> Portal Ativo</div>
-                    <div><span style="background: #44aaff;"></span> Posição Livre (clique)</div>
+                    <div><span style="background: #44aaff;"></span> Posição Livre</div>
                     <div><span style="background: #ffaa44;"></span> Portal Selecionado</div>
-                    <div><span style="background: #333; width: 12px; height: 12px; border-radius: 2px;"></span> Asura (centro)</div>
+                    <div><span style="background: #333;"></span> Asura (centro)</div>
                 </div>
             </div>
             
-            <!-- Painel de Controles -->
             <div class="controls-panel">
                 <h3>🎮 Controles</h3>
                 
                 <div class="position-input">
                     <div>
                         <label>X (direita/esquerda)</label>
-                        <input type="number" id="posX" step="0.1" value="0">
+                        <input type="number" id="posX" step="0.1" value="1.8">
                     </div>
                     <div>
                         <label>Z (frente/trás)</label>
-                        <input type="number" id="posZ" step="0.1" value="0">
+                        <input type="number" id="posZ" step="0.1" value="1.8">
                     </div>
                     <div>
                         <label>Y (altura)</label>
@@ -333,12 +328,12 @@
                 
                 <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                     <input type="text" id="portalName" placeholder="Nome do portal" style="flex:1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; color: white;">
-                    <input type="text" id="portalIcon" placeholder="Ícone (ex: 🪐)" style="width: 60px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; color: white; text-align: center;">
+                    <input type="text" id="portalIcon" placeholder="Ícone (ex: 🪐)" value="🚪" style="width: 60px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 8px; color: white; text-align: center;">
                 </div>
                 
                 <button class="add-portal" id="addPortalBtn">➕ ADICIONAR PORTAL</button>
                 
-                <h3>📋 Portais do Asura</h3>
+                <h3>📋 Portais do Asura (clique duplo para viajar)</h3>
                 <div class="portals-list" id="portalsList"></div>
                 
                 <h3>📍 Posições Rápidas</h3>
@@ -391,55 +386,98 @@
             daedala: { name: 'DAEDALA', color: '#00ffd5', glow: '#00ccaa', icon: '⚗️' }
         };
         
-        // Portais padrão para cada Asura
+        // =========================
+        // MAPEAMENTO DOS MINI-MUNDOS (PORTAIS REAIS)
+        // =========================
+        function getMiniMundoPath(portalName) {
+            const map = {
+                'SISTEMA SOLAR': 'mini-mundos/global/sistema_solar/index.html',
+                'TERRA': 'mini-mundos/global/earth/index.html',
+                'GALÁXIA': 'mini-mundos/global/galaxy_animation/index.html',
+                'CINEMA': 'mini-mundos/global/planner/index.html',
+                'GALAXY': 'mini-mundos/global/galaxy_animation/index.html',
+                'PRAIA': 'mini-mundos/global/beach/index.html',
+                'BEACH': 'mini-mundos/global/beach/index.html',
+                'CIDADE CYBER': 'mini-mundos/global/cybercity/index.html',
+                'CYBERCITY': 'mini-mundos/global/cybercity/index.html',
+                'MUSEU DINOSSAURO': 'mini-mundos/global/dinomuseum/index.html',
+                'DINOMUSEUM': 'mini-mundos/global/dinomuseum/index.html',
+                'TEMPLO DRAGÃO': 'mini-mundos/global/dragon-temple/index.html',
+                'DRAGON TEMPLE': 'mini-mundos/global/dragon-temple/index.html',
+                'BIBLIOTECA': 'mini-mundos/global/library/index.html',
+                'LIBRARY': 'mini-mundos/global/library/index.html',
+                'BURACO NEGRO': 'mini-mundos/exclusive/umbra/buraco_negro/index.html'
+            };
+            return map[portalName.toUpperCase()] || null;
+        }
+        
+        // Navegação
+        function openMiniMundo(portalName) {
+            const caminho = getMiniMundoPath(portalName);
+            if (caminho) {
+                console.log(`🚪 Abrindo portal para: ${portalName} -> ${caminho}`);
+                window.location.href = caminho;
+            } else {
+                console.log(`⚠️ Portal "${portalName}" sem mini-mundo configurado`);
+                alert(`🌌 "${portalName}"\n\nMini-mundo em construção! Em breve você poderá viajar para este destino.`);
+            }
+        }
+        
+        // Portais padrão para cada Asura (posições distribuídas)
         const defaultPortals = {
             diva: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' },
-                { name: 'CINEMA', icon: '🎬', x: -1.8, y: 0.3, z: -1.8, description: 'Assista filmes' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'CINEMA', icon: '🎬', x: -1.8, y: 0.3, z: -1.8 }
             ],
             siria: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
-            ],
-            astreia: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' },
-                { name: 'CÂMERAS', icon: '📷', x: 1.2, y: 0.3, z: 0, description: 'Vigilância' },
-                { name: 'SENSORES', icon: '🔒', x: -1.2, y: 0.3, z: 0, description: 'Monitoramento' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'PRAIA', icon: '🏖️', x: -1.8, y: 0.3, z: -1.8 }
             ],
             merlim: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'BIBLIOTECA', icon: '📚', x: -1.8, y: 0.3, z: -1.8 }
+            ],
+            astreia: [
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'CIDADE CYBER', icon: '🌆', x: -1.8, y: 0.3, z: -1.8 }
             ],
             umbra: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'BURACO NEGRO', icon: '⚫', x: 1.5, y: 0.3, z: 1.5 },
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.5, y: 0.3, z: -1.5 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.5, y: 0.3, z: 1.5 },
+                { name: 'TEMPLO DRAGÃO', icon: '🐉', x: -1.5, y: 0.3, z: -1.5 }
             ],
             atena: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'BIBLIOTECA', icon: '📚', x: -1.8, y: 0.3, z: -1.8 }
             ],
             victoria: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'MUSEU DINOSSAURO', icon: '🦕', x: -1.8, y: 0.3, z: -1.8 }
             ],
             hestia: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'TEMPLO DRAGÃO', icon: '🐉', x: -1.8, y: 0.3, z: -1.8 }
             ],
             daedala: [
-                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8, description: 'Explore os planetas' },
-                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8, description: 'Veja a Terra' },
-                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8, description: 'Viaje pela galáxia' }
+                { name: 'SISTEMA SOLAR', icon: '🪐', x: 1.8, y: 0.3, z: 1.8 },
+                { name: 'TERRA', icon: '🌍', x: 1.8, y: 0.3, z: -1.8 },
+                { name: 'GALÁXIA', icon: '✨', x: -1.8, y: 0.3, z: 1.8 },
+                { name: 'CIDADE CYBER', icon: '🌆', x: -1.8, y: 0.3, z: -1.8 }
             ]
         };
         
@@ -462,7 +500,6 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
         
-        // CSS2DRenderer para texto
         const labelRenderer = new CSS2DRenderer();
         labelRenderer.setSize(container.clientWidth, container.clientHeight);
         labelRenderer.domElement.style.position = 'absolute';
@@ -471,7 +508,6 @@
         labelRenderer.domElement.style.pointerEvents = 'none';
         container.appendChild(labelRenderer.domElement);
         
-        // Controles
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
@@ -479,16 +515,11 @@
         controls.rotateSpeed = 1.0;
         controls.enablePan = true;
         
-        // =========================
-        // ELEMENTOS DA CENA
-        // =========================
-        
-        // Grade de chão
+        // Elementos da cena
         const gridHelper = new THREE.GridHelper(8, 20, 0x4488ff, 0x333366);
         gridHelper.position.y = -0.2;
         scene.add(gridHelper);
         
-        // Círculo central (Asura)
         const centerCircle = new THREE.Mesh(
             new THREE.CircleGeometry(0.5, 32),
             new THREE.MeshStandardMaterial({ color: 0xffaa44, emissive: 0xff4400, emissiveIntensity: 0.3, side: THREE.DoubleSide })
@@ -497,7 +528,6 @@
         centerCircle.position.y = -0.19;
         scene.add(centerCircle);
         
-        // Asura (representação 3D)
         const asuraGroup = new THREE.Group();
         const asuraBody = new THREE.Mesh(new THREE.SphereGeometry(0.35, 32, 32), new THREE.MeshStandardMaterial({ color: 0xffaa44, emissive: 0xff6600, emissiveIntensity: 0.2 }));
         asuraGroup.add(asuraBody);
@@ -510,7 +540,6 @@
         asuraGroup.position.set(0, 0, 0);
         scene.add(asuraGroup);
         
-        // Anéis orbitais (referência)
         const ringGeo = new THREE.TorusGeometry(1.2, 0.02, 64, 200);
         const ringMat = new THREE.MeshStandardMaterial({ color: 0x44aaff, transparent: true, opacity: 0.3 });
         const orbitRing1 = new THREE.Mesh(ringGeo, ringMat);
@@ -522,13 +551,11 @@
         orbitRing2.rotation.x = Math.PI / 2;
         scene.add(orbitRing2);
         
-        // Eixos de referência
         const axesHelper = new THREE.AxesHelper(2.5);
         axesHelper.material.transparent = true;
         axesHelper.material.opacity = 0.15;
         scene.add(axesHelper);
         
-        // Luzes
         const ambientLight = new THREE.AmbientLight(0x222222);
         scene.add(ambientLight);
         const mainLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -538,9 +565,6 @@
         fillLight.position.set(0, 2, 0);
         scene.add(fillLight);
         
-        // =========================
-        // PORTAIS (objetos 3D)
-        // =========================
         const portalMeshes = [];
         
         function updatePortalColors() {
@@ -548,7 +572,15 @@
             portalMeshes.forEach((mesh, idx) => {
                 if (mesh.material) {
                     mesh.material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
-                    mesh.material.emissive.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
+                }
+                if (mesh.children[0] && mesh.children[0].material) {
+                    mesh.children[0].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
+                }
+                if (mesh.children[1] && mesh.children[1].material) {
+                    mesh.children[1].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
+                }
+                if (mesh.children[2] && mesh.children[2].material) {
+                    mesh.children[2].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
                 }
             });
         }
@@ -556,41 +588,25 @@
         function createPortalMesh(x, z, y, name, icon, isSelected = false) {
             const group = new THREE.Group();
             const asuraColor = asurasConfig[currentAsura].color;
+            const colorHex = isSelected ? '#ffaa44' : asuraColor;
             
-            // Anel principal
             const geometry = new THREE.TorusGeometry(0.35, 0.05, 32, 64);
-            const material = new THREE.MeshStandardMaterial({
-                color: isSelected ? '#ffaa44' : asuraColor,
-                emissive: isSelected ? '#ffaa44' : asuraColor,
-                emissiveIntensity: 0.6,
-                metalness: 0.8
-            });
+            const material = new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 0.6, metalness: 0.8 });
             const ring = new THREE.Mesh(geometry, material);
             group.add(ring);
             
-            // Anel externo
             const outerGeo = new THREE.TorusGeometry(0.42, 0.03, 32, 64);
-            const outerMat = new THREE.MeshStandardMaterial({
-                color: isSelected ? '#ffaa44' : asuraColor,
-                emissive: isSelected ? '#ffaa44' : asuraColor,
-                emissiveIntensity: 0.3,
-                transparent: true
-            });
+            const outerMat = new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 0.3, transparent: true });
             const outerRing = new THREE.Mesh(outerGeo, outerMat);
             group.add(outerRing);
             
-            // Esfera central (glow)
             const sphereGeo = new THREE.SphereGeometry(0.12, 16, 16);
-            const sphereMat = new THREE.MeshStandardMaterial({
-                color: isSelected ? '#ffaa44' : asuraColor,
-                emissive: isSelected ? '#ffaa44' : asuraColor,
-                emissiveIntensity: 0.8
-            });
+            const sphereMat = new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 0.8 });
             const sphere = new THREE.Mesh(sphereGeo, sphereMat);
             group.add(sphere);
             
             group.position.set(x, y, z);
-            group.userData = { name, icon, x, z, y };
+            group.userData = { name, icon, x, z, y, idx: portalMeshes.length };
             
             return group;
         }
@@ -607,23 +623,29 @@
             div.style.borderRadius = '20px';
             div.style.border = `1px solid ${asurasConfig[currentAsura].color}`;
             div.style.whiteSpace = 'nowrap';
+            div.style.cursor = 'pointer';
             
             const label = new CSS2DObject(div);
             label.position.set(x, y + 0.5, z);
+            label.userData = { name, icon };
+            
+            // Clique na label também navega
+            div.onclick = (e) => {
+                e.stopPropagation();
+                openMiniMundo(name);
+            };
+            
             return label;
         }
         
         function rebuildPortals() {
-            // Remover portais antigos
             portalMeshes.forEach(portal => scene.remove(portal));
             portalMeshes.length = 0;
             
-            // Remover labels antigos
             scene.children.forEach(child => {
                 if (child.isCSS2DObject) scene.remove(child);
             });
             
-            // Recriar portais
             portals.forEach((portal, idx) => {
                 const portalMesh = createPortalMesh(portal.x, portal.z, portal.y || 0.3, portal.name, portal.icon, idx === selectedPortalIndex);
                 scene.add(portalMesh);
@@ -633,14 +655,12 @@
                 scene.add(label);
             });
             
-            // Atualizar lista de portais no painel
             updatePortalsList();
+            updatePortalColors();
         }
         
         function updatePortalsList() {
             const list = document.getElementById('portalsList');
-            const asuraColor = asurasConfig[currentAsura].color;
-            
             list.innerHTML = portals.map((portal, idx) => `
                 <div class="portal-item ${idx === selectedPortalIndex ? 'selected' : ''}" data-index="${idx}">
                     <div class="portal-info">
@@ -654,7 +674,6 @@
                 </div>
             `).join('');
             
-            // Adicionar eventos
             document.querySelectorAll('.portal-item').forEach(el => {
                 el.addEventListener('click', (e) => {
                     if (e.target.classList.contains('delete-portal')) return;
@@ -662,6 +681,13 @@
                     selectedPortalIndex = idx;
                     updatePortalsList();
                     rebuildPortals();
+                });
+                
+                el.addEventListener('dblclick', (e) => {
+                    if (e.target.classList.contains('delete-portal')) return;
+                    const idx = parseInt(el.dataset.index);
+                    const portal = portals[idx];
+                    openMiniMundo(portal.name);
                 });
             });
             
@@ -676,11 +702,7 @@
             });
         }
         
-        // =========================
-        // EVENTOS
-        // =========================
-        
-        // Selecionar Asura
+        // Eventos da UI
         const asuraSelector = document.getElementById('asuraSelector');
         Object.keys(asurasConfig).forEach(key => {
             const btn = document.createElement('button');
@@ -692,25 +714,20 @@
                 portals = JSON.parse(JSON.stringify(defaultPortals[currentAsura] || []));
                 selectedPortalIndex = -1;
                 
-                // Atualizar UI
                 document.querySelectorAll('.asura-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 document.getElementById('mapTitle').textContent = `📍 ${asurasConfig[currentAsura].name} - Posição dos Portais`;
-                document.getElementById('mapTitle').style.setProperty('--asura-color', asurasConfig[currentAsura].color);
                 
-                // Atualizar cena
                 const color = asurasConfig[currentAsura].color;
                 orbitRing1.material.color.setStyle(color);
                 orbitRing2.material.color.setStyle(color);
                 centerCircle.material.color.setStyle(color);
                 
                 rebuildPortals();
-                updatePortalColors();
             });
             asuraSelector.appendChild(btn);
         });
         
-        // Adicionar portal
         document.getElementById('addPortalBtn').addEventListener('click', () => {
             const x = parseFloat(document.getElementById('posX').value);
             const z = parseFloat(document.getElementById('posZ').value);
@@ -723,23 +740,20 @@
                 return;
             }
             
-            // Verificar se posição já está ocupada
             const occupied = portals.some(p => Math.abs(p.x - x) < 0.3 && Math.abs(p.z - z) < 0.3);
             if (occupied) {
                 alert('⚠️ Esta posição já está ocupada por outro portal!');
                 return;
             }
             
-            portals.push({ name, icon, x, y, z, description: '' });
+            portals.push({ name, icon, x, y, z });
             selectedPortalIndex = portals.length - 1;
             rebuildPortals();
             
-            // Limpar campos
             document.getElementById('portalName').value = '';
-            document.getElementById('portalIcon').value = '';
+            document.getElementById('portalIcon').value = '🚪';
         });
         
-        // Posições rápidas
         document.querySelectorAll('.coord-preset').forEach(el => {
             el.addEventListener('click', () => {
                 const x = parseFloat(el.dataset.x);
@@ -749,12 +763,8 @@
             });
         });
         
-        // Exportar configuração
         document.getElementById('exportBtn').addEventListener('click', () => {
-            const config = {
-                asura: currentAsura,
-                portals: portals
-            };
+            const config = { asura: currentAsura, portals: portals };
             const dataStr = JSON.stringify(config, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -765,7 +775,6 @@
             URL.revokeObjectURL(url);
         });
         
-        // Importar configuração
         document.getElementById('importBtn').addEventListener('click', () => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -792,23 +801,15 @@
             input.click();
         });
         
-        // =========================
-        // ANIMAÇÃO
-        // =========================
         let time = 0;
-        
         function animate() {
             requestAnimationFrame(animate);
             time += 0.01;
             
-            // Animar anéis
             orbitRing1.rotation.z += 0.003;
             orbitRing2.rotation.z -= 0.002;
-            
-            // Animar asura
             asuraGroup.position.y = Math.sin(time * 2) * 0.03;
             
-            // Animar portais
             portalMeshes.forEach((portal, idx) => {
                 const yOffset = Math.sin(time * 2 + idx) * 0.03;
                 portal.position.y = (portal.userData.y || 0.3) + yOffset;
@@ -822,7 +823,6 @@
         
         animate();
         
-        // Redimensionamento
         window.addEventListener('resize', () => {
             const width = container.clientWidth;
             const height = container.clientHeight;
@@ -832,10 +832,8 @@
             labelRenderer.setSize(width, height);
         });
         
-        // Inicializar
         rebuildPortals();
-        
-        console.log('🗺️ Portal Planner carregado! Use o mouse para rotacionar a visão.');
+        console.log('🗺️ Portal Planner carregado! Clique duplo nos portais para viajar aos mini-mundos.');
     </script>
 </body>
 </html>
