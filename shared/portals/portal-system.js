@@ -419,7 +419,7 @@
         };
         
         // =========================
-        // PORTAIS PADRÃO PARA CADA ASURA - GARANTIDO
+        // PORTAIS PADRÃO PARA CADA ASURA
         // =========================
         const defaultPortals = {
             diva: [
@@ -479,29 +479,27 @@
         };
         
         // =========================
-        // MAPEAMENTO DOS MINI-MUNDOS - CAMINHOS CORRIGIDOS
+        // CAMINHOS ABSOLUTOS PARA O GITHUB PAGES
         // =========================
+        const BASE_URL = '/3d-slides/';
+        
         function getMiniMundoPath(portalName) {
-            // Caminho relativo: de shared/portals/ para mini-mundos/
-            const basePath = '../../mini-mundos/global/';
-            const exclusivePath = '../../mini-mundos/exclusive/';
-            
             const map = {
-                'SISTEMA SOLAR': basePath + 'sistema_solar/index.html',
-                'TERRA': basePath + 'earth/index.html',
-                'GALÁXIA': basePath + 'galaxy_animation/index.html',
-                'CINEMA': basePath + 'planner/index.html',
-                'PRAIA': basePath + 'beach/index.html',
-                'BEACH': basePath + 'beach/index.html',
-                'CIDADE CYBER': basePath + 'cybercity/index.html',
-                'CYBERCITY': basePath + 'cybercity/index.html',
-                'MUSEU DINOSSAURO': basePath + 'dinomuseum/index.html',
-                'DINOMUSEUM': basePath + 'dinomuseum/index.html',
-                'TEMPLO DRAGÃO': basePath + 'dragon-temple/index.html',
-                'DRAGON TEMPLE': basePath + 'dragon-temple/index.html',
-                'BIBLIOTECA': basePath + 'library/index.html',
-                'LIBRARY': basePath + 'library/index.html',
-                'BURACO NEGRO': exclusivePath + 'umbra/buraco_negro/index.html'
+                'SISTEMA SOLAR': BASE_URL + 'mini-mundos/global/sistema_solar/index.html',
+                'TERRA': BASE_URL + 'mini-mundos/global/earth/index.html',
+                'GALÁXIA': BASE_URL + 'mini-mundos/global/galaxy_animation/index.html',
+                'CINEMA': BASE_URL + 'mini-mundos/global/planner/index.html',
+                'PRAIA': BASE_URL + 'mini-mundos/global/beach/index.html',
+                'BEACH': BASE_URL + 'mini-mundos/global/beach/index.html',
+                'CIDADE CYBER': BASE_URL + 'mini-mundos/global/cybercity/index.html',
+                'CYBERCITY': BASE_URL + 'mini-mundos/global/cybercity/index.html',
+                'MUSEU DINOSSAURO': BASE_URL + 'mini-mundos/global/dinomuseum/index.html',
+                'DINOMUSEUM': BASE_URL + 'mini-mundos/global/dinomuseum/index.html',
+                'TEMPLO DRAGÃO': BASE_URL + 'mini-mundos/global/dragon-temple/index.html',
+                'DRAGON TEMPLE': BASE_URL + 'mini-mundos/global/dragon-temple/index.html',
+                'BIBLIOTECA': BASE_URL + 'mini-mundos/global/library/index.html',
+                'LIBRARY': BASE_URL + 'mini-mundos/global/library/index.html',
+                'BURACO NEGRO': BASE_URL + 'mini-mundos/exclusive/umbra/buraco_negro/index.html'
             };
             
             const path = map[portalName.toUpperCase()];
@@ -526,13 +524,11 @@
             
             console.log(`🚪 Abrindo portal: ${portalName} -> ${caminho}`);
             
-            // Salvar no localStorage qual Asura está chamando
             localStorage.setItem('lastAsura', currentAsura);
             localStorage.setItem('lastPortal', portalName);
             
             isRedirecting = true;
             
-            // Efeito de transição
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position: fixed;
@@ -713,14 +709,12 @@
         }
         
         function rebuildPortals() {
-            // Remover portais antigos
             portalMeshes.forEach(portal => scene.remove(portal));
             portalMeshes.length = 0;
             
             portalLabels.forEach(label => scene.remove(label));
             portalLabels.length = 0;
             
-            // Criar novos portais
             portals.forEach((portal, idx) => {
                 const portalMesh = createPortalMesh(portal.x, portal.z, portal.y || 0.3, portal.name, portal.icon, idx === selectedPortalIndex);
                 scene.add(portalMesh);
@@ -767,4 +761,231 @@
                 });
                 
                 el.addEventListener('dblclick', (e) => {
-                    if (e.target.classList.contains('delete-portal'))
+                    if (e.target.classList.contains('delete-portal')) return;
+                    const idx = parseInt(el.dataset.index);
+                    const portal = portals[idx];
+                    openMiniMundo(portal.name, portal.icon, portal.x, portal.z);
+                });
+            });
+            
+            document.querySelectorAll('.delete-portal').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Remover portal "${portals[parseInt(btn.dataset.index)].name}"?`)) {
+                        const idx = parseInt(btn.dataset.index);
+                        portals.splice(idx, 1);
+                        if (selectedPortalIndex >= portals.length) selectedPortalIndex = -1;
+                        rebuildPortals();
+                    }
+                });
+            });
+        }
+        
+        // =========================
+        // BOTÃO VOLTAR - CAMINHO ABSOLUTO
+        // =========================
+        const backBtn = document.getElementById('backToAsuraBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', () => {
+                const lastAsura = localStorage.getItem('lastAsura') || currentAsura;
+                window.location.href = BASE_URL + `worlds/${lastAsura}.html`;
+            });
+        }
+        
+        // =========================
+        // CARREGAR ASURA DA URL
+        // =========================
+        function loadAsuraFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const asuraParam = urlParams.get('asura');
+            
+            if (asuraParam && asurasConfig[asuraParam]) {
+                currentAsura = asuraParam;
+                console.log(`✅ Asura carregado da URL: ${currentAsura}`);
+            } else {
+                console.log(`⚠️ Nenhum asura na URL, usando padrão: ${currentAsura}`);
+            }
+            
+            if (defaultPortals[currentAsura] && defaultPortals[currentAsura].length > 0) {
+                portals = JSON.parse(JSON.stringify(defaultPortals[currentAsura]));
+                console.log(`📦 Portais carregados para ${currentAsura}: ${portals.length} portais`);
+            } else {
+                console.warn(`⚠️ Nenhum portal padrão para ${currentAsura}`);
+                portals = [];
+            }
+            
+            selectedPortalIndex = -1;
+            document.getElementById('mapTitle').textContent = `📍 ${asurasConfig[currentAsura].name} - Posição dos Portais`;
+            
+            if (backBtn) {
+                backBtn.style.setProperty('--asura-color', asurasConfig[currentAsura].color);
+            }
+        }
+        
+        // =========================
+        // INICIALIZAR UI DOS ASURAS
+        // =========================
+        function initAsuraSelector() {
+            const selector = document.getElementById('asuraSelector');
+            selector.innerHTML = '';
+            
+            Object.keys(asurasConfig).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `asura-btn ${key === currentAsura ? 'active' : ''}`;
+                btn.textContent = `${asurasConfig[key].icon} ${asurasConfig[key].name}`;
+                btn.style.setProperty('--asura-color', asurasConfig[key].color);
+                btn.addEventListener('click', () => {
+                    currentAsura = key;
+                    
+                    if (defaultPortals[currentAsura] && defaultPortals[currentAsura].length > 0) {
+                        portals = JSON.parse(JSON.stringify(defaultPortals[currentAsura]));
+                    } else {
+                        portals = [];
+                    }
+                    selectedPortalIndex = -1;
+                    
+                    document.querySelectorAll('.asura-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById('mapTitle').textContent = `📍 ${asurasConfig[currentAsura].name} - Posição dos Portais`;
+                    
+                    const color = asurasConfig[currentAsura].color;
+                    orbitRing1.material.color.setStyle(color);
+                    orbitRing2.material.color.setStyle(color);
+                    centerCircle.material.color.setStyle(color);
+                    
+                    if (backBtn) backBtn.style.setProperty('--asura-color', color);
+                    
+                    rebuildPortals();
+                });
+                selector.appendChild(btn);
+            });
+        }
+        
+        // =========================
+        // EVENTOS DA UI
+        // =========================
+        document.getElementById('addPortalBtn').addEventListener('click', () => {
+            const x = parseFloat(document.getElementById('posX').value);
+            const z = parseFloat(document.getElementById('posZ').value);
+            const y = parseFloat(document.getElementById('posY').value);
+            const name = document.getElementById('portalName').value.trim();
+            const icon = document.getElementById('portalIcon').value.trim() || '🚪';
+            
+            if (!name) {
+                alert('Digite um nome para o portal');
+                return;
+            }
+            
+            if (portals.length >= 20) {
+                alert('⚠️ Máximo de 20 portais por Asura');
+                return;
+            }
+            
+            const occupied = portals.some(p => Math.abs(p.x - x) < 0.3 && Math.abs(p.z - z) < 0.3);
+            if (occupied) {
+                alert('⚠️ Esta posição já está ocupada por outro portal!');
+                return;
+            }
+            
+            portals.push({ name, icon, x, y, z });
+            selectedPortalIndex = portals.length - 1;
+            rebuildPortals();
+            
+            document.getElementById('portalName').value = '';
+            document.getElementById('portalIcon').value = '🚪';
+        });
+        
+        document.querySelectorAll('.coord-preset').forEach(el => {
+            el.addEventListener('click', () => {
+                const x = parseFloat(el.dataset.x);
+                const z = parseFloat(el.dataset.z);
+                document.getElementById('posX').value = x;
+                document.getElementById('posZ').value = z;
+            });
+        });
+        
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const configData = { asura: currentAsura, portals: portals };
+            const dataStr = JSON.stringify(configData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `portals_${currentAsura}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+        
+        document.getElementById('importBtn').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const configData = JSON.parse(ev.target.result);
+                        if (configData.asura === currentAsura) {
+                            portals = configData.portals;
+                            selectedPortalIndex = -1;
+                            rebuildPortals();
+                        } else {
+                            alert(`Este arquivo é para ${configData.asura}, você está em ${currentAsura}`);
+                        }
+                    } catch (err) {
+                        alert('Arquivo inválido');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        });
+        
+        // =========================
+        // ANIMAÇÃO
+        // =========================
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            orbitRing1.rotation.z += 0.003;
+            orbitRing2.rotation.z -= 0.002;
+            asuraGroup.position.y = Math.sin(time * 2) * 0.03;
+            
+            portalMeshes.forEach((portal, idx) => {
+                const yOffset = Math.sin(time * 2 + idx) * 0.03;
+                portal.position.y = (portal.userData.y || 0.3) + yOffset;
+                portal.rotation.z += 0.01;
+            });
+            
+            controls.update();
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+        
+        // =========================
+        // INICIALIZAR
+        // =========================
+        function init() {
+            loadAsuraFromUrl();
+            initAsuraSelector();
+            rebuildPortals();
+            animate();
+            console.log('🗺️ Portal Planner carregado!');
+        }
+        
+        window.addEventListener('resize', () => {
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+            labelRenderer.setSize(width, height);
+        });
+        
+        init();
+    </script>
+</body>
+</html>
