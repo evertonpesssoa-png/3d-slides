@@ -281,6 +281,33 @@
             margin-right: 5px;
         }
         
+        /* Botão de voltar */
+        .back-to-asura {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            z-index: 10000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-to-asura:hover {
+            background: rgba(0,0,0,0.9);
+            transform: scale(1.05);
+            border-color: var(--asura-color, #44aaff);
+        }
+        
         @media (max-width: 900px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -289,6 +316,11 @@
     </style>
 </head>
 <body>
+    <!-- Botão de voltar para o mundo da Asura -->
+    <button class="back-to-asura" id="backToAsuraBtn">
+        ← Voltar para o Mundo da Asura
+    </button>
+    
     <div class="container">
         <h1>🗺️ PORTAL PLANNER</h1>
         <div class="subtitle">Clique duas vezes em um portal para viajar até o mini-mundo</div>
@@ -387,42 +419,96 @@
         };
         
         // =========================
-        // MAPEAMENTO DOS MINI-MUNDOS (PORTAIS REAIS) - CORRIGIDO PARA GITHUB PAGES
+        // DETECTAR AMBIENTE (LOCAL x PRODUÇÃO)
+        // =========================
+        function getBasePath() {
+            const isLocal = window.location.hostname === 'localhost' || 
+                            window.location.hostname === '127.0.0.1' ||
+                            window.location.hostname === '';
+            
+            if (isLocal) {
+                // Desenvolvimento local - ajuste conforme sua estrutura
+                return '../mini-mundos/global/';
+            } else {
+                // GitHub Pages
+                return 'https://evertonpesssoa-png.github.io/3d-slides/mini-mundos/global/';
+            }
+        }
+        
+        // =========================
+        // MAPEAMENTO DOS MINI-MUNDOS CORRIGIDO
         // =========================
         function getMiniMundoPath(portalName) {
-            // Base do seu repositório no GitHub Pages
-            const basePath = 'https://evertonpesssoa-png.github.io/3d-slides/';
+            const basePath = getBasePath();
+            const exclusivePath = window.location.hostname === 'localhost' || 
+                                  window.location.hostname === '127.0.0.1' 
+                                  ? '../mini-mundos/exclusive/' 
+                                  : 'https://evertonpesssoa-png.github.io/3d-slides/mini-mundos/exclusive/';
             
             const map = {
-                'SISTEMA SOLAR': basePath + 'mini-mundos/global/sistema_solar/index.html',
-                'TERRA': basePath + 'mini-mundos/global/earth/index.html',
-                'GALÁXIA': basePath + 'mini-mundos/global/galaxy_animation/index.html',
-                'CINEMA': basePath + 'mini-mundos/global/planner/index.html',
-                'PRAIA': basePath + 'mini-mundos/global/beach/index.html',
-                'BEACH': basePath + 'mini-mundos/global/beach/index.html',
-                'CIDADE CYBER': basePath + 'mini-mundos/global/cybercity/index.html',
-                'CYBERCITY': basePath + 'mini-mundos/global/cybercity/index.html',
-                'MUSEU DINOSSAURO': basePath + 'mini-mundos/global/dinomuseum/index.html',
-                'DINOMUSEUM': basePath + 'mini-mundos/global/dinomuseum/index.html',
-                'TEMPLO DRAGÃO': basePath + 'mini-mundos/global/dragon-temple/index.html',
-                'DRAGON TEMPLE': basePath + 'mini-mundos/global/dragon-temple/index.html',
-                'BIBLIOTECA': basePath + 'mini-mundos/global/library/index.html',
-                'LIBRARY': basePath + 'mini-mundos/global/library/index.html',
-                'BURACO NEGRO': basePath + 'mini-mundos/exclusive/umbra/buraco_negro/index.html'
+                'SISTEMA SOLAR': basePath + 'sistema_solar/index.html',
+                'TERRA': basePath + 'earth/index.html',
+                'GALÁXIA': basePath + 'galaxy_animation/index.html',
+                'CINEMA': basePath + 'planner/index.html',
+                'PRAIA': basePath + 'beach/index.html',
+                'BEACH': basePath + 'beach/index.html',
+                'CIDADE CYBER': basePath + 'cybercity/index.html',
+                'CYBERCITY': basePath + 'cybercity/index.html',
+                'MUSEU DINOSSAURO': basePath + 'dinomuseum/index.html',
+                'DINOMUSEUM': basePath + 'dinomuseum/index.html',
+                'TEMPLO DRAGÃO': basePath + 'dragon-temple/index.html',
+                'DRAGON TEMPLE': basePath + 'dragon-temple/index.html',
+                'BIBLIOTECA': basePath + 'library/index.html',
+                'LIBRARY': basePath + 'library/index.html',
+                'BURACO NEGRO': exclusivePath + 'umbra/buraco_negro/index.html'
             };
             return map[portalName.toUpperCase()] || null;
         }
         
-        // Navegação
-        function openMiniMundo(portalName) {
+        // =========================
+        // NAVEGAÇÃO PARA MINI-MUNDOS CORRIGIDA
+        // =========================
+        let isRedirecting = false;
+        
+        function openMiniMundo(portalName, portalIcon, portalX, portalZ) {
+            if (isRedirecting) return;
+            
             const caminho = getMiniMundoPath(portalName);
-            if (caminho) {
-                console.log(`🚪 Abrindo portal para: ${portalName} -> ${caminho}`);
-                window.location.href = caminho;
-            } else {
+            
+            if (!caminho) {
                 console.log(`⚠️ Portal "${portalName}" sem mini-mundo configurado`);
                 alert(`🌌 "${portalName}"\n\nMini-mundo em construção! Em breve você poderá viajar para este destino.`);
+                return;
             }
+            
+            console.log(`🚪 Abrindo portal para: ${portalName} -> ${caminho}`);
+            
+            // Salvar no localStorage qual Asura e portal estão sendo usados
+            localStorage.setItem('lastAsura', currentAsura);
+            localStorage.setItem('lastPortal', portalName);
+            localStorage.setItem('lastPortalPosition', JSON.stringify({ x: portalX, z: portalZ }));
+            
+            isRedirecting = true;
+            
+            // Criar efeito de transição visual
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, ${asurasConfig[currentAsura].color}, transparent);
+                opacity: 0;
+                transition: opacity 0.6s ease;
+                z-index: 99999;
+                pointer-events: none;
+            `;
+            document.body.appendChild(overlay);
+            
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = caminho;
+                }, 500);
+            });
         }
         
         // Portais padrão para cada Asura (posições distribuídas)
@@ -568,22 +654,21 @@
         scene.add(fillLight);
         
         const portalMeshes = [];
+        const portalLabels = [];
         
         function updatePortalColors() {
             const asuraColor = asurasConfig[currentAsura].color;
             portalMeshes.forEach((mesh, idx) => {
-                if (mesh.material) {
-                    mesh.material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
-                }
-                if (mesh.children[0] && mesh.children[0].material) {
-                    mesh.children[0].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
-                }
-                if (mesh.children[1] && mesh.children[1].material) {
-                    mesh.children[1].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
-                }
-                if (mesh.children[2] && mesh.children[2].material) {
-                    mesh.children[2].material.color.setStyle(idx === selectedPortalIndex ? '#ffaa44' : asuraColor);
-                }
+                const colorHex = idx === selectedPortalIndex ? '#ffaa44' : asuraColor;
+                mesh.traverse(child => {
+                    if (child.isMesh && child.material) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(mat => mat.color.setStyle(colorHex));
+                        } else {
+                            child.material.color.setStyle(colorHex);
+                        }
+                    }
+                });
             });
         }
         
@@ -608,7 +693,7 @@
             group.add(sphere);
             
             group.position.set(x, y, z);
-            group.userData = { name, icon, x, z, y, idx: portalMeshes.length };
+            group.userData = { name, icon, x, z, y };
             
             return group;
         }
@@ -629,25 +714,27 @@
             
             const label = new CSS2DObject(div);
             label.position.set(x, y + 0.5, z);
-            label.userData = { name, icon };
+            label.userData = { name, icon, x, z, y };
             
             // Clique na label também navega
             div.onclick = (e) => {
                 e.stopPropagation();
-                openMiniMundo(name);
+                openMiniMundo(name, icon, x, z);
             };
             
             return label;
         }
         
         function rebuildPortals() {
+            // Remover portais antigos
             portalMeshes.forEach(portal => scene.remove(portal));
             portalMeshes.length = 0;
             
-            scene.children.forEach(child => {
-                if (child.isCSS2DObject) scene.remove(child);
-            });
+            // Remover labels antigas
+            portalLabels.forEach(label => scene.remove(label));
+            portalLabels.length = 0;
             
+            // Criar novos portais
             portals.forEach((portal, idx) => {
                 const portalMesh = createPortalMesh(portal.x, portal.z, portal.y || 0.3, portal.name, portal.icon, idx === selectedPortalIndex);
                 scene.add(portalMesh);
@@ -655,6 +742,7 @@
                 
                 const label = createLabel(portal.name, portal.icon, portal.x, portal.z, portal.y || 0.3);
                 scene.add(label);
+                portalLabels.push(label);
             });
             
             updatePortalsList();
@@ -689,19 +777,46 @@
                     if (e.target.classList.contains('delete-portal')) return;
                     const idx = parseInt(el.dataset.index);
                     const portal = portals[idx];
-                    openMiniMundo(portal.name);
+                    openMiniMundo(portal.name, portal.icon, portal.x, portal.z);
                 });
             });
             
             document.querySelectorAll('.delete-portal').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const idx = parseInt(btn.dataset.index);
-                    portals.splice(idx, 1);
-                    if (selectedPortalIndex >= portals.length) selectedPortalIndex = -1;
-                    rebuildPortals();
+                    if (confirm(`Remover portal "${portals[parseInt(btn.dataset.index)].name}"?`)) {
+                        const idx = parseInt(btn.dataset.index);
+                        portals.splice(idx, 1);
+                        if (selectedPortalIndex >= portals.length) selectedPortalIndex = -1;
+                        if (selectedPortalIndex === idx) selectedPortalIndex = -1;
+                        rebuildPortals();
+                    }
                 });
             });
+        }
+        
+        // =========================
+        // BOTÃO VOLTAR PARA O MUNDO DA ASURA
+        // =========================
+        const backBtn = document.getElementById('backToAsuraBtn');
+        if (backBtn) {
+            // Verificar se veio de algum Asura específico via URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const asuraFromUrl = urlParams.get('asura');
+            
+            if (asuraFromUrl && asurasConfig[asuraFromUrl]) {
+                currentAsura = asuraFromUrl;
+                portals = JSON.parse(JSON.stringify(defaultPortals[currentAsura] || []));
+                selectedPortalIndex = -1;
+            }
+            
+            backBtn.addEventListener('click', () => {
+                const lastAsura = localStorage.getItem('lastAsura') || currentAsura;
+                window.location.href = `../../worlds/${lastAsura}.html`;
+            });
+            
+            // Atualizar cor do botão com o Asura atual
+            backBtn.style.setProperty('--asura-color', asurasConfig[currentAsura].color);
         }
         
         // Eventos da UI
@@ -726,6 +841,9 @@
                 centerCircle.material.color.setStyle(color);
                 
                 rebuildPortals();
+                
+                // Atualizar cor do botão voltar
+                if (backBtn) backBtn.style.setProperty('--asura-color', color);
             });
             asuraSelector.appendChild(btn);
         });
@@ -739,6 +857,11 @@
             
             if (!name) {
                 alert('Digite um nome para o portal');
+                return;
+            }
+            
+            if (portals.length >= 20) {
+                alert('⚠️ Máximo de 20 portais por Asura');
                 return;
             }
             
@@ -802,6 +925,25 @@
             };
             input.click();
         });
+        
+        // Carregar Asura da URL se existir
+        const urlParams = new URLSearchParams(window.location.search);
+        const asuraParam = urlParams.get('asura');
+        if (asuraParam && asurasConfig[asuraParam]) {
+            currentAsura = asuraParam;
+            portals = JSON.parse(JSON.stringify(defaultPortals[currentAsura] || []));
+            selectedPortalIndex = -1;
+            
+            // Atualizar UI
+            setTimeout(() => {
+                const btns = document.querySelectorAll('.asura-btn');
+                btns.forEach(btn => {
+                    if (btn.textContent.includes(asurasConfig[currentAsura].name)) {
+                        btn.click();
+                    }
+                });
+            }, 100);
+        }
         
         let time = 0;
         function animate() {
