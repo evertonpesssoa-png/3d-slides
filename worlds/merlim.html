@@ -71,6 +71,13 @@
         .portal-planner-btn:hover::before {
             opacity: 1;
         }
+        
+        /* Efeito de transição ao sair */
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
     </style>
 </head>
 <body>
@@ -109,10 +116,10 @@
     
     <div class="portal-overlay" id="portalOverlay"></div>
     
-    <!-- BOTÃO DO PORTAL PLANNER -->
-    <a href="../shared/portals/portal-system.html?asura=merlim" class="portal-planner-btn" title="Abrir Portal Planner">
+    <!-- BOTÃO DO PORTAL PLANNER - Garantido para funcionar -->
+    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">
         🗺️
-    </a>
+    </div>
 
     <script type="importmap">
         {
@@ -164,6 +171,52 @@
                 return "🔮 Como arquiteta deste reino tecnológico, vejo padrões e soluções onde outros veem caos. Me conte seu desafio, e juntos vamos construir a resposta.";
             }
         };
+        
+        // =========================
+        // BOTÃO DO PORTAL PLANNER - FUNCIONALIDADE GARANTIDA
+        // =========================
+        const portalPlannerBtn = document.getElementById('portalPlannerBtn');
+        
+        function openPortalPlanner() {
+            // Salvar no localStorage qual Asura está chamando
+            localStorage.setItem('lastAsura', 'merlim');
+            
+            // Criar efeito de transição
+            document.body.classList.add('transition-out');
+            
+            // Criar overlay de flash
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, #00d9ff, transparent);
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 10000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flashOverlay);
+            
+            requestAnimationFrame(() => {
+                flashOverlay.style.opacity = '0.8';
+                setTimeout(() => {
+                    // Redirecionar para o Portal Planner
+                    window.location.href = '../shared/portals/portal-system.html?asura=merlim';
+                }, 400);
+            });
+        }
+        
+        if (portalPlannerBtn) {
+            // Remover comportamento padrão de link se existir
+            portalPlannerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openPortalPlanner();
+            });
+            console.log('✅ Botão do Portal Planner configurado');
+        } else {
+            console.error('❌ Botão do Portal Planner não encontrado');
+        }
         
         // =========================
         // SETUP 3D COMPLETO COM EFEITOS
@@ -291,7 +344,9 @@
         // =========================
         // PARTÍCULAS DIGITAIS (CÓDIGO FLUTUANTE)
         // =========================
-        const particleCount = 1800;
+        // Reduzir partículas em mobile para performance
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 800 : 1800;
         const particleGeometry = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount; i++) {
@@ -353,7 +408,8 @@
         const codeSymbols = ['{', '}', '</>', '[]', '()', ';', '#', '~', 'const', 'let', 'function', '=>', 'class'];
         const symbols = [];
         
-        for (let i = 0; i < 40; i++) {
+        const symbolCount = isMobile ? 20 : 40;
+        for (let i = 0; i < symbolCount; i++) {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
             canvas.width = 256;
@@ -528,16 +584,18 @@
         
         // Efeito de portal de entrada
         const portalOverlay = document.getElementById('portalOverlay');
-        portalOverlay.style.setProperty('--asura-color', config.color);
-        setTimeout(() => {
-            portalOverlay.style.opacity = '0.6';
+        if (portalOverlay) {
+            portalOverlay.style.setProperty('--asura-color', config.color);
             setTimeout(() => {
-                portalOverlay.style.opacity = '0';
+                portalOverlay.style.opacity = '0.6';
                 setTimeout(() => {
-                    portalOverlay.style.display = 'none';
-                }, 800);
-            }, 500);
-        }, 50);
+                    portalOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        portalOverlay.style.display = 'none';
+                    }, 800);
+                }, 500);
+            }, 50);
+        }
         
         console.log('🟢 MERLIM carregado com todos os efeitos visuais e Portal Planner integrado!');
     </script>
