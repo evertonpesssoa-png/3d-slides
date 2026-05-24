@@ -387,26 +387,28 @@
         };
         
         // =========================
-        // MAPEAMENTO DOS MINI-MUNDOS (PORTAIS REAIS)
+        // MAPEAMENTO DOS MINI-MUNDOS (PORTAIS REAIS) - CORRIGIDO PARA GITHUB PAGES
         // =========================
         function getMiniMundoPath(portalName) {
+            // Base do seu repositório no GitHub Pages
+            const basePath = 'https://evertonpesssoa-png.github.io/3d-slides/';
+            
             const map = {
-                'SISTEMA SOLAR': 'mini-mundos/global/sistema_solar/index.html',
-                'TERRA': 'mini-mundos/global/earth/index.html',
-                'GALÁXIA': 'mini-mundos/global/galaxy_animation/index.html',
-                'CINEMA': 'mini-mundos/global/planner/index.html',
-                'GALAXY': 'mini-mundos/global/galaxy_animation/index.html',
-                'PRAIA': 'mini-mundos/global/beach/index.html',
-                'BEACH': 'mini-mundos/global/beach/index.html',
-                'CIDADE CYBER': 'mini-mundos/global/cybercity/index.html',
-                'CYBERCITY': 'mini-mundos/global/cybercity/index.html',
-                'MUSEU DINOSSAURO': 'mini-mundos/global/dinomuseum/index.html',
-                'DINOMUSEUM': 'mini-mundos/global/dinomuseum/index.html',
-                'TEMPLO DRAGÃO': 'mini-mundos/global/dragon-temple/index.html',
-                'DRAGON TEMPLE': 'mini-mundos/global/dragon-temple/index.html',
-                'BIBLIOTECA': 'mini-mundos/global/library/index.html',
-                'LIBRARY': 'mini-mundos/global/library/index.html',
-                'BURACO NEGRO': 'mini-mundos/exclusive/umbra/buraco_negro/index.html'
+                'SISTEMA SOLAR': basePath + 'mini-mundos/global/sistema_solar/index.html',
+                'TERRA': basePath + 'mini-mundos/global/earth/index.html',
+                'GALÁXIA': basePath + 'mini-mundos/global/galaxy_animation/index.html',
+                'CINEMA': basePath + 'mini-mundos/global/planner/index.html',
+                'PRAIA': basePath + 'mini-mundos/global/beach/index.html',
+                'BEACH': basePath + 'mini-mundos/global/beach/index.html',
+                'CIDADE CYBER': basePath + 'mini-mundos/global/cybercity/index.html',
+                'CYBERCITY': basePath + 'mini-mundos/global/cybercity/index.html',
+                'MUSEU DINOSSAURO': basePath + 'mini-mundos/global/dinomuseum/index.html',
+                'DINOMUSEUM': basePath + 'mini-mundos/global/dinomuseum/index.html',
+                'TEMPLO DRAGÃO': basePath + 'mini-mundos/global/dragon-temple/index.html',
+                'DRAGON TEMPLE': basePath + 'mini-mundos/global/dragon-temple/index.html',
+                'BIBLIOTECA': basePath + 'mini-mundos/global/library/index.html',
+                'LIBRARY': basePath + 'mini-mundos/global/library/index.html',
+                'BURACO NEGRO': basePath + 'mini-mundos/exclusive/umbra/buraco_negro/index.html'
             };
             return map[portalName.toUpperCase()] || null;
         }
