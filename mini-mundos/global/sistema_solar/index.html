@@ -1,130 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Solar System</title>
-<link rel=stylesheet href="style.css">
-<style>
-    /* =========================
-       BOTÃO CYBERPUNK VOLTAR
-    ========================= */
-    .cyberpunk-back {
-        position: fixed;
-        bottom: 25px;
-        left: 25px;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(12px);
-        color: #00d9ff;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-family: 'Courier New', monospace;
-        font-size: 14px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        z-index: 9999;
-        cursor: pointer;
-        border: 1px solid #00d9ff;
-        box-shadow: 0 0 15px rgba(0, 217, 255, 0.4), inset 0 0 5px rgba(0, 217, 255, 0.2);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+  <title>Solar System</title>
 
-    .cyberpunk-back:hover {
-        transform: translateX(-5px);
-        background: rgba(0, 217, 255, 0.15);
-        box-shadow: 0 0 25px rgba(0, 217, 255, 0.8), inset 0 0 10px rgba(0, 217, 255, 0.4);
-        letter-spacing: 3px;
-    }
+  <!-- 📱 RESPONSIVO -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .cyberpunk-back .back-icon {
-        font-size: 18px;
-        transition: transform 0.3s ease;
-    }
-
-    .cyberpunk-back:hover .back-icon {
-        transform: translateX(-4px);
-    }
-
-    @media (max-width: 768px) {
-        .cyberpunk-back {
-            padding: 8px 16px;
-            font-size: 11px;
-            bottom: 15px;
-            left: 15px;
-        }
-    }
-</style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- BOTÃO CYBERPUNK VOLTAR -->
-  <div class="cyberpunk-back" id="backToAsuraBtn">
-    <span class="back-icon">⤺</span>
-    <span>VOLTAR</span>
+
+  <!-- ⭐ FUNDO DE ESTRELAS -->
+  <div id="stars"></div>
+
+  <!-- 🔍 WRAPPER -->
+  <div class="viewport">
+    <div class="container">
+      <div class="sun">
+        <img src="./images/sun.png" alt="sun">
+      </div>
+
+      <div class="mercury"></div>
+      <div class="venus"></div>
+      <div class="earth">
+        <div class="moon"></div>
+      </div>
+      <div class="mars"></div>
+      <div class="jupiter"></div>
+      <div class="saturn"></div>
+      <div class="uranus"></div>
+      <div class="neptune"></div>
+      <div class="pluto"></div>
+    </div>
   </div>
 
-  <div class="container">
-    <div class="sun">
-      <img src="./images/sun.png" alt="sun">
-    </div>
-    <div class="mercury"></div>
-    <div class="venus"></div>
-    <div class="earth">
-      <div class="moon"></div>
-    </div>
-    <div class="mars"></div>
-    <div class="jupiter"></div>
-    <div class="saturn"></div>
-    <div class="uranus"></div>
-    <div class="neptune"></div>
-    <div class="pluto">
-    </div>
-  </div>
-  
   <script src="script.js"></script>
-  <script>
-    // =========================
-    // BOTÃO VOLTAR PARA O MUNDO DA ASURA
-    // =========================
-    const backBtn = document.getElementById('backToAsuraBtn');
-    
-    function goBackToAsura() {
-        // Recupera qual Asura chamou este mini-mundo
-        const lastAsura = localStorage.getItem('lastAsura') || 'merlim';
-        
-        // Efeito de transição
-        document.body.style.transition = 'opacity 0.4s ease';
-        document.body.style.opacity = '0';
-        
-        // Criar flash
-        const flash = document.createElement('div');
-        flash.style.cssText = `
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle, #00d9ff, transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 10000;
-            pointer-events: none;
-        `;
-        document.body.appendChild(flash);
-        
-        requestAnimationFrame(() => {
-            flash.style.opacity = '0.8';
-            setTimeout(() => {
-                window.location.href = `../../worlds/${lastAsura}.html`;
-            }, 400);
-        });
-    }
-    
-    if (backBtn) {
-        backBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            goBackToAsura();
-        });
-        console.log('✅ Botão voltar configurado');
-    }
-  </script>
 </body>
 </html>
