@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
     <title>ATENA • Reino Dourado Divino</title>
-    
+
     <link rel="stylesheet" href="../shared/css/base.css">
     <link rel="stylesheet" href="../shared/css/top-icons.css">
     <link rel="stylesheet" href="../shared/css/chat.css">
     <link rel="stylesheet" href="../shared/css/profile-panel.css">
     <link rel="stylesheet" href="../shared/css/portal.css">
-    
+
     <style>
+
         :root {
             --asura-color: #ffd700;
             --asura-glow: rgba(255, 215, 0, 0.6);
@@ -19,59 +21,14 @@
         }
 
         body {
-            background: radial-gradient(circle at 30% 20%, #0a0a1a, #030108);
+            background:
+            radial-gradient(circle at 30% 20%, #0a0a1a, #030108);
+            overflow: hidden;
         }
 
         /* =========================
-           BOTÃO PORTAL PLANNER
+           TRANSIÇÃO PORTAL
         ========================= */
-        .portal-planner-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            border: 2px solid #ffd700;
-            color: #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            cursor: pointer;
-            font-size: 28px;
-            transition: all .3s ease;
-            box-shadow: 0 0 20px rgba(255,215,0,.5);
-        }
-
-        .portal-planner-btn:hover{
-            transform: scale(1.1);
-            box-shadow: 0 0 35px rgba(255,215,0,.9);
-        }
-
-        .portal-planner-btn::before {
-            content: "🗺️ Portal Planner";
-            position: absolute;
-            top: 70px;
-            left: 0;
-            background: rgba(0,0,0,0.9);
-            color: #ffd700;
-            font-size: 12px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            border: 1px solid #ffd700;
-            font-family: sans-serif;
-        }
-
-        .portal-planner-btn:hover::before {
-            opacity: 1;
-        }
 
         body.transition-out{
             opacity:0;
@@ -79,14 +36,111 @@
             transition:all .4s ease;
         }
 
-        .top-icons {
+        /* =========================
+           BOTÃO PORTAL PLANNER
+        ========================= */
+
+        .portal-planner-btn {
+
             position: fixed;
+
+            top: 20px;
+            left: 20px;
+
+            width: 55px;
+            height: 55px;
+
+            border-radius: 50%;
+
+            background: rgba(0,0,0,0.85);
+
+            backdrop-filter: blur(12px);
+
+            border: 2px solid #ffd700;
+
+            color: #ffd700;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 9999;
+
+            cursor: pointer;
+
+            font-size: 28px;
+
+            transition: all .3s ease;
+
+            box-shadow:
+            0 0 20px rgba(255,215,0,.5);
+
+        }
+
+        .portal-planner-btn:hover{
+
+            transform: scale(1.1);
+
+            box-shadow:
+            0 0 35px rgba(255,215,0,.9);
+
+        }
+
+        .portal-planner-btn::before {
+
+            content: "🗺️ Portal Planner";
+
+            position: absolute;
+
+            top: 70px;
+            left: 0;
+
+            background: rgba(0,0,0,0.9);
+
+            color: #ffd700;
+
+            font-size: 12px;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            white-space: nowrap;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: opacity 0.3s;
+
+            border: 1px solid #ffd700;
+
+            font-family: sans-serif;
+
+        }
+
+        .portal-planner-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* =========================
+           TOP ICONS
+        ========================= */
+
+        .top-icons {
+
+            position: fixed;
+
             top: 20px;
             right: 20px;
+
             z-index: 9998;
+
             display: flex;
+
             gap: 12px;
         }
+
     </style>
 </head>
 
@@ -94,81 +148,178 @@
 
     <div id="canvas-container"></div>
 
-    <!-- PORTAL -->
-    <div class="portal-planner-btn" id="portalPlannerBtn">
+    <!-- =========================
+         PORTAL BUTTON
+    ========================== -->
+
+    <div
+        class="portal-planner-btn"
+        id="portalPlannerBtn">
+
         🗺️
+
     </div>
 
-    <div class="top-icons">
-        <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
+    <!-- =========================
+         TOP ICONS
+    ========================== -->
 
-        <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
+    <div class="top-icons">
+
+        <div
+            class="top-icon"
+            id="backButton"
+            data-tooltip="Voltar ao Grimório">
+
+            ←
+
+        </div>
+
+        <div
+            class="top-icon voice-icon"
+            id="voiceButton"
+            data-tooltip="Modo Jarvis (clique para ativar)">
+
             <span class="brain-icon">🦉</span>
+
             <span class="mic-icon">🎤</span>
 
             <div class="mental-wave"></div>
 
             <div class="brain-waves left">
-                <span></span><span></span><span></span><span></span><span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
             <div class="brain-waves right">
-                <span></span><span></span><span></span><span></span><span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+
         </div>
 
-        <div class="top-icon" id="profileButton" data-tooltip="Perfil da Atena">
+        <div
+            class="top-icon"
+            id="profileButton"
+            data-tooltip="Perfil da Atena">
+
             🦉
+
         </div>
+
     </div>
 
-    <div class="profile-panel" id="profilePanel"></div>
+    <!-- =========================
+         PROFILE PANEL
+    ========================== -->
 
-    <div class="chat-container" id="chatContainer">
+    <div
+        class="profile-panel"
+        id="profilePanel">
+    </div>
 
-        <div class="chat-header" id="chatHeader">
+    <!-- =========================
+         CHAT
+    ========================== -->
+
+    <div
+        class="chat-container"
+        id="chatContainer">
+
+        <div
+            class="chat-header"
+            id="chatHeader">
 
             <div class="chat-header-info">
 
-                <div class="chat-avatar">🦉</div>
+                <div class="chat-avatar">
+                    🦉
+                </div>
 
                 <div>
-                    <h4>ATENA • Mestra Divina</h4>
+
+                    <h4>
+                        ATENA • Mestra Divina
+                    </h4>
+
                     <div class="chat-status">
                         🟢 online | sabedoria infinita
                     </div>
+
                 </div>
 
             </div>
 
-            <div class="chat-toggle" id="chatToggle">
+            <div
+                class="chat-toggle"
+                id="chatToggle">
+
                 ▼
+
             </div>
 
         </div>
 
-        <div class="chat-body" id="chatBody">
+        <div
+            class="chat-body"
+            id="chatBody">
 
-            <div class="chat-messages" id="chatMessages"></div>
+            <div
+                class="chat-messages"
+                id="chatMessages">
+            </div>
 
             <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
-                <button id="sendChatBtn">➤</button>
+
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Digite sua mensagem...">
+
+                <button id="sendChatBtn">
+                    ➤
+                </button>
+
             </div>
 
         </div>
+
     </div>
 
-    <div class="portal-overlay" id="portalOverlay"></div>
+    <!-- =========================
+         PORTAL OVERLAY
+    ========================== -->
+
+    <div
+        class="portal-overlay"
+        id="portalOverlay">
+    </div>
+
+    <!-- =========================
+         IMPORT MAP
+    ========================== -->
 
     <script type="importmap">
     {
         "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            "three":
+            "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+
+            "three/addons/":
+            "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
         }
     }
     </script>
+
+    <!-- =========================
+         SCRIPT MODULE
+    ========================== -->
 
     <script type="module">
 
@@ -219,62 +370,136 @@
             },
 
             welcomeMessage:
-            '✨ Bem-vindo ao meu Reino Dourado. Sou Atena, a mestra divina.',
+            '✨ Bem-vindo ao meu Reino Dourado. Sou Atena, a mestra divina. Todo conhecimento que você busca, eu posso te ensinar.',
 
             skills: [
-                { name: '📚 Pedagogia & Ensino', value: 100 },
-                { name: '🦉 Sabedoria Divina', value: 99 },
-                { name: '🎓 Formação & Capacitação', value: 98 },
-                { name: '⭐ Mentoria & Orientação', value: 100 }
+
+                {
+                    name:
+                    '📚 Pedagogia & Ensino',
+                    value: 100
+                },
+
+                {
+                    name:
+                    '🦉 Sabedoria Divina',
+                    value: 99
+                },
+
+                {
+                    name:
+                    '🎓 Formação & Capacitação',
+                    value: 98
+                },
+
+                {
+                    name:
+                    '⭐ Mentoria & Orientação',
+                    value: 100
+                }
+
             ],
 
             personalityText:
-            '🦉 "O conhecimento é a luz que transforma."',
+            '🦉 "O conhecimento é a luz que transforma. Sou sua mestra e guia."<br>Atena é a essência da pedagogia.',
 
             getResponse: (msg) => {
 
-                const lower = msg.toLowerCase();
+                const lower =
+                msg.toLowerCase();
 
-                if (lower.includes('oi') || lower.includes('olá')) {
-                    return "✨ Olá, aprendiz!";
+                if (
+                    lower.includes('olá') ||
+                    lower.includes('oi')
+                ) {
+
+                    return
+                    "✨ Olá, aprendiz!";
+
                 }
 
-                if (lower.includes('aprender')) {
-                    return "📚 Posso te ensinar qualquer área.";
+                if (
+                    lower.includes('ensinar') ||
+                    lower.includes('aprender')
+                ) {
+
+                    return
+                    "📚 Posso te ensinar qualquer área.";
                 }
 
-                return "🦉 O conhecimento ilumina o espírito.";
+                if (
+                    lower.includes('concurso')
+                ) {
+
+                    return
+                    "🎯 Concursos exigem disciplina.";
+
+                }
+
+                if (
+                    lower.includes('obrigado')
+                ) {
+
+                    return
+                    "💛 Continue evoluindo.";
+                }
+
+                return
+                "🦉 O conhecimento ilumina o espírito.";
+
             }
+
         };
 
         // =========================
-        // PORTAL
+        // PORTAL SYSTEM
         // =========================
 
         const portalPlannerBtn =
-        document.getElementById('portalPlannerBtn');
+        document.getElementById(
+            'portalPlannerBtn'
+        );
 
         function openPortalPlanner() {
 
-            localStorage.setItem('lastAsura', 'atena');
+            localStorage.setItem(
+                'lastAsura',
+                'atena'
+            );
 
-            document.body.classList.add('transition-out');
+            document.body.classList.add(
+                'transition-out'
+            );
 
             const flashOverlay =
             document.createElement('div');
 
             flashOverlay.style.cssText = `
+
                 position: fixed;
                 inset: 0;
+
                 background:
-                radial-gradient(circle, #ffd700, transparent);
+                radial-gradient(
+                    circle,
+                    #ffd700,
+                    transparent
+                );
+
                 opacity: 0;
-                transition: opacity .5s ease;
+
+                transition:
+                opacity .5s ease;
+
                 z-index: 10000;
+
                 pointer-events: none;
+
             `;
 
-            document.body.appendChild(flashOverlay);
+            document.body.appendChild(
+                flashOverlay
+            );
 
             requestAnimationFrame(() => {
 
@@ -288,18 +513,23 @@
                 }, 400);
 
             });
+
         }
 
         if (portalPlannerBtn) {
 
-            portalPlannerBtn.addEventListener('click', (e) => {
+            portalPlannerBtn
+            .addEventListener(
+                'click',
+                (e) => {
 
-                e.preventDefault();
-                e.stopPropagation();
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                openPortalPlanner();
+                    openPortalPlanner();
 
-            });
+                }
+            );
         }
 
         // =========================
@@ -307,20 +537,29 @@
         // =========================
 
         const container =
-        document.getElementById('canvas-container');
+        document.getElementById(
+            'canvas-container'
+        );
 
-        const scene = new THREE.Scene();
+        const scene =
+        new THREE.Scene();
 
         scene.background =
-        new THREE.Color(config.bgColor);
+        new THREE.Color(
+            config.bgColor
+        );
 
         scene.fog =
-        new THREE.FogExp2(config.bgColor, 0.008);
+        new THREE.FogExp2(
+            config.bgColor,
+            0.008
+        );
 
         const camera =
         new THREE.PerspectiveCamera(
             45,
-            window.innerWidth / window.innerHeight,
+            window.innerWidth /
+            window.innerHeight,
             0.1,
             1000
         );
@@ -343,45 +582,106 @@
             window.innerHeight
         );
 
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(
+            window.devicePixelRatio
+        );
 
         renderer.shadowMap.enabled = true;
 
-        container.appendChild(renderer.domElement);
+        container.appendChild(
+            renderer.domElement
+        );
 
         const controls =
-        new OrbitControls(camera, renderer.domElement);
+        new OrbitControls(
+            camera,
+            renderer.domElement
+        );
 
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
 
-        controls.target.set(0, 0.8, 0);
+        controls.enableZoom = true;
+        controls.enablePan = true;
+
+        controls.target.set(
+            0,
+            0.8,
+            0
+        );
 
         // =========================
-        // LUZES
+        // LIGHTS
         // =========================
 
         const ambientLight =
-        new THREE.AmbientLight(0x332200, 0.5);
+        new THREE.AmbientLight(
+            0x332200,
+            0.5
+        );
 
         scene.add(ambientLight);
 
         const mainLight =
-        new THREE.DirectionalLight(0xffdd88, 1.2);
+        new THREE.DirectionalLight(
+            0xffdd88,
+            1.2
+        );
 
-        mainLight.position.set(3,5,2);
+        mainLight.position.set(
+            3,
+            5,
+            2
+        );
+
+        mainLight.castShadow = true;
 
         scene.add(mainLight);
 
         const fillLight =
-        new THREE.PointLight(config.color, 0.7);
+        new THREE.PointLight(
+            config.color,
+            0.7
+        );
 
-        fillLight.position.set(1,2,2);
+        fillLight.position.set(
+            1,
+            2,
+            2
+        );
 
         scene.add(fillLight);
 
+        const backLight =
+        new THREE.PointLight(
+            0xffaa44,
+            0.45
+        );
+
+        backLight.position.set(
+            -2,
+            1.5,
+            -3
+        );
+
+        scene.add(backLight);
+
+        const goldenLight =
+        new THREE.PointLight(
+            0xffcc66,
+            0.5
+        );
+
+        goldenLight.position.set(
+            0.5,
+            2.5,
+            1
+        );
+
+        scene.add(goldenLight);
+
         // =========================
-        // CHÃO
+        // GROUND
         // =========================
 
         const gridHelper =
@@ -394,30 +694,89 @@
 
         gridHelper.position.y = -0.5;
 
+        gridHelper.material.transparent =
+        true;
+
+        gridHelper.material.opacity =
+        0.4;
+
         scene.add(gridHelper);
 
         const groundPlane =
         new THREE.Mesh(
 
-            new THREE.PlaneGeometry(9,9),
+            new THREE.PlaneGeometry(
+                9,
+                9
+            ),
 
             new THREE.MeshStandardMaterial({
+
                 color: 0x1a0f00,
+
                 roughness: 0.5,
+
                 metalness: 0.4,
+
                 transparent: true,
+
                 opacity: 0.5
+
             })
 
         );
 
-        groundPlane.rotation.x = -Math.PI / 2;
-        groundPlane.position.y = -0.5;
+        groundPlane.rotation.x =
+        -Math.PI / 2;
+
+        groundPlane.position.y =
+        -0.5;
+
+        groundPlane.receiveShadow =
+        true;
 
         scene.add(groundPlane);
 
         // =========================
-        // PARTÍCULAS
+        // GLOW CIRCLE
+        // =========================
+
+        const circleGlow =
+        new THREE.Mesh(
+
+            new THREE.CircleGeometry(
+                1.3,
+                32
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color: config.color,
+
+                emissive: config.color,
+
+                emissiveIntensity: 0.5,
+
+                transparent: true,
+
+                opacity: 0.5,
+
+                side: THREE.DoubleSide
+
+            })
+
+        );
+
+        circleGlow.rotation.x =
+        -Math.PI / 2;
+
+        circleGlow.position.y =
+        -0.45;
+
+        scene.add(circleGlow);
+
+        // =========================
+        // PARTICLES
         // =========================
 
         const particleCount = 2000;
@@ -426,34 +785,49 @@
         new THREE.BufferGeometry();
 
         const particlePositions =
-        new Float32Array(particleCount * 3);
+        new Float32Array(
+            particleCount * 3
+        );
 
-        for (let i = 0; i < particleCount; i++) {
+        for (
+            let i = 0;
+            i < particleCount;
+            i++
+        ) {
 
-            particlePositions[i * 3] =
-            (Math.random() - 0.5) * 16;
+            particlePositions[i*3] =
+            (Math.random()-0.5)*16;
 
-            particlePositions[i * 3 + 1] =
-            Math.random() * 5;
+            particlePositions[i*3+1] =
+            Math.random()*5;
 
-            particlePositions[i * 3 + 2] =
-            (Math.random() - 0.5) * 14;
+            particlePositions[i*3+2] =
+            (Math.random()-0.5)*14;
+
         }
 
         particleGeometry.setAttribute(
+
             'position',
+
             new THREE.BufferAttribute(
                 particlePositions,
                 3
             )
+
         );
 
         const particleMaterial =
         new THREE.PointsMaterial({
+
             color: config.color,
+
             size: 0.05,
+
             transparent: true,
+
             opacity: 0.55
+
         });
 
         const particles =
@@ -465,76 +839,111 @@
         scene.add(particles);
 
         // =========================
-        // MODELO 3D
+        // MODEL
         // =========================
 
-        const loader = new GLTFLoader();
+        const loader =
+        new GLTFLoader();
 
         let model = null;
         let mixer = null;
 
-        loader.load(config.modelPath, (gltf) => {
+        loader.load(
+            config.modelPath,
 
-            model = gltf.scene;
+            (gltf) => {
 
-            model.position.set(
-                0,
-                config.modelPositionY,
-                0
-            );
+                model =
+                gltf.scene;
 
-            model.scale.set(
-                config.modelScale,
-                config.modelScale,
-                config.modelScale
-            );
+                model.position.set(
+                    0,
+                    config.modelPositionY,
+                    0
+                );
 
-            model.traverse((node) => {
+                model.scale.set(
+                    config.modelScale,
+                    config.modelScale,
+                    config.modelScale
+                );
 
-                if (node.isMesh) {
-                    node.castShadow = true;
-                }
+                model.traverse((node) => {
 
-            });
-
-            scene.add(model);
-
-            if (
-                gltf.animations &&
-                gltf.animations.length > 0
-            ) {
-
-                mixer =
-                new THREE.AnimationMixer(model);
-
-                gltf.animations.forEach((clip) => {
-
-                    mixer.clipAction(clip).play();
+                    if (node.isMesh) {
+                        node.castShadow = true;
+                    }
 
                 });
+
+                scene.add(model);
+
+                if (
+                    gltf.animations &&
+                    gltf.animations.length > 0
+                ) {
+
+                    mixer =
+                    new THREE.AnimationMixer(
+                        model
+                    );
+
+                    gltf.animations
+                    .forEach((clip) => {
+
+                        mixer
+                        .clipAction(clip)
+                        .play();
+
+                    });
+
+                }
+
             }
-
-        });
+        );
 
         // =========================
-        // ANIMAÇÃO
+        // ANIMATION
         // =========================
 
-        const clock = new THREE.Clock();
+        let time = 0;
 
         function animate() {
 
-            requestAnimationFrame(animate);
+            requestAnimationFrame(
+                animate
+            );
 
-            const delta = clock.getDelta();
+            time += 0.007;
 
-            if (mixer) mixer.update(delta);
+            if (mixer) {
+                mixer.update(0.016);
+            }
 
-            particles.rotation.y += 0.0008;
+            particles.rotation.y =
+            time * 0.06;
+
+            particles.rotation.x =
+            Math.sin(time * 0.12)
+            * 0.08;
+
+            fillLight.intensity =
+            0.55 +
+            Math.sin(time * 2.0)
+            * 0.2;
+
+            goldenLight.intensity =
+            0.4 +
+            Math.sin(time * 1.5)
+            * 0.15;
 
             controls.update();
 
-            renderer.render(scene, camera);
+            renderer.render(
+                scene,
+                camera
+            );
+
         }
 
         animate();
@@ -543,53 +952,71 @@
         // RESIZE
         // =========================
 
-        window.addEventListener('resize', () => {
+        window.addEventListener(
+            'resize',
+            () => {
 
-            camera.aspect =
-            window.innerWidth / window.innerHeight;
+                camera.aspect =
+                window.innerWidth /
+                window.innerHeight;
 
-            camera.updateProjectionMatrix();
+                camera.updateProjectionMatrix();
 
-            renderer.setSize(
-                window.innerWidth,
-                window.innerHeight
-            );
+                renderer.setSize(
+                    window.innerWidth,
+                    window.innerHeight
+                );
 
-        });
+            }
+        );
 
         // =========================
-        // UI / CHAT / VOZ
+        // UI / CHAT / VOICE
         // =========================
 
         initUI(config);
 
         const chat =
         new ChatSystem(
+
             'chatContainer',
+
             config,
+
             (response) => {
 
-                if (voice?.isJarvisActive?.()) {
-                    voice.speak(response);
+                if (
+                    voice?.isJarvisActive?.()
+                ) {
+
+                    voice.speak(
+                        response
+                    );
+
                 }
 
             }
+
         );
 
         const voiceButtonElem =
-        document.getElementById('voiceButton');
+        document.getElementById(
+            'voiceButton'
+        );
 
         let voice = null;
 
         if (voiceButtonElem) {
 
-            voice = new VoiceAssistant(
+            voice =
+            new VoiceAssistant(
 
                 voiceButtonElem,
 
                 (text) => {
 
-                    document.getElementById(
+                    document
+                    .getElementById(
                         'chatInput'
                     ).value = text;
 
@@ -600,11 +1027,22 @@
                 null,
 
                 {
-                    asuraName: config.name,
-                    continuous: true
+
+                    asuraName:
+                    config.name,
+
+                    continuous:
+                    true
+
                 }
+
             );
+
         }
+
+        // =========================
+        // WELCOME MESSAGES
+        // =========================
 
         setTimeout(() => {
 
@@ -616,11 +1054,26 @@
             setTimeout(() => {
 
                 chat.addMessage(
-                    "🗺️ Use o portal dourado para acessar o Portal Planner.",
+
+                    "🎤 Clique na coruja para ativar o modo Jarvis.",
+
                     false
+
                 );
 
-            }, 2000);
+            }, 1800);
+
+            setTimeout(() => {
+
+                chat.addMessage(
+
+                    "🗺️ Use o portal dourado para acessar o Portal Planner.",
+
+                    false
+
+                );
+
+            }, 3600);
 
         }, 500);
 
@@ -629,7 +1082,9 @@
         // =========================
 
         const portalOverlay =
-        document.getElementById('portalOverlay');
+        document.getElementById(
+            'portalOverlay'
+        );
 
         portalOverlay.style.setProperty(
             '--asura-color',
@@ -638,11 +1093,13 @@
 
         setTimeout(() => {
 
-            portalOverlay.style.opacity = '0.6';
+            portalOverlay.style.opacity =
+            '0.6';
 
             setTimeout(() => {
 
-                portalOverlay.style.opacity = '0';
+                portalOverlay.style.opacity =
+                '0';
 
                 setTimeout(() => {
 
@@ -656,7 +1113,7 @@
         }, 50);
 
         console.log(
-            '🟢 ATENA carregada com portal planner!'
+            '🟢 ATENA carregada com Reino Dourado + Portal Planner!'
         );
 
     </script>
