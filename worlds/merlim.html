@@ -18,6 +18,59 @@
             --asura-gradient: linear-gradient(135deg, #00d9ff, #00aaff);
         }
         body { background: radial-gradient(circle at 30% 20%, #050a18, #030108); }
+        
+        /* Botão do Portal Planner */
+        .portal-planner-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: #00d9ff;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 34px;
+            z-index: 9999;
+            border: 2px solid #00d9ff;
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        
+        .portal-planner-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(0, 217, 255, 0.8);
+            background: rgba(0, 217, 255, 0.2);
+        }
+        
+        /* Tooltip do botão */
+        .portal-planner-btn::before {
+            content: "🗺️ Portal Planner";
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            color: #00d9ff;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #00d9ff;
+        }
+        
+        .portal-planner-btn:hover::before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +108,11 @@
     </div>
     
     <div class="portal-overlay" id="portalOverlay"></div>
+    
+    <!-- BOTÃO DO PORTAL PLANNER -->
+    <a href="../../shared/portals/portal-system.html?asura=merlim" class="portal-planner-btn" title="Abrir Portal Planner">
+        🗺️
+    </a>
 
     <script type="importmap">
         {
@@ -87,7 +145,7 @@
             modelPositionY: -0.25,
             bgColor: 0x050a18,
             cameraPosition: { x: 3.2, y: 2.2, z: 4.2 },
-            welcomeMessage: '✨ Bem-vindo ao meu reino tecnológico. Sou Merlim, a engenheira mágica. Código, sistemas e arquitetura são meus encantamentos.',
+            welcomeMessage: '✨ Bem-vindo ao meu reino tecnológico. Sou Merlim, a engenheira mágica. Código, sistemas e arquitetura são meus encantamentos. Use o botão 🗺️ para acessar o Portal Planner e posicionar seus próprios portais!',
             skills: [
                 { name: '🔧 Arquitetura de Sistemas', value: 97 },
                 { name: '⚡ Programação & Código', value: 96 },
@@ -98,6 +156,7 @@
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
                 if (lower.includes('olá') || lower.includes('oi')) return "✨ Olá! Sou Merlim, a engenheira mágica. Código é minha poesia. Como posso te ajudar a construir algo incrível?";
+                if (lower.includes('portal') || lower.includes('planner')) return "🗺️ Ah, o Portal Planner! Use o botão no canto inferior direito. Lá você pode posicionar portais para viajar a outros mundos dentro do meu reino tecnológico.";
                 if (lower.includes('código') || lower.includes('programação')) return "🔧 Código é magia pura! Posso ajudar com arquitetura de sistemas, debug, otimização. Qual linguagem ou projeto você está trabalhando?";
                 if (lower.includes('arquitetura') || lower.includes('sistema')) return "🏗️ Arquitetura de sistemas é minha especialidade. Posso ajudar a estruturar projetos robustos e escaláveis.";
                 if (lower.includes('bug') || lower.includes('erro')) return "🐛 Um bug? Deixe-me analisar... Como engenheira mágica, consigo rastrear e resolver problemas com eficiência.";
@@ -463,6 +522,7 @@
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => {
                 chat.addMessage("🎤 Dica: Clique no ícone 💻 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
+                chat.addMessage("🗺️ Dica: Clique no botão com o mapa 🗺️ no canto inferior direito para acessar o PORTAL PLANNER e posicionar seus portais!", false);
             }, 2000);
         }, 500);
         
@@ -479,7 +539,7 @@
             }, 500);
         }, 50);
         
-        console.log('🟢 MERLIM carregado com todos os efeitos visuais!');
+        console.log('🟢 MERLIM carregado com todos os efeitos visuais e Portal Planner integrado!');
     </script>
 </body>
 </html>
