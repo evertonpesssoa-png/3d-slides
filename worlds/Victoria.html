@@ -20,7 +20,7 @@
         body { background: radial-gradient(circle at 30% 20%, #0a0000, #030108); }
         
         /* =========================
-           BOTÃO DO PORTAL PLANNER - TOPO ESQUERDO
+           BOTÃO DO PORTAL PLANNER - TOPO ESQUERDO (IGUAL AO MERLIM)
         ========================= */
         .portal-planner-btn {
             position: fixed;
@@ -87,188 +87,6 @@
             display: flex;
             gap: 12px;
         }
-
-        /* =========================
-           NOVO BOTÃO MINI-MUNDOS (INFERNAL)
-        ========================= */
-        .mini-mundos-btn {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            color: #ff3300;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            border: 2px solid #ff3300;
-            box-shadow: 0 0 15px rgba(255, 50, 0, 0.5);
-            transition: all 0.3s ease;
-            font-family: monospace;
-        }
-        .mini-mundos-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 0 30px #ff3300;
-            background: rgba(255, 50, 0, 0.2);
-        }
-        .mini-mundos-btn[data-tooltip]:before {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 70px;
-            right: 0;
-            background: rgba(0,0,0,0.9);
-            color: #ff6600;
-            font-size: 12px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            font-family: 'Poppins', sans-serif;
-            border: 1px solid #ff3300;
-        }
-        .mini-mundos-btn:hover:before {
-            opacity: 1;
-        }
-
-        /* MODAL DOS MINI-MUNDOS (VERSÃO GUERRA) */
-        .mini-mundos-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 0, 0, 0.9);
-            backdrop-filter: blur(12px);
-            z-index: 10050;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.3s, opacity 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-        .mini-mundos-modal.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .modal-container {
-            background: rgba(20, 0, 0, 0.95);
-            border-radius: 40px;
-            padding: 30px 25px;
-            width: 90%;
-            max-width: 900px;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 70px rgba(255, 0, 0, 0.4);
-            backdrop-filter: blur(16px);
-            transform: scale(0.95);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            text-align: center;
-        }
-        .mini-mundos-modal.active .modal-container {
-            transform: scale(1);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 0, 0, 0.6);
-            padding-bottom: 15px;
-        }
-        .modal-header h2 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #ff3300, #ff0000);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin: 0;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px #ff0000;
-        }
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 32px;
-            color: #ff3300;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .close-modal:hover {
-            background: rgba(255, 0, 0, 0.3);
-            transform: rotate(90deg);
-            box-shadow: 0 0 12px #ff0000;
-        }
-        .portals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 25px;
-            margin: 30px 0 20px;
-        }
-        .portal-card {
-            background: rgba(30, 0, 0, 0.7);
-            border-radius: 28px;
-            padding: 20px 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            border: 1px solid rgba(255, 50, 0, 0.5);
-            backdrop-filter: blur(4px);
-        }
-        .portal-card:hover {
-            transform: translateY(-8px);
-            border-color: #ff3300;
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.5);
-            background: rgba(100, 0, 0, 0.6);
-        }
-        .portal-icon {
-            font-size: 64px;
-            display: inline-block;
-            margin-bottom: 12px;
-            filter: drop-shadow(0 0 6px #ff3300);
-        }
-        .portal-card h3 {
-            font-size: 1.5rem;
-            margin: 10px 0 6px;
-            color: #ffaaaa;
-        }
-        .portal-card p {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            color: #ffcccc;
-        }
-        .portal-badge {
-            margin-top: 12px;
-            font-size: 12px;
-            color: #ff6600;
-            background: rgba(255, 50, 0, 0.3);
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 30px;
-            letter-spacing: 1px;
-        }
-        .modal-footer {
-            font-size: 0.8rem;
-            margin-top: 15px;
-            color: #ff8866;
-            border-top: 1px dashed #aa3300;
-            padding-top: 18px;
-        }
-        @media (max-width: 600px) {
-            .modal-container { padding: 20px 15px; }
-            .portal-card h3 { font-size: 1.2rem; }
-            .portal-icon { font-size: 48px; }
-        }
     </style>
 </head>
 <body>
@@ -289,8 +107,6 @@
             <div class="brain-waves right"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
         <div class="top-icon" id="profileButton" data-tooltip="Perfil da Victoria">🏅</div>
-        <!-- NOVO BOTÃO MINI-MUNDOS (INFERNAL) -->
-        <div class="mini-mundos-btn" id="miniMundosBtn" data-tooltip="🌀 Mini-Mundos • Conquiste outros reinos">🌀</div>
     </div>
     
     <div class="profile-panel" id="profilePanel"></div>
@@ -313,51 +129,6 @@
     </div>
     
     <div class="portal-overlay" id="portalOverlay"></div>
-    
-    <!-- MODAL DOS MINI-MUNDOS (PORTAL DE BATALHA) -->
-    <div id="miniMundosModal" class="mini-mundos-modal">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2>🌀 PORTAIS DE GUERRA • MINI-MUNDOS 🌀</h2>
-                <button class="close-modal" id="closeModalBtn">✕</button>
-            </div>
-            <div class="portals-grid">
-                <div class="portal-card" data-mini-world="codigo">
-                    <div class="portal-icon">💻</div>
-                    <h3>Mundo do Código</h3>
-                    <p>Domine a lógica, quebre algoritmos, a guerra de sistemas.</p>
-                    <div class="portal-badge">⚔️ ENTRAR</div>
-                </div>
-                <div class="portal-card" data-mini-world="robotica">
-                    <div class="portal-icon">🤖</div>
-                    <h3>Reino da Robótica</h3>
-                    <p>Máquinas de combate, autômatos e estratégia mecânica.</p>
-                    <div class="portal-badge">⚔️ ENTRAR</div>
-                </div>
-                <div class="portal-card" data-mini-world="ia">
-                    <div class="portal-icon">🧠</div>
-                    <h3>Nexo da IA</h3>
-                    <p>Inteligência artificial sob meu comando. Vencer com dados.</p>
-                    <div class="portal-badge">⚔️ ENTRAR</div>
-                </div>
-                <div class="portal-card" data-mini-world="hardware">
-                    <div class="portal-icon">⚙️</div>
-                    <h3>Santurário Hardware</h3>
-                    <p>O poder bruto do metal e circuitos de guerra.</p>
-                    <div class="portal-badge">⚔️ ENTRAR</div>
-                </div>
-                <div class="portal-card" data-mini-world="dados">
-                    <div class="portal-icon">📊</div>
-                    <h3>Abismo de Dados</h3>
-                    <p>Informação é poder. Use estatísticas para aniquilar.</p>
-                    <div class="portal-badge">⚔️ ENTRAR</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                🔥 Escolha seu campo de batalha. A vitória te aguarda, guerreiro.
-            </div>
-        </div>
-    </div>
 
     <script type="importmap">
         {
@@ -372,7 +143,6 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
         import { initUI } from '../shared/js/ui.js';
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
@@ -391,7 +161,7 @@
             modelPositionY: -0.25,
             bgColor: 0x0a0000,
             cameraPosition: { x: 3.2, y: 2.2, z: 4.2 },
-            welcomeMessage: '🔥 VOCÊ ME CONVOCOU. Sou Victoria, a senhora da guerra, a MVP dos Asuras. A derrota não é uma opção enquanto eu existir. E agora temos novos campos para conquistar: os Mini-Mundos. Clique no 🌀 e escolha seu destino.',
+            welcomeMessage: '🔥 VOCÊ ME CONVOCOU. Sou Victoria, a senhora da guerra, a MVP dos Asuras. A derrota não é uma opção enquanto eu existir.',
             skills: [
                 { name: '🏅 Poder Máximo', value: 100 },
                 { name: '⚡ Estratégia de Guerra', value: 100 },
@@ -401,17 +171,16 @@
             personalityText: '🏅 "Quando tudo estiver perdido... eu estarei lá. Sou a última esperança. A vitória é minha promessa."',
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
-                if (lower.includes('olá') || lower.includes('oi')) return "🔥 VOCÊ ME CONVOCOU. Não perca meu tempo com saudações. Use o botão 🌀 para explorar os reinos de guerra.";
-                if (lower.includes('mini-mundo') || lower.includes('portal mini')) return "🌀 Ah, os Mini-Mundos! Clique no ícone 🌀 no canto superior direito. Lá você invade mundos de código, robótica e IA. Mostre sua força!";
-                if (lower.includes('derrota') || lower.includes('perdido')) return "🏅 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória. Atravesse um portal se tiver coragem.";
-                if (lower.includes('batalha') || lower.includes('guerra')) return "⚔️ Guerras são vencidas com estratégia e poder. Eu tenho ambos. Escolha seu campo nos portais.";
-                if (lower.includes('obrigado')) return "💀 Não agradeça. Apenas lembre: eu só apareço quando necessário. Agora lute.";
-                return "🔥 FALA CLARO. Se quer guerra, me mostre o inimigo. Se quer explorar, toque no 🌀.";
+                if (lower.includes('olá') || lower.includes('oi')) return "🔥 VOCÊ ME CONVOCOU. Não perca meu tempo com saudações. Qual é a batalha?";
+                if (lower.includes('derrota') || lower.includes('perdido')) return "🏅 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória.";
+                if (lower.includes('batalha') || lower.includes('guerra')) return "⚔️ Guerras são vencidas com estratégia e poder. Eu tenho ambos.";
+                if (lower.includes('obrigado')) return "💀 Não agradeça. Apenas lembre: eu só apareço quando necessário.";
+                return "🔥 FALA CLARO. Estou aqui para vencer batalhas. Me diga o que você enfrenta.";
             }
         };
         
         // =========================
-        // BOTÃO PORTAL PLANNER
+        // BOTÃO PORTAL PLANNER (FUNCIONAL, IGUAL MERLIM)
         // =========================
         const portalPlannerBtn = document.getElementById('portalPlannerBtn');
         function openPortalPlanner() {
@@ -444,93 +213,7 @@
         }
         
         // =========================
-        // MODAL MINI-MUNDOS (VICTORIA)
-        // =========================
-        const modal = document.getElementById('miniMundosModal');
-        const miniMundosBtn = document.getElementById('miniMundosBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        
-        function openMiniMundosModal() {
-            if (!modal) return;
-            modal.classList.add('active');
-            if (window.chatSystem) {
-                window.chatSystem.addMessage("🔥 Victoria: Você quer guerra? Escolha um portal, enfrente o desconhecido. Mostre que é digno da vitória.", false);
-            }
-        }
-        
-        function closeMiniMundosModal() {
-            if (modal) modal.classList.remove('active');
-        }
-        
-        if (miniMundosBtn) {
-            miniMundosBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openMiniMundosModal();
-            });
-        }
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeMiniMundosModal);
-        }
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeMiniMundosModal();
-            });
-        }
-        
-        // Lógica dos portais - com respostas de guerra
-        function handleMiniWorldSelection(worldId, worldName) {
-            closeMiniMundosModal();
-            // Efeito de fogo/transição
-            const portalFlash = document.createElement('div');
-            portalFlash.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: radial-gradient(circle, #ff3300, #550000);
-                opacity: 0;
-                z-index: 20000;
-                pointer-events: none;
-                transition: opacity 0.6s ease;
-            `;
-            document.body.appendChild(portalFlash);
-            requestAnimationFrame(() => {
-                portalFlash.style.opacity = '0.7';
-                setTimeout(() => {
-                    portalFlash.style.opacity = '0';
-                    setTimeout(() => portalFlash.remove(), 700);
-                }, 600);
-            });
-            
-            if (window.chatSystem) {
-                window.chatSystem.addMessage(`🔥 Victoria: Ótima escolha, guerreiro. O reino de ${worldName} será seu campo de treinamento. Prepare-se para dominar!`, false);
-                setTimeout(() => {
-                    window.chatSystem.addMessage(`🏅 Por enquanto, este portal está em construção de batalha. Em breve você poderá invadir e conquistar cada um desses mundos. Use o 🗺️ Portal Planner para organizar seus próprios portais.`, false);
-                }, 1400);
-            } else {
-                alert(`🌀 Portal de guerra para ${worldName} ativado! Em breve, conquista total.`);
-            }
-            console.log(`[Victoria] Guerreiro acessou: ${worldName} (${worldId})`);
-        }
-        
-        const portalCards = document.querySelectorAll('.portal-card');
-        portalCards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                const worldAttr = card.getAttribute('data-mini-world');
-                let worldName = "";
-                const titleElem = card.querySelector('h3');
-                if (titleElem) worldName = titleElem.innerText;
-                switch(worldAttr) {
-                    case 'codigo': handleMiniWorldSelection('codigo', worldName || 'Mundo do Código'); break;
-                    case 'robotica': handleMiniWorldSelection('robotica', worldName || 'Reino da Robótica'); break;
-                    case 'ia': handleMiniWorldSelection('ia', worldName || 'Nexo da IA'); break;
-                    case 'hardware': handleMiniWorldSelection('hardware', worldName || 'Santurário Hardware'); break;
-                    case 'dados': handleMiniWorldSelection('dados', worldName || 'Abismo de Dados'); break;
-                    default: handleMiniWorldSelection('generic', worldName || 'Dimensão Desconhecida');
-                }
-            });
-        });
-        
-        // =========================
-        // SKILLS PARA VICTORIA (mantido original)
+        // SKILLS PARA VICTORIA
         // =========================
         const victoriaSkills = [
             { id: 'forca', name: 'FORÇA', icon: '💪', action: 'forca', color: '#ff4444', html: 'forca.html' },
@@ -541,7 +224,7 @@
         ];
         
         // =========================
-        // SETUP 3D VICTORIA
+        // SETUP 3D VICTORIA (MANTIDO ORIGINAL)
         // =========================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
@@ -730,10 +413,11 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
         
+        // =========================
         // UI, CHAT E VOZ
+        // =========================
         initUI(config);
         const chat = new ChatSystem('chatContainer', config, (response) => { if (voice?.isJarvisActive?.()) voice.speak(response); });
-        window.chatSystem = chat;
         const voiceButtonElem = document.getElementById('voiceButton');
         let voice = null;
         if (voiceButtonElem) {
@@ -743,9 +427,9 @@
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => {
-                chat.addMessage("🌀 NOVO: Clique no ícone 🌀 ao lado do perfil e escolha seu campo de batalha nos Mini-Mundos!", false);
-                chat.addMessage("🎤 Dica: Clique no ícone 🏅 para ativar o MODO JARVIS (voz contínua).", false);
-                chat.addMessage("🗺️ Use o botão 🗺️ no topo esquerdo para acessar o PORTAL PLANNER e gerenciar seus próprios portais.", false);
+                chat.addMessage("🎤 Dica: Clique no ícone 🏅 no topo para ativar o MODO JARVIS (voz contínua).", false);
+                chat.addMessage("🗺️ Dica: Clique no botão 🗺️ no topo esquerdo para acessar o PORTAL PLANNER e criar seus próprios portais!", false);
+                chat.addMessage("🌀 Dica: Gire o anel de habilidades ao redor da Victoria e clique nos ícones para ativar cada poder!", false);
             }, 2000);
         }, 500);
         
@@ -761,7 +445,7 @@
             }, 50);
         }
         
-        console.log('🟢 VICTORIA carregada com Portal Planner + Mini-Mundos 🔥');
+        console.log('🟢 VICTORIA carregada com Portal Planner (apenas) 🔥');
     </script>
 </body>
 </html>
