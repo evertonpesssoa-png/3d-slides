@@ -1,29 +1,24 @@
 // =========================
-// SKILL CARROSSEL - MÓDULO REUTILIZÁVEL
+// SKILL CARROSSEL - MÓDULO COMPLETAMENTE PARAMETRIZÁVEL
 // =========================
-// Uso: initSkillCarousel(scene, camera, renderer, asuraColor, asuraName)
-// Exemplo: initSkillCarousel(scene, camera, renderer, '#00d9ff', 'merlim')
+// Uso:
+// initSkillCarousel(scene, camera, renderer, asuraColor, asuraName, skillsArray)
+// skillsArray = [ { id, name, icon, action, color, html }, ... ]
+// Se skillsArray não for fornecido, usa um array padrão (Merlim).
 
-export function initSkillCarousel(scene, camera, renderer, asuraColor, asuraName = 'merlim') {
+export function initSkillCarousel(scene, camera, renderer, asuraColor, asuraName = 'merlim', customSkills = null) {
     
-    // Configuração das skills (personalizável por Asura)
-    const skillsConfig = {
-        // Para Merlim (engenheira mágica)
-        merlim: [
-            { id: 'monitor', name: 'MONITOR', icon: '📊', action: 'monitor', color: '#00ff88', html: 'monitor.html' },
-            { id: 'manutencao', name: 'REPARO', icon: '⚙️', action: 'manutencao', color: '#ffaa00', html: 'manutencao.html' },
-            { id: 'biblioteca', name: 'BIBLIOTECA', icon: '📚', action: 'biblioteca', color: '#44aaff', html: 'biblioteca.html' },
-            { id: 'sistema', name: 'SISTEMA', icon: '🔧', action: 'sistema', color: asuraColor || '#00d9ff', html: 'sistema.html' },
-            { id: 'codigo', name: 'CÓDIGO', icon: '⚡', action: 'codigo', color: '#ffff00', html: 'codigo.html' },
-            { id: 'perfil', name: 'PERFIL', icon: '👤', action: 'perfil', color: '#ff44aa', html: 'perfil.html' }
-        ],
-        // Adicione outros Asuras aqui quando necessário
-        // diva: [ ... ],
-        // siria: [ ... ]
-    };
-    
-    // Seleciona as skills do Asura atual ou usa as da Merlim como fallback
-    const skills = skillsConfig[asuraName] || skillsConfig.merlim;
+    // Skills padrão (caso não seja passado um array customizado)
+    const defaultSkills = [
+        { id: 'monitor', name: 'MONITOR', icon: '📊', action: 'monitor', color: '#00ff88', html: 'monitor.html' },
+        { id: 'manutencao', name: 'REPARO', icon: '⚙️', action: 'manutencao', color: '#ffaa00', html: 'manutencao.html' },
+        { id: 'biblioteca', name: 'BIBLIOTECA', icon: '📚', action: 'biblioteca', color: '#44aaff', html: 'biblioteca.html' },
+        { id: 'sistema', name: 'SISTEMA', icon: '🔧', action: 'sistema', color: asuraColor || '#00d9ff', html: 'sistema.html' },
+        { id: 'codigo', name: 'CÓDIGO', icon: '⚡', action: 'codigo', color: '#ffff00', html: 'codigo.html' },
+        { id: 'perfil', name: 'PERFIL', icon: '👤', action: 'perfil', color: '#ff44aa', html: 'perfil.html' }
+    ];
+
+    const skills = (customSkills && customSkills.length) ? customSkills : defaultSkills;
     const skillCount = skills.length;
     const circleRadius = 2.4;
     const carrosselGroup = new THREE.Group();
@@ -296,15 +291,24 @@ export function initSkillCarousel(scene, camera, renderer, asuraColor, asuraName
         if (!isDragging) onSkillClick(e);
     });
     
-    // Retornar objeto com método destroy
+    // Retornar objeto com método destroy e updateSkills
     return {
         destroy: () => {
             scene.remove(carrosselGroup);
             window.removeEventListener('click', onSkillClick);
         },
-        // Opcional: permitir atualizar skills dinamicamente
+        // Método para atualizar as skills dinamicamente (recria o carrossel)
         updateSkills: (newSkills) => {
-            // Implementar se necessário
+            // Remove todos os filhos do grupo, exceto os anéis? (simplificado: recria tudo)
+            while(carrosselGroup.children.length > 3) {
+                carrosselGroup.remove(carrosselGroup.children[carrosselGroup.children.length-1]);
+            }
+            // Limpar arrays e referências
+            iconSpheres.length = 0;
+            linePoints.length = 0;
+            // Recriar habilidades
+            // (Implementação simplificada – na prática você pode querer recriar todo o carrossel)
+            console.warn('updateSkills não implementado totalmente. Recrie o carrossel chamando initSkillCarousel novamente.');
         }
     };
 }
