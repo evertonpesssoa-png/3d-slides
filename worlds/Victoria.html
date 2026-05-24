@@ -18,10 +18,84 @@
             --asura-gradient: linear-gradient(135deg, #ff0000, #cc0000);
         }
         body { background: radial-gradient(circle at 30% 20%, #0a0000, #030108); }
+        
+        /* =========================
+           BOTÃO DO PORTAL PLANNER - TOPO ESQUERDO
+        ========================= */
+        .portal-planner-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            color: #ff0000;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 28px;
+            z-index: 9999;
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        
+        .portal-planner-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(255, 0, 0, 0.8);
+            background: rgba(255, 0, 0, 0.2);
+        }
+        
+        .portal-planner-btn::before {
+            content: "🗺️ Portal Planner";
+            position: absolute;
+            top: 70px;
+            left: 0;
+            background: rgba(0,0,0,0.9);
+            color: #ff0000;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #ff0000;
+        }
+        
+        .portal-planner-btn:hover::before {
+            opacity: 1;
+        }
+        
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
+        
+        .top-icons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9998;
+            display: flex;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    
+    <!-- BOTÃO DO PORTAL PLANNER - TOPO ESQUERDO -->
+    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">
+        🗺️
+    </div>
     
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
@@ -69,10 +143,15 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
         import { initUI } from '../shared/js/ui.js';
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
+        import { initSkillCarousel } from '../shared/js/skill-carousel.js';
         
+        // =========================
+        // CONFIGURAÇÃO DA VICTORIA
+        // =========================
         const config = {
             name: 'VICTORIA',
             title: '✦ GUERRA INFERNAL • A MVP DOS ASURAS ✦',
@@ -100,6 +179,50 @@
                 return "🔥 FALA CLARO. Estou aqui para vencer batalhas. Me diga o que você enfrenta.";
             }
         };
+        
+        // =========================
+        // BOTÃO PORTAL PLANNER
+        // =========================
+        const portalPlannerBtn = document.getElementById('portalPlannerBtn');
+        function openPortalPlanner() {
+            localStorage.setItem('lastAsura', 'victoria');
+            document.body.classList.add('transition-out');
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, #ff0000, transparent);
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 10000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flashOverlay);
+            requestAnimationFrame(() => {
+                flashOverlay.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = '../shared/portals/portal-system.html?asura=victoria';
+                }, 400);
+            });
+        }
+        if (portalPlannerBtn) {
+            portalPlannerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openPortalPlanner();
+            });
+        }
+        
+        // =========================
+        // SKILLS PROVISÓRIAS PARA VICTORIA (VOCÊ PODE MODIFICAR DEPOIS)
+        // =========================
+        const victoriaSkills = [
+            { id: 'forca', name: 'FORÇA', icon: '💪', action: 'forca', color: '#ff4444', html: 'forca.html' },
+            { id: 'estrategia', name: 'ESTRATÉGIA', icon: '♟️', action: 'estrategia', color: '#ff8888', html: 'estrategia.html' },
+            { id: 'furia', name: 'FÚRIA', icon: '🔥', action: 'furia', color: '#ff6600', html: 'furia.html' },
+            { id: 'lideranca', name: 'LIDERANÇA', icon: '🏅', action: 'lideranca', color: '#ffaa00', html: 'lideranca.html' },
+            { id: 'perfil', name: 'PERFIL', icon: '👤', action: 'perfil', color: '#ff44aa', html: 'perfil.html' }
+        ];
         
         // =========================
         // SETUP 3D VICTORIA
@@ -257,7 +380,23 @@
                 mixer = new THREE.AnimationMixer(model);
                 gltf.animations.forEach(clip => mixer.clipAction(clip).play());
             }
+        }, undefined, (error) => {
+            console.error('Erro ao carregar modelo 3D:', error);
+            const fallback = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 }));
+            fallback.position.set(0, 0.2, 0);
+            scene.add(fallback);
         });
+        
+        // =========================
+        // CARROSSEL DE SKILLS (genérico para Victoria)
+        // =========================
+        let carrossel = null;
+        try {
+            carrossel = initSkillCarousel(scene, camera, renderer, config.color, 'victoria', victoriaSkills);
+            console.log('✅ Carrossel de skills da Victoria inicializado');
+        } catch (err) {
+            console.error('❌ Erro ao iniciar carrossel:', err);
+        }
         
         // =========================
         // ANIMAÇÃO
@@ -308,14 +447,26 @@
         
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
-            setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 🏅 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
+            setTimeout(() => {
+                chat.addMessage("🎤 Dica: Clique no ícone 🏅 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
+                chat.addMessage("🗺️ Dica: Use o botão 🗺️ no topo esquerdo para acessar o PORTAL PLANNER e gerenciar seus mini-mundos.", false);
+                chat.addMessage("🌀 Dica: Gire o anel de habilidades ao redor da Victoria e clique nos ícones para ativar cada poder!", false);
+            }, 2000);
         }, 500);
         
-        const portalOverlay = document.getElementById('portalOverlay');
-        portalOverlay.style.setProperty('--asura-color', config.color);
-        setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
+        const portalOverlayElem = document.getElementById('portalOverlay');
+        if (portalOverlayElem) {
+            portalOverlayElem.style.setProperty('--asura-color', config.color);
+            setTimeout(() => {
+                portalOverlayElem.style.opacity = '0.6';
+                setTimeout(() => {
+                    portalOverlayElem.style.opacity = '0';
+                    setTimeout(() => { portalOverlayElem.style.display = 'none'; }, 800);
+                }, 500);
+            }, 50);
+        }
         
-        console.log('🟢 VICTORIA carregada com chamas, espadas, coroa de louros e Modo Jarvis!');
+        console.log('🟢 VICTORIA carregada com Portal Planner e carrossel de skills!');
     </script>
 </body>
 </html>
