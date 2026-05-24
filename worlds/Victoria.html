@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-
     <title>VICTORIA • Guerra Infernal • A MVP dos Asuras</title>
-
+    
     <link rel="stylesheet" href="../shared/css/base.css">
     <link rel="stylesheet" href="../shared/css/top-icons.css">
     <link rel="stylesheet" href="../shared/css/chat.css">
     <link rel="stylesheet" href="../shared/css/profile-panel.css">
     <link rel="stylesheet" href="../shared/css/portal.css">
-
+    
     <style>
         :root {
             --asura-color: #ff0000;
@@ -21,27 +20,27 @@
 
         body {
             background: radial-gradient(circle at 30% 20%, #0a0000, #030108);
+            overflow: hidden;
         }
 
         /* =========================
-           PORTAL PLANNER BUTTON
+           BOTÃO PORTAL - TOPO ESQUERDO
         ========================= */
-
         .portal-planner-btn {
             position: fixed;
             top: 20px;
             left: 20px;
-
             width: 55px;
             height: 55px;
-
-            border-radius: 50%;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            background: rgba(0, 0, 0, 0.85);
+            border-radius: 50%;
+            cursor: pointer;
+
+            background: rgba(0, 0, 0, 0.88);
             backdrop-filter: blur(12px);
 
             color: #ff0000;
@@ -50,55 +49,53 @@
             border: 2px solid #ff0000;
 
             box-shadow:
-                0 0 20px rgba(255, 0, 0, 0.4);
+                0 0 15px rgba(255, 0, 0, 0.4),
+                0 0 35px rgba(255, 0, 0, 0.2);
 
-            z-index: 9999;
+            z-index: 99999;
 
-            cursor: pointer;
-
-            transition: all 0.3s ease;
-
-            font-family: monospace;
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
         }
 
         .portal-planner-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.08);
 
-            background: rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.15);
 
             box-shadow:
-                0 0 35px rgba(255, 0, 0, 0.8);
+                0 0 25px rgba(255, 0, 0, 0.7),
+                0 0 60px rgba(255, 0, 0, 0.3);
         }
 
         .portal-planner-btn::before {
             content: "🗺️ Portal Planner";
 
             position: absolute;
-
             top: 70px;
             left: 0;
-
-            background: rgba(0,0,0,0.9);
-
-            color: #ff0000;
-
-            font-size: 12px;
 
             padding: 6px 12px;
 
             border-radius: 20px;
 
+            background: rgba(0, 0, 0, 0.95);
+
+            color: #ff4444;
+
+            font-size: 12px;
+            font-family: Poppins, sans-serif;
+
             white-space: nowrap;
 
-            opacity: 0;
+            border: 1px solid #ff0000;
 
+            opacity: 0;
             pointer-events: none;
 
-            transition: opacity 0.3s;
-
-            font-family: 'Poppins', sans-serif;
-
-            border: 1px solid #ff0000;
+            transition: opacity 0.3s ease;
         }
 
         .portal-planner-btn:hover::before {
@@ -111,13 +108,8 @@
             transition: all 0.4s ease;
         }
 
-        /* =========================
-           TOP ICONS
-        ========================= */
-
         .top-icons {
             position: fixed;
-
             top: 20px;
             right: 20px;
 
@@ -133,7 +125,9 @@
 
     <div id="canvas-container"></div>
 
-    <!-- PORTAL PLANNER -->
+    <!-- =========================
+         BOTÃO DO PORTAL
+    ========================== -->
     <div
         class="portal-planner-btn"
         id="portalPlannerBtn"
@@ -142,7 +136,9 @@
         🗺️
     </div>
 
-    <!-- TOP ICONS -->
+    <!-- =========================
+         TOP ICONS
+    ========================== -->
     <div class="top-icons">
 
         <div
@@ -182,10 +178,11 @@
 
     </div>
 
-    <!-- PROFILE -->
     <div class="profile-panel" id="profilePanel"></div>
 
-    <!-- CHAT -->
+    <!-- =========================
+         CHAT
+    ========================== -->
     <div class="chat-container" id="chatContainer">
 
         <div class="chat-header" id="chatHeader">
@@ -212,7 +209,6 @@
             <div class="chat-messages" id="chatMessages"></div>
 
             <div class="chat-input-area">
-
                 <input
                     type="text"
                     id="chatInput"
@@ -220,7 +216,6 @@
                 >
 
                 <button id="sendChatBtn">➤</button>
-
             </div>
 
         </div>
@@ -229,7 +224,9 @@
 
     <div class="portal-overlay" id="portalOverlay"></div>
 
-    <!-- IMPORTMAP -->
+    <!-- =========================
+         IMPORT MAP
+    ========================== -->
     <script type="importmap">
     {
         "imports": {
@@ -239,46 +236,51 @@
     }
     </script>
 
-    <!-- MAIN -->
+    <!-- =========================
+         SCRIPT
+    ========================== -->
     <script type="module">
 
         import * as THREE from 'three';
 
-        import { OrbitControls }
-        from 'three/addons/controls/OrbitControls.js';
+        import {
+            OrbitControls
+        } from 'three/addons/controls/OrbitControls.js';
 
-        import { GLTFLoader }
-        from 'three/addons/loaders/GLTFLoader.js';
+        import {
+            GLTFLoader
+        } from 'three/addons/loaders/GLTFLoader.js';
 
-        import { initUI }
-        from '../shared/js/ui.js';
+        import {
+            initUI
+        } from '../shared/js/ui.js';
 
-        import { ChatSystem }
-        from '../shared/js/chat.js';
+        import {
+            ChatSystem
+        } from '../shared/js/chat.js';
 
-        import { VoiceAssistant }
-        from '../shared/js/voice-assistant.js';
+        import {
+            VoiceAssistant
+        } from '../shared/js/voice-assistant.js';
 
-        import { initSkillCarousel }
-        from '../shared/js/skill-carousel.js';
+        import {
+            initSkillCarousel
+        } from '../shared/js/skill-carousel.js';
 
         // =========================
         // CONFIG
         // =========================
-
         const config = {
 
             name: 'VICTORIA',
 
-            title:
-                '✦ GUERRA INFERNAL • A MVP DOS ASURAS ✦',
+            title: '✦ GUERRA INFERNAL • A MVP DOS ASURAS ✦',
 
             color: '#ff0000',
 
             icon: '🏅',
 
-            modelPath:
-                '../models/victoria2.glb',
+            modelPath: '../models/victoria2.glb',
 
             modelScale: 0.04,
 
@@ -293,32 +295,47 @@
             },
 
             welcomeMessage:
-                '🔥 VOCÊ ME CONVOCOU.',
+                '🔥 VOCÊ ME CONVOCOU. Sou Victoria, a senhora da guerra.',
 
             skills: [
-
                 {
                     name: '🏅 Poder Máximo',
                     value: 100
                 },
-
                 {
                     name: '⚡ Estratégia',
                     value: 100
+                },
+                {
+                    name: '🔥 Poder Infernal',
+                    value: 100
+                },
+                {
+                    name: '🏆 Vitória Absoluta',
+                    value: 100
+                }
+            ],
+
+            personalityText:
+                '🏅 "A derrota não é uma opção."',
+
+            getResponse: (msg) => {
+
+                const lower = msg.toLowerCase();
+
+                if (lower.includes('oi')) {
+                    return '🔥 Qual é a batalha?';
                 }
 
-            ]
-
+                return '⚔️ Estou pronta para vencer.';
+            }
         };
 
         // =========================
-        // PORTAL PLANNER
+        // BOTÃO PORTAL
         // =========================
-
         const portalPlannerBtn =
-            document.getElementById(
-                'portalPlannerBtn'
-            );
+            document.getElementById('portalPlannerBtn');
 
         function openPortalPlanner() {
 
@@ -337,33 +354,33 @@
             flashOverlay.style.cssText = `
                 position: fixed;
                 inset: 0;
+                z-index: 100000;
+                pointer-events: none;
+
                 background:
                     radial-gradient(
                         circle,
-                        #ff0000,
-                        transparent
+                        rgba(255,0,0,0.95),
+                        transparent 70%
                     );
+
                 opacity: 0;
-                transition: opacity 0.5s ease;
-                z-index: 10000;
-                pointer-events: none;
+
+                transition: opacity 0.45s ease;
             `;
 
-            document.body.appendChild(
-                flashOverlay
-            );
+            document.body.appendChild(flashOverlay);
 
             requestAnimationFrame(() => {
 
-                flashOverlay.style.opacity =
-                    '0.8';
+                flashOverlay.style.opacity = '1';
 
                 setTimeout(() => {
 
                     window.location.href =
                         '../shared/portals/portal-system.html?asura=victoria';
 
-                }, 400);
+                }, 450);
 
             });
 
@@ -386,27 +403,24 @@
         }
 
         // =========================
-        // THREE JS
+        // CENA 3D
         // =========================
-
         const container =
-            document.getElementById(
-                'canvas-container'
-            );
+            document.getElementById('canvas-container');
 
-        const scene =
-            new THREE.Scene();
+        const scene = new THREE.Scene();
 
         scene.background =
-            new THREE.Color(
-                config.bgColor
-            );
+            new THREE.Color(config.bgColor);
 
+        scene.fog =
+            new THREE.FogExp2(config.bgColor, 0.012);
+
+        // CAMERA
         const camera =
             new THREE.PerspectiveCamera(
                 45,
-                window.innerWidth /
-                window.innerHeight,
+                window.innerWidth / window.innerHeight,
                 0.1,
                 1000
             );
@@ -417,6 +431,9 @@
             config.cameraPosition.z
         );
 
+        camera.lookAt(0, 0.8, 0);
+
+        // RENDERER
         const renderer =
             new THREE.WebGLRenderer({
                 antialias: true
@@ -431,10 +448,11 @@
             window.devicePixelRatio
         );
 
-        container.appendChild(
-            renderer.domElement
-        );
+        renderer.shadowMap.enabled = true;
 
+        container.appendChild(renderer.domElement);
+
+        // CONTROLS
         const controls =
             new OrbitControls(
                 camera,
@@ -442,39 +460,56 @@
             );
 
         controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        controls.target.set(0, 0.8, 0);
 
         // =========================
-        // LIGHTS
+        // LUZES
         // =========================
-
         const ambientLight =
-            new THREE.AmbientLight(
-                0x330000,
-                0.5
-            );
+            new THREE.AmbientLight(0x330000, 0.4);
 
         scene.add(ambientLight);
 
-        const directionalLight =
-            new THREE.DirectionalLight(
-                0xff0000,
-                1
+        const mainLight =
+            new THREE.DirectionalLight(0xff4422, 1.1);
+
+        mainLight.position.set(3, 5, 2);
+
+        scene.add(mainLight);
+
+        const fillLight =
+            new THREE.PointLight(config.color, 0.9);
+
+        fillLight.position.set(1, 1.5, 2);
+
+        scene.add(fillLight);
+
+        // =========================
+        // CHÃO
+        // =========================
+        const gridHelper =
+            new THREE.GridHelper(
+                14,
+                24,
+                config.color,
+                0x440000
             );
 
-        directionalLight.position.set(
-            3,
-            5,
-            2
-        );
+        gridHelper.position.y = -0.5;
 
-        scene.add(directionalLight);
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.45;
+
+        scene.add(gridHelper);
 
         // =========================
-        // MODEL
+        // MODELO
         // =========================
+        const loader = new GLTFLoader();
 
-        const loader =
-            new GLTFLoader();
+        let model = null;
 
         loader.load(
 
@@ -482,8 +517,13 @@
 
             (gltf) => {
 
-                const model =
-                    gltf.scene;
+                model = gltf.scene;
+
+                model.position.set(
+                    0,
+                    config.modelPositionY,
+                    0
+                );
 
                 model.scale.set(
                     config.modelScale,
@@ -491,67 +531,42 @@
                     config.modelScale
                 );
 
-                model.position.y =
-                    config.modelPositionY;
-
                 scene.add(model);
 
             },
 
             undefined,
 
-            (err) => {
+            (error) => {
 
-                console.error(err);
+                console.error(error);
+
+                const fallback =
+                    new THREE.Mesh(
+
+                        new THREE.SphereGeometry(
+                            0.7,
+                            32,
+                            32
+                        ),
+
+                        new THREE.MeshStandardMaterial({
+                            color: config.color,
+                            emissive: config.color,
+                            emissiveIntensity: 0.5
+                        })
+
+                    );
+
+                scene.add(fallback);
 
             }
 
         );
 
         // =========================
-        // UI
+        // CARROSSEL
         // =========================
-
-        initUI(config);
-
-        const chat =
-            new ChatSystem(
-                'chatContainer',
-                config
-            );
-
-        const voiceButtonElem =
-            document.getElementById(
-                'voiceButton'
-            );
-
-        let voice = null;
-
-        if (voiceButtonElem) {
-
-            voice =
-                new VoiceAssistant(
-
-                    voiceButtonElem,
-
-                    (text) => {
-
-                        document.getElementById(
-                            'chatInput'
-                        ).value = text;
-
-                        chat.send();
-
-                    }
-
-                );
-
-        }
-
-        // =========================
-        // SKILLS
-        // =========================
-
         try {
 
             initSkillCarousel(
@@ -559,8 +574,7 @@
                 camera,
                 renderer,
                 config.color,
-                'victoria',
-                []
+                'victoria'
             );
 
         } catch (err) {
@@ -570,21 +584,22 @@
         }
 
         // =========================
-        // ANIMATE
+        // ANIMAÇÃO
         // =========================
+        let time = 0;
 
         function animate() {
 
-            requestAnimationFrame(
-                animate
-            );
+            requestAnimationFrame(animate);
+
+            time += 0.01;
+
+            fillLight.intensity =
+                0.7 + Math.sin(time * 3.5) * 0.25;
 
             controls.update();
 
-            renderer.render(
-                scene,
-                camera
-            );
+            renderer.render(scene, camera);
 
         }
 
@@ -593,29 +608,67 @@
         // =========================
         // RESIZE
         // =========================
+        window.addEventListener('resize', () => {
 
-        window.addEventListener(
-            'resize',
-            () => {
+            camera.aspect =
+                window.innerWidth /
+                window.innerHeight;
 
-                camera.aspect =
-                    window.innerWidth /
-                    window.innerHeight;
+            camera.updateProjectionMatrix();
 
-                camera.updateProjectionMatrix();
+            renderer.setSize(
+                window.innerWidth,
+                window.innerHeight
+            );
 
-                renderer.setSize(
-                    window.innerWidth,
-                    window.innerHeight
-                );
-
-            }
-        );
+        });
 
         // =========================
-        // WELCOME
+        // UI
         // =========================
+        initUI(config);
 
+        const chat =
+            new ChatSystem(
+                'chatContainer',
+                config
+            );
+
+        const voiceButtonElem =
+            document.getElementById('voiceButton');
+
+        let voice = null;
+
+        if (voiceButtonElem) {
+
+            voice = new VoiceAssistant(
+
+                voiceButtonElem,
+
+                (text) => {
+
+                    document.getElementById(
+                        'chatInput'
+                    ).value = text;
+
+                    chat.send();
+
+                },
+
+                null,
+
+                {
+                    asuraName: config.name,
+                    continuous: true
+                }
+
+            );
+
+        }
+
+        // =========================
+        // MENSAGEM
+        // =========================
         setTimeout(() => {
 
             chat.addMessage(
@@ -623,10 +676,34 @@
                 false
             );
 
+            setTimeout(() => {
+
+                chat.addMessage(
+                    '🗺️ Clique no botão do mapa no topo esquerdo para abrir o Portal Planner.',
+                    false
+                );
+
+            }, 1500);
+
         }, 500);
 
+        // =========================
+        // OVERLAY
+        // =========================
+        const portalOverlayElem =
+            document.getElementById('portalOverlay');
+
+        if (portalOverlayElem) {
+
+            portalOverlayElem.style.setProperty(
+                '--asura-color',
+                config.color
+            );
+
+        }
+
         console.log(
-            '🟢 Victoria carregada com Portal Planner'
+            '🟥 VICTORIA carregada com PORTAL funcionando'
         );
 
     </script>
