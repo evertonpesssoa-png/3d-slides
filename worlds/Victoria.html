@@ -1,632 +1,694 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 
-    <title>VICTORIA • Guerra Infernal • A MVP dos Asuras</title>
+<title>VICTORIA • Reino Celestial</title>
 
-    <link rel="stylesheet" href="../shared/css/base.css">
-    <link rel="stylesheet" href="../shared/css/top-icons.css">
-    <link rel="stylesheet" href="../shared/css/chat.css">
-    <link rel="stylesheet" href="../shared/css/profile-panel.css">
-    <link rel="stylesheet" href="../shared/css/portal.css">
+<link rel="stylesheet" href="../shared/css/base.css">
+<link rel="stylesheet" href="../shared/css/top-icons.css">
+<link rel="stylesheet" href="../shared/css/chat.css">
+<link rel="stylesheet" href="../shared/css/profile-panel.css">
+<link rel="stylesheet" href="../shared/css/portal.css">
 
-    <style>
+<style>
 
-        :root{
-            --asura-color:#ff0000;
-            --asura-glow:rgba(255,0,0,0.6);
-            --asura-gradient:linear-gradient(135deg,#ff0000,#aa0000);
-        }
+:root{
+    --asura-color:#ff66d9;
+    --asura-glow:rgba(255,102,217,.6);
+    --asura-gradient:linear-gradient(135deg,#ff66d9,#b366ff);
+}
 
-        body{
-            margin:0;
-            overflow:hidden;
-            background:
-                radial-gradient(circle at 30% 20%, #120000, #020104);
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        #canvas-container{
-            position:fixed;
-            inset:0;
-            z-index:1;
-        }
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:
+    radial-gradient(circle at top,#2a1038 0%,#080312 60%,#020104 100%);
+}
 
-        /* =========================
-           BOTÃO PORTAL
-        ========================= */
+/* =========================
+   CANVAS
+========================= */
 
-        .portal-planner-btn{
+#canvas-container{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
 
-            position:fixed;
+/* =========================
+   PORTAL BUTTON
+========================= */
 
-            top:20px;
-            left:20px;
+#portalPlannerBtn{
+    position:fixed;
+    top:20px;
+    left:20px;
 
-            width:60px;
-            height:60px;
+    width:58px;
+    height:58px;
 
-            display:flex;
-            align-items:center;
-            justify-content:center;
+    border-radius:50%;
 
-            border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
-            background:rgba(0,0,0,0.88);
+    background:rgba(0,0,0,.82);
 
-            border:2px solid #ff0000;
+    color:#ff66d9;
 
-            color:#ff0000;
+    font-size:30px;
 
-            font-size:30px;
+    border:2px solid #ff66d9;
 
-            cursor:pointer;
+    box-shadow:
+    0 0 18px rgba(255,102,217,.5),
+    0 0 40px rgba(255,102,217,.2);
 
-            z-index:999999;
+    backdrop-filter:blur(10px);
 
-            backdrop-filter:blur(12px);
+    cursor:pointer;
 
-            box-shadow:
-                0 0 20px rgba(255,0,0,0.5),
-                inset 0 0 15px rgba(255,0,0,0.25);
+    z-index:999999999;
 
-            transition:0.3s;
-        }
+    user-select:none;
 
-        .portal-planner-btn:hover{
+    transition:.25s;
+}
 
-            transform:scale(1.08);
+#portalPlannerBtn:hover{
+    transform:scale(1.08);
 
-            background:rgba(255,0,0,0.18);
+    box-shadow:
+    0 0 28px rgba(255,102,217,.9),
+    0 0 60px rgba(255,102,217,.4);
+}
 
-            box-shadow:
-                0 0 35px rgba(255,0,0,0.9),
-                inset 0 0 25px rgba(255,0,0,0.35);
-        }
+/* =========================
+   TOP ICONS
+========================= */
 
-        .portal-planner-btn::after{
+.top-icons{
+    position:fixed;
+    top:20px;
+    right:20px;
+    display:flex;
+    gap:12px;
+    z-index:999999;
+}
 
-            content:"Portal Planner";
+/* =========================
+   TRANSITION
+========================= */
 
-            position:absolute;
+body.transition-out{
+    opacity:0;
+    transform:scale(.98);
+    transition:.4s ease;
+}
 
-            top:72px;
-            left:0;
-
-            background:rgba(0,0,0,0.92);
-
-            border:1px solid #ff0000;
-
-            color:#ff0000;
-
-            padding:6px 12px;
-
-            border-radius:20px;
-
-            font-size:12px;
-
-            white-space:nowrap;
-
-            opacity:0;
-
-            pointer-events:none;
-
-            transition:0.3s;
-        }
-
-        .portal-planner-btn:hover::after{
-            opacity:1;
-        }
-
-        body.transition-out{
-            opacity:0;
-            transform:scale(0.98);
-            transition:0.4s ease;
-        }
-
-        /* =========================
-           TOP ICONS
-        ========================= */
-
-        .top-icons{
-            position:fixed;
-            top:20px;
-            right:20px;
-            z-index:999998;
-
-            display:flex;
-            gap:12px;
-        }
-
-    </style>
+</style>
 </head>
 
 <body>
 
-    <!-- =========================
-         PORTAL BUTTON
-    ========================= -->
+<!-- =========================
+     CANVAS
+========================= -->
 
-    <div id="portalPlannerBtn"
-         class="portal-planner-btn">
-        🗺️
+<div id="canvas-container"></div>
+
+<!-- =========================
+     PORTAL BUTTON
+========================= -->
+
+<div id="portalPlannerBtn">🗺️</div>
+
+<!-- =========================
+     TOP ICONS
+========================= -->
+
+<div class="top-icons">
+
+    <div class="top-icon" id="backButton">
+        ←
     </div>
 
-    <!-- =========================
-         CANVAS
-    ========================= -->
+    <div class="top-icon voice-icon" id="voiceButton">
 
-    <div id="canvas-container"></div>
+        <span class="brain-icon">👑</span>
+        <span class="mic-icon">🎤</span>
 
-    <!-- =========================
-         TOP ICONS
-    ========================= -->
+        <div class="mental-wave"></div>
 
-    <div class="top-icons">
-
-        <div class="top-icon"
-             id="backButton"
-             data-tooltip="Voltar ao Grimório">
-            ←
+        <div class="brain-waves left">
+            <span></span><span></span><span></span>
+            <span></span><span></span>
         </div>
 
-        <div class="top-icon voice-icon"
-             id="voiceButton"
-             data-tooltip="Modo Jarvis">
-
-            <span class="brain-icon">🏅</span>
-            <span class="mic-icon">🎤</span>
-
-            <div class="mental-wave"></div>
-
-            <div class="brain-waves left">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-            <div class="brain-waves right">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-
-        </div>
-
-        <div class="top-icon"
-             id="profileButton"
-             data-tooltip="Perfil da Victoria">
-            🏅
+        <div class="brain-waves right">
+            <span></span><span></span><span></span>
+            <span></span><span></span>
         </div>
 
     </div>
 
-    <!-- =========================
-         PROFILE PANEL
-    ========================= -->
+    <div class="top-icon" id="profileButton">
+        👑
+    </div>
 
-    <div class="profile-panel"
-         id="profilePanel"></div>
+</div>
 
-    <!-- =========================
-         CHAT
-    ========================= -->
+<div class="profile-panel" id="profilePanel"></div>
 
-    <div class="chat-container"
-         id="chatContainer">
+<!-- =========================
+     CHAT
+========================= -->
 
-        <div class="chat-header"
-             id="chatHeader">
+<div class="chat-container" id="chatContainer">
 
-            <div class="chat-header-info">
+    <div class="chat-header" id="chatHeader">
 
-                <div class="chat-avatar">
-                    🏅
+        <div class="chat-header-info">
+
+            <div class="chat-avatar">👑</div>
+
+            <div>
+                <h4>VICTORIA • Rainha Celestial</h4>
+                <div class="chat-status">
+                    🟢 online | consciência divina
                 </div>
-
-                <div>
-                    <h4>
-                        VICTORIA • A MVP Suprema
-                    </h4>
-
-                    <div class="chat-status">
-                        🔴 modo guerra | força máxima
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="chat-toggle"
-                 id="chatToggle">
-                ▼
             </div>
 
         </div>
 
-        <div class="chat-body"
-             id="chatBody">
+        <div class="chat-toggle" id="chatToggle">
+            ▼
+        </div>
 
-            <div class="chat-messages"
-                 id="chatMessages"></div>
+    </div>
 
-            <div class="chat-input-area">
+    <div class="chat-body" id="chatBody">
 
-                <input
-                    type="text"
-                    id="chatInput"
-                    placeholder="Descreva o conflito..."
-                >
+        <div class="chat-messages" id="chatMessages"></div>
 
-                <button id="sendChatBtn">
-                    ➤
-                </button>
+        <div class="chat-input-area">
 
-            </div>
+            <input
+            type="text"
+            id="chatInput"
+            placeholder="Digite sua mensagem..."
+            >
+
+            <button id="sendChatBtn">
+                ➤
+            </button>
 
         </div>
 
     </div>
 
-    <!-- =========================
-         PORTAL OVERLAY
-    ========================= -->
+</div>
 
-    <div class="portal-overlay"
-         id="portalOverlay"></div>
+<div class="portal-overlay" id="portalOverlay"></div>
 
-    <!-- =========================
-         IMPORTMAP
-    ========================= -->
+<!-- =========================
+     IMPORTMAP
+========================= -->
 
-    <script type="importmap">
-    {
-        "imports": {
-            "three":
-            "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+<script type="importmap">
+{
+    "imports": {
+        "three":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
 
-            "three/addons/":
-            "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-        }
+        "three/addons/":
+        "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
     }
-    </script>
+}
+</script>
 
-    <!-- =========================
-         SCRIPT
-    ========================= -->
+<!-- =========================
+     MAIN SCRIPT
+========================= -->
 
-    <script type="module">
+<script type="module">
 
-        import * as THREE from 'three';
+import * as THREE from 'three';
 
-        // =========================
-        // CONFIG
-        // =========================
+import {
+OrbitControls
+}
+from 'three/addons/controls/OrbitControls.js';
 
-        const config = {
+import {
+GLTFLoader
+}
+from 'three/addons/loaders/GLTFLoader.js';
 
-            name:'VICTORIA',
+import {
+initUI
+}
+from '../shared/js/ui.js';
 
-            color:'#ff0000',
+import {
+ChatSystem
+}
+from '../shared/js/chat.js';
 
-            bgColor:0x120000
-        };
+import {
+VoiceAssistant
+}
+from '../shared/js/voice-assistant.js';
 
-        // =========================
-        // SCENE
-        // =========================
+/* =========================
+   CONFIG
+========================= */
 
-        const container =
-            document.getElementById(
-                'canvas-container'
-            );
+const config = {
 
-        const scene = new THREE.Scene();
+    name:'VICTORIA',
 
-        scene.background =
-            new THREE.Color(
-                config.bgColor
-            );
+    title:'✦ REINO CELESTIAL ✦',
 
-        const camera =
-            new THREE.PerspectiveCamera(
-                45,
-                window.innerWidth /
-                window.innerHeight,
-                0.1,
-                1000
-            );
+    color:'#ff66d9',
 
-        camera.position.set(0,2,5);
+    icon:'👑',
 
-        // =========================
-        // RENDERER
-        // =========================
+    modelPath:'../models/victoria.glb',
 
-        const renderer =
-            new THREE.WebGLRenderer({
-                antialias:true
-            });
+    modelScale:0.52,
+
+    modelPositionY:-0.3,
+
+    bgColor:0x12051d,
+
+    cameraPosition:{
+        x:3,
+        y:2,
+        z:4
+    },
+
+    welcomeMessage:
+    '✨ Bem-vindo ao reino celestial da Victoria.',
+
+    getResponse:(msg)=>{
+
+        return '👑 Victoria observa o fluxo do destino.';
+    }
+};
+
+/* =========================
+   PORTAL BUTTON
+========================= */
+
+const portalBtn =
+document.getElementById("portalPlannerBtn");
+
+portalBtn.addEventListener("click",()=>{
+
+    localStorage.setItem(
+        "lastAsura",
+        "victoria"
+    );
+
+    document.body.classList.add(
+        "transition-out"
+    );
+
+    setTimeout(()=>{
+
+        window.location.href =
+        "../shared/portals/portal-system.html?asura=victoria";
+
+    },350);
+
+});
+
+/* =========================
+   THREE
+========================= */
+
+const container =
+document.getElementById(
+    "canvas-container"
+);
+
+const scene = new THREE.Scene();
+
+scene.background =
+new THREE.Color(config.bgColor);
+
+scene.fog =
+new THREE.FogExp2(
+    config.bgColor,
+    0.018
+);
+
+const camera =
+new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth /
+    window.innerHeight,
+    0.1,
+    1000
+);
+
+camera.position.set(
+    config.cameraPosition.x,
+    config.cameraPosition.y,
+    config.cameraPosition.z
+);
+
+const renderer =
+new THREE.WebGLRenderer({
+    antialias:true
+});
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+renderer.setPixelRatio(
+    window.devicePixelRatio
+);
+
+renderer.shadowMap.enabled = true;
+
+container.appendChild(
+    renderer.domElement
+);
+
+/* =========================
+   CONTROLS
+========================= */
+
+const controls =
+new OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.enableDamping = true;
+
+controls.target.set(0,.8,0);
+
+/* =========================
+   LIGHTS
+========================= */
+
+const ambient =
+new THREE.AmbientLight(
+    0xffffff,
+    .6
+);
+
+scene.add(ambient);
+
+const light =
+new THREE.DirectionalLight(
+    0xff99ff,
+    1.2
+);
+
+light.position.set(3,5,2);
+
+scene.add(light);
+
+const pinkLight =
+new THREE.PointLight(
+    0xff66d9,
+    1.4
+);
+
+pinkLight.position.set(0,2,2);
+
+scene.add(pinkLight);
+
+/* =========================
+   FLOOR
+========================= */
+
+const floor =
+new THREE.Mesh(
+
+    new THREE.CircleGeometry(
+        2.2,
+        64
+    ),
+
+    new THREE.MeshStandardMaterial({
+
+        color:0x441155,
+
+        emissive:0xff66d9,
+
+        emissiveIntensity:.2,
+
+        transparent:true,
+
+        opacity:.85
+    })
+);
+
+floor.rotation.x = -Math.PI/2;
+
+floor.position.y = -.5;
+
+scene.add(floor);
+
+/* =========================
+   PARTICLES
+========================= */
+
+const particlesGeo =
+new THREE.BufferGeometry();
+
+const count = 1200;
+
+const positions =
+new Float32Array(count*3);
+
+for(let i=0;i<count;i++){
+
+    positions[i*3] =
+    (Math.random()-.5)*14;
+
+    positions[i*3+1] =
+    Math.random()*5;
+
+    positions[i*3+2] =
+    (Math.random()-.5)*14;
+}
+
+particlesGeo.setAttribute(
+    'position',
+    new THREE.BufferAttribute(
+        positions,
+        3
+    )
+);
+
+const particlesMat =
+new THREE.PointsMaterial({
+
+    color:0xff99ff,
+
+    size:.03,
+
+    transparent:true,
+
+    opacity:.7
+});
+
+const particles =
+new THREE.Points(
+    particlesGeo,
+    particlesMat
+);
+
+scene.add(particles);
+
+/* =========================
+   MODEL
+========================= */
+
+const loader =
+new GLTFLoader();
+
+let victoria = null;
+
+loader.load(
+
+    config.modelPath,
+
+    (gltf)=>{
+
+        victoria = gltf.scene;
+
+        victoria.scale.set(
+            config.modelScale,
+            config.modelScale,
+            config.modelScale
+        );
+
+        victoria.position.set(
+            0,
+            config.modelPositionY,
+            0
+        );
+
+        scene.add(victoria);
+    },
+
+    undefined,
+
+    (err)=>{
+
+        console.error(err);
+
+        const fallback =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                .7,
+                32,
+                32
+            ),
+
+            new THREE.MeshStandardMaterial({
+
+                color:0xff66d9,
+
+                emissive:0xff66d9,
+
+                emissiveIntensity:.8
+            })
+        );
+
+        fallback.position.y = .5;
+
+        scene.add(fallback);
+    }
+);
+
+/* =========================
+   ANIMATION
+========================= */
+
+let time = 0;
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+    time += .01;
+
+    particles.rotation.y =
+    time * .05;
+
+    floor.material.emissiveIntensity =
+    .2 + Math.sin(time*2)*.1;
+
+    controls.update();
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+animate();
+
+/* =========================
+   RESIZE
+========================= */
+
+window.addEventListener(
+    'resize',
+    ()=>{
+
+        camera.aspect =
+        window.innerWidth /
+        window.innerHeight;
+
+        camera.updateProjectionMatrix();
 
         renderer.setSize(
             window.innerWidth,
             window.innerHeight
         );
+    }
+);
 
-        renderer.setPixelRatio(
-            window.devicePixelRatio
-        );
+/* =========================
+   UI
+========================= */
 
-        container.appendChild(
-            renderer.domElement
-        );
+initUI(config);
 
-        // =========================
-        // LIGHTS
-        // =========================
+const chat =
+new ChatSystem(
+    'chatContainer',
+    config
+);
 
-        const ambient =
-            new THREE.AmbientLight(
-                0xff3333,
-                0.5
-            );
+const voiceButton =
+document.getElementById(
+    'voiceButton'
+);
 
-        scene.add(ambient);
+if(voiceButton){
 
-        const light =
-            new THREE.PointLight(
-                0xff0000,
-                1.5
-            );
+    new VoiceAssistant(
 
-        light.position.set(2,3,2);
+        voiceButton,
 
-        scene.add(light);
+        (text)=>{
 
-        // =========================
-        // FALLBACK MODEL
-        // =========================
-
-        const sphere =
-            new THREE.Mesh(
-
-                new THREE.SphereGeometry(
-                    0.8,
-                    64,
-                    64
-                ),
-
-                new THREE.MeshStandardMaterial({
-
-                    color:0xff0000,
-
-                    emissive:0xaa0000,
-
-                    emissiveIntensity:0.7
-                })
-            );
-
-        sphere.position.y = 0.5;
-
-        scene.add(sphere);
-
-        // =========================
-        // FLOOR
-        // =========================
-
-        const floor =
-            new THREE.Mesh(
-
-                new THREE.CircleGeometry(
-                    2,
-                    64
-                ),
-
-                new THREE.MeshStandardMaterial({
-
-                    color:0x220000,
-
-                    emissive:0x550000,
-
-                    emissiveIntensity:0.3,
-
-                    transparent:true,
-
-                    opacity:0.7
-                })
-            );
-
-        floor.rotation.x =
-            -Math.PI / 2;
-
-        floor.position.y =
-            -0.7;
-
-        scene.add(floor);
-
-        // =========================
-        // PARTICLES
-        // =========================
-
-        const particlesGeometry =
-            new THREE.BufferGeometry();
-
-        const count = 1500;
-
-        const positions =
-            new Float32Array(
-                count * 3
-            );
-
-        for(let i=0;i<count;i++){
-
-            positions[i*3] =
-                (Math.random()-0.5)*12;
-
-            positions[i*3+1] =
-                Math.random()*5;
-
-            positions[i*3+2] =
-                (Math.random()-0.5)*12;
-        }
-
-        particlesGeometry.setAttribute(
-            'position',
-            new THREE.BufferAttribute(
-                positions,
-                3
-            )
-        );
-
-        const particles =
-            new THREE.Points(
-
-                particlesGeometry,
-
-                new THREE.PointsMaterial({
-
-                    color:0xff3300,
-
-                    size:0.05,
-
-                    transparent:true,
-
-                    opacity:0.6
-                })
-            );
-
-        scene.add(particles);
-
-        // =========================
-        // ANIMATION
-        // =========================
-
-        let time = 0;
-
-        function animate(){
-
-            requestAnimationFrame(
-                animate
-            );
-
-            time += 0.01;
-
-            sphere.rotation.y += 0.01;
-
-            particles.rotation.y =
-                time * 0.05;
-
-            floor.material.emissiveIntensity =
-                0.25 +
-                Math.sin(time * 2)*0.15;
-
-            renderer.render(
-                scene,
-                camera
-            );
-        }
-
-        animate();
-
-        // =========================
-        // RESIZE
-        // =========================
-
-        window.addEventListener(
-            'resize',
-            ()=>{
-
-                camera.aspect =
-                    window.innerWidth /
-                    window.innerHeight;
-
-                camera.updateProjectionMatrix();
-
-                renderer.setSize(
-                    window.innerWidth,
-                    window.innerHeight
-                );
-            }
-        );
-
-        // =========================
-        // PORTAL BUTTON
-        // =========================
-
-        const portalPlannerBtn =
             document.getElementById(
-                'portalPlannerBtn'
-            );
+                'chatInput'
+            ).value = text;
 
-        portalPlannerBtn.addEventListener(
-            'click',
-            ()=>{
+            chat.send();
+        }
+    );
+}
 
-                localStorage.setItem(
-                    'lastAsura',
-                    'victoria'
-                );
+/* =========================
+   START MESSAGE
+========================= */
 
-                document.body.classList.add(
-                    'transition-out'
-                );
+setTimeout(()=>{
 
-                const flash =
-                    document.createElement(
-                        'div'
-                    );
+    chat.addMessage(
 
-                flash.style.position =
-                    'fixed';
+        "🗺️ Clique no portal no canto superior esquerdo.",
 
-                flash.style.inset =
-                    '0';
+        false
+    );
 
-                flash.style.zIndex =
-                    '999999';
+},800);
 
-                flash.style.pointerEvents =
-                    'none';
+console.log(
+    "✅ VICTORIA COM PORTAL OK"
+);
 
-                flash.style.background =
-                    'radial-gradient(circle, rgba(255,0,0,0.9), transparent)';
-
-                flash.style.opacity =
-                    '0';
-
-                flash.style.transition =
-                    '0.5s ease';
-
-                document.body.appendChild(
-                    flash
-                );
-
-                requestAnimationFrame(()=>{
-
-                    flash.style.opacity =
-                        '1';
-
-                    setTimeout(()=>{
-
-                        window.location.href =
-                            '../shared/portals/portal-system.html?asura=victoria';
-
-                    },450);
-
-                });
-
-            }
-        );
-
-        console.log(
-            '🟢 Victoria carregada com portal planner'
-        );
-
-    </script>
+</script>
 
 </body>
 </html>
