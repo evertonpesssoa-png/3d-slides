@@ -20,20 +20,33 @@ content="width=device-width, initial-scale=1.0, user-scalable=no" />
     --asura-glow: rgba(255,102,204,.6);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body{
     margin:0;
     overflow:hidden;
-    background:
-    radial-gradient(circle at top,
-    #1d0820,
-    #050308);
+    background: radial-gradient(circle at top, #1d0820, #050308);
+}
+
+/* Força o container do Three a ficar atrás */
+#canvas-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
 }
 
 /* =========================
-PORTAL BUTTON - VERSÃO FORÇADA
+BOTÃO PORTAL - VERSÃO SUPREMA
 ========================= */
 
-.portal-planner-btn{
+.portal-planner-btn {
     position: fixed !important;
     top: 20px !important;
     left: 20px !important;
@@ -106,7 +119,7 @@ TOP ICONS
     position: fixed;
     top:20px;
     right:20px;
-    z-index:99999;
+    z-index: 99999 !important;
     display:flex;
     gap:12px;
 }
@@ -120,7 +133,7 @@ TOP ICONS
 <div id="canvas-container"></div>
 
 <!-- =========================
-BOTÃO PORTAL
+BOTÃO PORTAL - VERSÃO HTML
 ========================= -->
 
 <div
@@ -366,13 +379,8 @@ const config = {
 };
 
 /* =========================
-PORTAL SYSTEM
+FUNÇÃO DO PORTAL
 ========================= */
-
-const portalPlannerBtn =
-document.getElementById(
-"portalPlannerBtn"
-);
 
 function openPortalPlanner(){
 
@@ -423,25 +431,117 @@ function openPortalPlanner(){
 
 }
 
-if(portalPlannerBtn){
+/* =========================
+CRIAÇÃO DO BOTÃO - FALLBACK SUPREMO
+========================= */
 
-    console.log("✅ Botão do portal encontrado!");
-
-    portalPlannerBtn
-    .addEventListener(
-    "click",
-    (e)=>{
-
+function criarBotaoPortal() {
+    // Remove qualquer botão existente com problemas
+    const btnExistente = document.getElementById('portalPlannerBtn');
+    if (btnExistente) {
+        btnExistente.remove();
+    }
+    
+    // Cria o botão do zero
+    const btn = document.createElement('div');
+    btn.id = 'portalPlannerBtn';
+    btn.className = 'portal-planner-btn';
+    btn.innerHTML = '🗺️';
+    btn.setAttribute('title', 'Abrir Portal Planner');
+    
+    // Estilos inline para garantir
+    btn.style.cssText = `
+        position: fixed !important;
+        top: 20px !important;
+        left: 20px !important;
+        width: 58px !important;
+        height: 58px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: rgba(0,0,0,0.9) !important;
+        color: #ff66cc !important;
+        border: 2px solid #ff66cc !important;
+        font-size: 30px !important;
+        z-index: 999999 !important;
+        cursor: pointer !important;
+        backdrop-filter: blur(10px) !important;
+        box-shadow: 0 0 12px rgba(255,102,204,0.4), 0 0 30px rgba(255,102,204,0.7) !important;
+        transition: 0.25s !important;
+        pointer-events: auto !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    `;
+    
+    // Adiciona evento de clique
+    btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-
         openPortalPlanner();
-
     });
-
-} else {
-    console.error("❌ Botão do portal NÃO encontrado!");
+    
+    // Adiciona hover effects
+    btn.addEventListener('mouseenter', () => {
+        btn.style.transform = 'scale(1.08)';
+        btn.style.boxShadow = '0 0 20px rgba(255,102,204,0.8), 0 0 45px rgba(255,102,204,1)';
+        btn.style.background = 'rgba(255,102,204,0.2)';
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'scale(1)';
+        btn.style.boxShadow = '0 0 12px rgba(255,102,204,0.4), 0 0 30px rgba(255,102,204,0.7)';
+        btn.style.background = 'rgba(0,0,0,0.9)';
+    });
+    
+    document.body.appendChild(btn);
+    console.log("✅ Botão do portal CRIADO VIA JAVASCRIPT com sucesso!");
+    return btn;
 }
+
+/* =========================
+TENTA PEGAR O BOTÃO EXISTENTE OU CRIA UM NOVO
+========================= */
+
+let portalPlannerBtn = document.getElementById("portalPlannerBtn");
+
+if (portalPlannerBtn) {
+    console.log("✅ Botão do portal encontrado no HTML!");
+    
+    // Remove qualquer evento anterior e adiciona o novo
+    const novoBtn = portalPlannerBtn.cloneNode(true);
+    portalPlannerBtn.parentNode.replaceChild(novoBtn, portalPlannerBtn);
+    portalPlannerBtn = novoBtn;
+    
+    portalPlannerBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openPortalPlanner();
+    });
+    
+    // Garante que os estilos estão aplicados
+    portalPlannerBtn.style.display = 'flex';
+    portalPlannerBtn.style.visibility = 'visible';
+    portalPlannerBtn.style.opacity = '1';
+    
+} else {
+    console.warn("❌ Botão do portal NÃO encontrado no HTML. Criando via JavaScript...");
+    portalPlannerBtn = criarBotaoPortal();
+}
+
+// Força a verificação após 1 segundo (caso algo tenha removido o botão)
+setTimeout(() => {
+    const btn = document.getElementById('portalPlannerBtn');
+    if (!btn) {
+        console.warn("⚠️ Botão sumiu! Recriando...");
+        criarBotaoPortal();
+    } else {
+        console.log("✅ Botão ainda está na página!");
+        btn.style.display = 'flex';
+        btn.style.visibility = 'visible';
+        btn.style.opacity = '1';
+    }
+}, 1000);
 
 /* =========================
 SCENE
@@ -780,7 +880,7 @@ false
 );
 
 chat.addMessage(
-"🗺️ Use o botão do mapa para abrir os portais.",
+"🗺️ Use o botão do mapa 🗺️ no topo esquerdo para abrir os portais!",
 false
 );
 
