@@ -395,10 +395,12 @@
             model.position.set(0, config.modelPositionY, 0);
             model.scale.set(config.modelScale, config.modelScale, config.modelScale);
             
+            // PERCORRE O MODELO PARA AJUSTAR MATERIAIS
             model.traverse((node) => {
                 if (node.isMesh) {
                     node.castShadow = true;
                     
+                    // Verifica se é um olho (pelo nome do material ou do objeto)
                     const isEye = node.name && (
                         node.name.toLowerCase().includes('eye') || 
                         node.name.toLowerCase().includes('olho') ||
@@ -406,9 +408,11 @@
                     );
                     
                     if (node.material) {
+                        // Ajusta materiais para ficarem mais brilhantes
                         node.material.roughness = 0.3;
                         node.material.metalness = 0.6;
                         
+                        // Se for olho, adiciona emissão própria (brilho)
                         if (isEye) {
                             node.material.emissive = new THREE.Color(0xff66cc);
                             node.material.emissiveIntensity = 0.6;
@@ -421,6 +425,7 @@
             
             scene.add(model);
             
+            // ANIMAÇÕES DO MODELO
             if (gltf.animations && gltf.animations.length > 0) {
                 mixer = new THREE.AnimationMixer(model);
                 gltf.animations.forEach(clip => {
@@ -458,19 +463,25 @@
             requestAnimationFrame(animate);
             time += 0.008;
             
+            // Atualiza animações do modelo 3D
             if (mixer) mixer.update(deltaTime);
             
+            // Anima partículas
             particles.rotation.y = time * 0.1;
             particles.rotation.x = Math.sin(time * 0.2) * 0.1;
             
+            // Anima anéis
             ring1.rotation.z = time * 0.3;
             ring2.rotation.z = -time * 0.2;
             
+            // Luz pulsante
+            const pulse = 0.5 + Math.sin(time * 3) * 0.2;
             fillLight.intensity = 0.9 + Math.sin(time * 4) * 0.25;
             circleGlow.material.emissiveIntensity = 0.3 + Math.sin(time * 2.5) * 0.2;
             bottomLight.intensity = 0.5 + Math.sin(time * 3) * 0.2;
             frontLight.intensity = 0.4 + Math.sin(time * 2) * 0.15;
             
+            // Anima o halo (pulsação suave)
             const scale = 1 + Math.sin(time * 2) * 0.03;
             glowHalo.scale.set(scale, scale, scale);
             glowMaterial.opacity = 0.08 + Math.sin(time * 1.5) * 0.04;
