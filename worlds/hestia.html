@@ -18,10 +18,75 @@
             --asura-gradient: linear-gradient(135deg, #fff0b3, #ffddaa);
         }
         body { background: radial-gradient(circle at 30% 20%, #0a0a1a, #030108); }
+        
+        /* =========================
+           BOTÃO DO PORTAL - TOPO ESQUERDO
+        ========================= */
+        .portal-planner-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            color: #fff0b3;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 28px;
+            z-index: 9999;
+            border: 2px solid #fff0b3;
+            box-shadow: 0 0 20px rgba(255, 240, 179, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        
+        .portal-planner-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(255, 240, 179, 0.8);
+            background: rgba(255, 240, 179, 0.2);
+        }
+        
+        .portal-planner-btn::before {
+            content: "🗺️ Portal Planner";
+            position: absolute;
+            top: 70px;
+            left: 0;
+            background: rgba(0,0,0,0.9);
+            color: #fff0b3;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #fff0b3;
+        }
+        
+        .portal-planner-btn:hover::before {
+            opacity: 1;
+        }
+        
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    
+    <!-- BOTÃO DO PORTAL PLANNER -->
+    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">
+        🗺️
+    </div>
     
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
@@ -101,6 +166,42 @@
                 return "🔮 Sinto sua busca por clareza. Como oráculo dos princípios, posso te ajudar a alinhar suas ações à sua verdadeira essência.";
             }
         };
+        
+        // =========================
+        // BOTÃO PORTAL PLANNER
+        // =========================
+        const portalPlannerBtn = document.getElementById('portalPlannerBtn');
+        
+        function openPortalPlanner() {
+            localStorage.setItem('lastAsura', 'hestia');
+            document.body.classList.add('transition-out');
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, #fff0b3, transparent);
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 10000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flashOverlay);
+            requestAnimationFrame(() => {
+                flashOverlay.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = '../shared/portals/portal-system.html?asura=hestia';
+                }, 400);
+            });
+        }
+        
+        if (portalPlannerBtn) {
+            portalPlannerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openPortalPlanner();
+            });
+            console.log("✅ Botão do portal configurado para HESTIA!");
+        }
         
         // =========================
         // SETUP 3D HESTIA
@@ -322,13 +423,14 @@
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 🔮 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
+            setTimeout(() => chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false), 4000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
         portalOverlay.style.setProperty('--asura-color', config.color);
         setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
         
-        console.log('🟢 HESTIA carregada com balança da justiça, luz celestial e Modo Jarvis!');
+        console.log('🟢 HESTIA carregada com PORTAL PLANNER, balança da justiça, luz celestial e Modo Jarvis!');
     </script>
 </body>
 </html>
