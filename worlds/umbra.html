@@ -18,10 +18,75 @@
             --asura-gradient: linear-gradient(135deg, #8b2fff, #aa55ff);
         }
         body { background: radial-gradient(circle at 30% 20%, #0a0515, #030108); }
+        
+        /* =========================
+           BOTÃO DO PORTAL - TOPO ESQUERDO
+        ========================= */
+        .portal-planner-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            color: #8b2fff;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 28px;
+            z-index: 9999;
+            border: 2px solid #8b2fff;
+            box-shadow: 0 0 20px rgba(139, 47, 255, 0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: monospace;
+        }
+        
+        .portal-planner-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 35px rgba(139, 47, 255, 0.8);
+            background: rgba(139, 47, 255, 0.2);
+        }
+        
+        .portal-planner-btn::before {
+            content: "🗺️ Portal Planner";
+            position: absolute;
+            top: 70px;
+            left: 0;
+            background: rgba(0,0,0,0.9);
+            color: #8b2fff;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #8b2fff;
+        }
+        
+        .portal-planner-btn:hover::before {
+            opacity: 1;
+        }
+        
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    
+    <!-- BOTÃO DO PORTAL PLANNER -->
+    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">
+        🗺️
+    </div>
     
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
@@ -100,6 +165,42 @@
                 return "🔎 Detecto padrões onde outros veem caos. Me descreva sua situação.";
             }
         };
+        
+        // =========================
+        // BOTÃO PORTAL PLANNER
+        // =========================
+        const portalPlannerBtn = document.getElementById('portalPlannerBtn');
+        
+        function openPortalPlanner() {
+            localStorage.setItem('lastAsura', 'umbra');
+            document.body.classList.add('transition-out');
+            const flashOverlay = document.createElement('div');
+            flashOverlay.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, #8b2fff, transparent);
+                opacity: 0;
+                transition: opacity 0.5s ease;
+                z-index: 10000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flashOverlay);
+            requestAnimationFrame(() => {
+                flashOverlay.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = '../shared/portals/portal-system.html?asura=umbra';
+                }, 400);
+            });
+        }
+        
+        if (portalPlannerBtn) {
+            portalPlannerBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openPortalPlanner();
+            });
+            console.log("✅ Botão do portal configurado para UMBRA!");
+        }
         
         // =========================
         // SETUP 3D UMBRA
@@ -324,13 +425,14 @@
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 🕵️ no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
+            setTimeout(() => chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false), 4000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
         portalOverlay.style.setProperty('--asura-color', config.color);
         setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
         
-        console.log('🟢 UMBRA carregada com olhos vigilantes, lupas e Modo Jarvis!');
+        console.log('🟢 UMBRA carregada com PORTAL PLANNER, olhos vigilantes, lupas e Modo Jarvis!');
     </script>
 </body>
 </html>
