@@ -3,33 +3,34 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Galaxy Azura | @Code_Spectre</title>
 
-    <link
-        rel="stylesheet"
-        href="./style.css"
-    >
-</head>
+    <link rel="stylesheet" href="./style.css">
 
-<body>
-
-    <!-- Canvas -->
-    <canvas class="webgl"></canvas>
-
-    <!-- Botão de voltar -->
-    <button
-        id="backToAsura"
-        style="
+    <style>
+        /* Estilos adicionais para garantir que o canvas fique atrás */
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .webgl {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        /* Botão de voltar estilizado */
+        #backToAsura {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             backdrop-filter: blur(12px);
             border: 1px solid #44aaff;
             color: #44aaff;
@@ -41,53 +42,117 @@
             font-weight: 600;
             z-index: 1000;
             transition: all 0.3s ease;
-        "
-    >
+            box-shadow: 0 0 15px rgba(68,170,255,0.3);
+        }
+        
+        #backToAsura:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(68,170,255,0.6);
+            border-color: #88ccff;
+        }
+        
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Canvas -->
+    <canvas class="webgl"></canvas>
+
+    <!-- Botão de voltar -->
+    <button id="backToAsura">
         ← VOLTAR PARA O ASURA
     </button>
 
     <!-- Script principal -->
-    <script
-        type="module"
-        src="script2.js"
-    ></script>
+    <script type="module" src="script2.js"></script>
 
-    <!-- Sistema de retorno -->
+    <!-- Sistema de retorno para asura + botão voltar do celular -->
     <script>
-        document
-            .getElementById('backToAsura')
-            .addEventListener('click', () => {
-
-                const returnTo =
-                    localStorage.getItem('returnToAsura')
-                    || '../diva.html';
-
-                // Criar efeito de portal reverso
-                const portalFlash = document.createElement('div');
-
-                portalFlash.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: radial-gradient(circle, #44aaff, transparent);
-                    opacity: 0;
-                    pointer-events: none;
-                    z-index: 10000;
-                    transition: opacity 0.6s ease;
-                `;
-
-                document.body.appendChild(portalFlash);
-
-                setTimeout(() => {
-                    portalFlash.style.opacity = '0.8';
-                }, 10);
-
+        // =========================
+        // BOTÃO DE VOLTAR (CLIQUE)
+        // =========================
+        const backButton = document.getElementById('backToAsura');
+        
+        function voltarParaAsura() {
+            const returnTo = localStorage.getItem('returnToAsura') || '../diva.html';
+            
+            document.body.classList.add('transition-out');
+            
+            const portalFlash = document.createElement('div');
+            portalFlash.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle, #44aaff, transparent);
+                opacity: 0;
+                pointer-events: none;
+                z-index: 10000;
+                transition: opacity 0.5s ease;
+            `;
+            document.body.appendChild(portalFlash);
+            
+            requestAnimationFrame(() => {
+                portalFlash.style.opacity = '0.8';
                 setTimeout(() => {
                     window.location.href = returnTo;
-                }, 600);
+                }, 450);
             });
+        }
+        
+        if (backButton) {
+            backButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                voltarParaAsura();
+            });
+        }
+        
+        // =========================
+        // BOTÃO VOLTAR DO CELULAR (NAVEGADOR)
+        // =========================
+        function voltarAoAsuraPorCelular() {
+            const returnTo = localStorage.getItem('returnToAsura') || '../diva.html';
+            
+            document.body.classList.add('transition-out');
+            
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, #44aaff, transparent);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 100000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flash);
+            
+            requestAnimationFrame(() => {
+                flash.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = returnTo;
+                }, 350);
+            });
+        }
+        
+        // Detecta o botão "voltar" do celular/navegador
+        window.addEventListener('popstate', (event) => {
+            event.preventDefault();
+            history.pushState(null, null, window.location.href);
+            voltarAoAsuraPorCelular();
+        });
+        
+        // Adiciona um estado inicial no histórico
+        history.pushState(null, null, window.location.href);
+        
+        console.log("✅ Galaxy carregada - Botão voltar e back button do celular configurados!");
     </script>
 
 </body>
