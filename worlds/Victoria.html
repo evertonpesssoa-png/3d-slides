@@ -42,67 +42,51 @@ body{
     z-index: 1 !important;
 }
 
+/* Força o canvas do Three a ficar com z-index baixo */
+#canvas-container canvas {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    pointer-events: auto !important;
+}
+
 /* =========================
-BOTÃO PORTAL - VERSÃO SUPREMA
+BOTÃO PORTAL - VERSÃO EXTREMA PARA CELULAR
 ========================= */
 
 .portal-planner-btn {
     position: fixed !important;
     top: 20px !important;
     left: 20px !important;
-    width: 58px !important;
-    height: 58px !important;
+    width: 60px !important;
+    height: 60px !important;
     border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background: rgba(0,0,0,0.9) !important;
+    background: rgba(0,0,0,0.95) !important;
     color: #ff66cc !important;
-    border: 2px solid #ff66cc !important;
-    font-size: 30px !important;
-    z-index: 999999 !important;
+    border: 3px solid #ff66cc !important;
+    font-size: 32px !important;
+    z-index: 2147483647 !important;
     cursor: pointer !important;
-    backdrop-filter: blur(10px) !important;
-    box-shadow: 0 0 12px rgba(255,102,204,0.4), 0 0 30px rgba(255,102,204,0.7) !important;
+    backdrop-filter: blur(12px) !important;
+    box-shadow: 0 0 15px rgba(255,102,204,0.6), 0 0 35px rgba(255,102,204,0.8) !important;
     transition: 0.25s !important;
     text-decoration: none !important;
     pointer-events: auto !important;
     opacity: 1 !important;
     visibility: visible !important;
+    font-family: monospace !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
-.portal-planner-btn:hover{
-    transform: scale(1.08) !important;
-    box-shadow: 0 0 20px rgba(255,102,204,0.8), 0 0 45px rgba(255,102,204,1) !important;
-    background: rgba(255,102,204,0.2) !important;
-}
-
-.portal-planner-btn:active{
+.portal-planner-btn:active {
     transform: scale(0.95) !important;
-}
-
-/* Tooltip ao passar o mouse */
-.portal-planner-btn::before {
-    content: "🗺️ Portal Planner" !important;
-    position: absolute !important;
-    top: 70px !important;
-    left: 0 !important;
-    background: rgba(0,0,0,0.9) !important;
-    color: #ff66cc !important;
-    font-size: 12px !important;
-    padding: 6px 12px !important;
-    border-radius: 20px !important;
-    white-space: nowrap !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 0.3s !important;
-    font-family: 'Poppins', sans-serif !important;
-    border: 1px solid #ff66cc !important;
-    z-index: 999999 !important;
-}
-
-.portal-planner-btn:hover::before {
-    opacity: 1 !important;
+    background: rgba(255,102,204,0.3) !important;
 }
 
 body.transition-out{
@@ -124,6 +108,21 @@ TOP ICONS
     gap:12px;
 }
 
+/* BARRA DE DEPURAÇÃO - mostra se o código está rodando */
+.debug-bar {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: #0f0;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    z-index: 999999;
+    font-family: monospace;
+    pointer-events: none;
+}
+
 </style>
 
 </head>
@@ -132,13 +131,17 @@ TOP ICONS
 
 <div id="canvas-container"></div>
 
+<!-- BARRA DE DEPURAÇÃO -->
+<div class="debug-bar" id="debugBar">⏳ Carregando...</div>
+
 <!-- =========================
 BOTÃO PORTAL - VERSÃO HTML
 ========================= -->
 
 <div
 class="portal-planner-btn"
-id="portalPlannerBtn">
+id="portalPlannerBtn"
+style="position:fixed!important;top:20px!important;left:20px!important;width:60px!important;height:60px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;background:rgba(0,0,0,0.95)!important;color:#ff66cc!important;border:3px solid #ff66cc!important;font-size:32px!important;z-index:2147483647!important;cursor:pointer!important;backdrop-filter:blur(12px)!important;box-shadow:0 0 15px rgba(255,102,204,0.6)!important;pointer-events:auto!important;opacity:1!important;visibility:visible!important">
 🗺️
 </div>
 
@@ -309,6 +312,10 @@ initSkillCarousel
 from
 "../shared/js/skill-carousel.js";
 
+// Atualiza barra de depuração
+const debugBar = document.getElementById('debugBar');
+if (debugBar) debugBar.innerHTML = '✅ Script iniciado';
+
 /* =========================
 CONFIG
 ========================= */
@@ -384,6 +391,8 @@ FUNÇÃO DO PORTAL
 
 function openPortalPlanner(){
 
+    if (debugBar) debugBar.innerHTML = '🚪 Abrindo portal...';
+    
     localStorage.setItem(
     "lastAsura",
     "victoria"
@@ -432,116 +441,64 @@ function openPortalPlanner(){
 }
 
 /* =========================
-CRIAÇÃO DO BOTÃO - FALLBACK SUPREMO
+VERIFICA E FORÇA O BOTÃO
 ========================= */
 
-function criarBotaoPortal() {
-    // Remove qualquer botão existente com problemas
-    const btnExistente = document.getElementById('portalPlannerBtn');
-    if (btnExistente) {
-        btnExistente.remove();
+function forcarBotao() {
+    let btn = document.getElementById('portalPlannerBtn');
+    
+    if (!btn) {
+        if (debugBar) debugBar.innerHTML = '❌ Botão não existe, criando...';
+        
+        btn = document.createElement('div');
+        btn.id = 'portalPlannerBtn';
+        btn.className = 'portal-planner-btn';
+        btn.innerHTML = '🗺️';
+        document.body.appendChild(btn);
     }
     
-    // Cria o botão do zero
-    const btn = document.createElement('div');
-    btn.id = 'portalPlannerBtn';
-    btn.className = 'portal-planner-btn';
-    btn.innerHTML = '🗺️';
-    btn.setAttribute('title', 'Abrir Portal Planner');
-    
-    // Estilos inline para garantir
+    // Força estilos diretamente
     btn.style.cssText = `
         position: fixed !important;
         top: 20px !important;
         left: 20px !important;
-        width: 58px !important;
-        height: 58px !important;
+        width: 60px !important;
+        height: 60px !important;
         border-radius: 50% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        background: rgba(0,0,0,0.9) !important;
+        background: rgba(0,0,0,0.95) !important;
         color: #ff66cc !important;
-        border: 2px solid #ff66cc !important;
-        font-size: 30px !important;
-        z-index: 999999 !important;
+        border: 3px solid #ff66cc !important;
+        font-size: 32px !important;
+        z-index: 2147483647 !important;
         cursor: pointer !important;
-        backdrop-filter: blur(10px) !important;
-        box-shadow: 0 0 12px rgba(255,102,204,0.4), 0 0 30px rgba(255,102,204,0.7) !important;
-        transition: 0.25s !important;
+        backdrop-filter: blur(12px) !important;
+        box-shadow: 0 0 15px rgba(255,102,204,0.6) !important;
         pointer-events: auto !important;
         opacity: 1 !important;
         visibility: visible !important;
     `;
     
-    // Adiciona evento de clique
-    btn.addEventListener('click', (e) => {
+    // Remove eventos antigos e adiciona novo
+    const novoBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(novoBtn, btn);
+    
+    novoBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         openPortalPlanner();
     });
     
-    // Adiciona hover effects
-    btn.addEventListener('mouseenter', () => {
-        btn.style.transform = 'scale(1.08)';
-        btn.style.boxShadow = '0 0 20px rgba(255,102,204,0.8), 0 0 45px rgba(255,102,204,1)';
-        btn.style.background = 'rgba(255,102,204,0.2)';
-    });
-    
-    btn.addEventListener('mouseleave', () => {
-        btn.style.transform = 'scale(1)';
-        btn.style.boxShadow = '0 0 12px rgba(255,102,204,0.4), 0 0 30px rgba(255,102,204,0.7)';
-        btn.style.background = 'rgba(0,0,0,0.9)';
-    });
-    
-    document.body.appendChild(btn);
-    console.log("✅ Botão do portal CRIADO VIA JAVASCRIPT com sucesso!");
-    return btn;
+    if (debugBar) debugBar.innerHTML = '✅ Botão FORÇADO e visível!';
+    return novoBtn;
 }
 
-/* =========================
-TENTA PEGAR O BOTÃO EXISTENTE OU CRIA UM NOVO
-========================= */
-
-let portalPlannerBtn = document.getElementById("portalPlannerBtn");
-
-if (portalPlannerBtn) {
-    console.log("✅ Botão do portal encontrado no HTML!");
-    
-    // Remove qualquer evento anterior e adiciona o novo
-    const novoBtn = portalPlannerBtn.cloneNode(true);
-    portalPlannerBtn.parentNode.replaceChild(novoBtn, portalPlannerBtn);
-    portalPlannerBtn = novoBtn;
-    
-    portalPlannerBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        openPortalPlanner();
-    });
-    
-    // Garante que os estilos estão aplicados
-    portalPlannerBtn.style.display = 'flex';
-    portalPlannerBtn.style.visibility = 'visible';
-    portalPlannerBtn.style.opacity = '1';
-    
-} else {
-    console.warn("❌ Botão do portal NÃO encontrado no HTML. Criando via JavaScript...");
-    portalPlannerBtn = criarBotaoPortal();
-}
-
-// Força a verificação após 1 segundo (caso algo tenha removido o botão)
-setTimeout(() => {
-    const btn = document.getElementById('portalPlannerBtn');
-    if (!btn) {
-        console.warn("⚠️ Botão sumiu! Recriando...");
-        criarBotaoPortal();
-    } else {
-        console.log("✅ Botão ainda está na página!");
-        btn.style.display = 'flex';
-        btn.style.visibility = 'visible';
-        btn.style.opacity = '1';
-    }
-}, 1000);
+// Executa a força do botão AGORA e depois de 1 segundo
+forcarBotao();
+setTimeout(() => forcarBotao(), 1000);
+setTimeout(() => forcarBotao(), 3000);
 
 /* =========================
 SCENE
@@ -597,6 +554,12 @@ window.devicePixelRatio
 
 renderer.shadowMap.enabled =
 true;
+
+// Força o canvas a ficar atrás
+renderer.domElement.style.position = 'fixed';
+renderer.domElement.style.top = '0';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.zIndex = '1';
 
 container.appendChild(
 renderer.domElement
@@ -763,6 +726,8 @@ config.modelScale
 );
 
 scene.add(victoriaModel);
+
+if (debugBar) debugBar.innerHTML = '✅ Modelo carregado + botão visível';
 
 },
 
