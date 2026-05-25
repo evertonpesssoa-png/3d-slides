@@ -821,6 +821,52 @@
         // =========================
         loadAsura();
         initAsuraSelector();
+
+// ... (código existente do portal-system)
+
+// =========================
+// BOTÃO VOLTAR (CELULAR E NAVEGADOR) - VOLTA PARA A ASURA
+// =========================
+function voltarParaAsura() {
+    document.body.classList.add('transition-out');
+    
+    // Pega a cor da asura atual para o flash
+    const corAsura = asurasConfig[currentAsura]?.color || '#00ffcc';
+    
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle, ${corAsura}, transparent);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 100000;
+        pointer-events: none;
+    `;
+    document.body.appendChild(flash);
+    
+    requestAnimationFrame(() => {
+        flash.style.opacity = '0.8';
+        setTimeout(() => {
+            // VOLTA PARA O MUNDO DA ASURA ATUAL
+            window.location.href = `../worlds/${currentAsura}.html`;
+        }, 350);
+    });
+}
+
+// Detecta o botão "voltar" do celular/navegador
+window.addEventListener('popstate', (event) => {
+    event.preventDefault();
+    history.pushState(null, null, window.location.href);
+    voltarParaAsura();
+});
+
+// Adiciona um estado inicial no histórico
+history.pushState(null, null, window.location.href);
+console.log("✅ Botão 'voltar' do celular configurado para voltar à asura!");
+
+
+
     </script>
 </body>
 </html>
