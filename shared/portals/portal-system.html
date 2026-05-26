@@ -25,7 +25,6 @@
             margin: 0 auto;
         }
         
-        /* Header Cyberpunk */
         .cyber-header {
             text-align: center;
             margin-bottom: 30px;
@@ -51,7 +50,6 @@
             margin-top: 10px;
         }
         
-        /* Seletor de Asuras */
         .asura-selector {
             display: flex;
             flex-wrap: wrap;
@@ -84,7 +82,6 @@
             box-shadow: 0 0 20px #00ffcc;
         }
         
-        /* Painel de Controles */
         .controls-panel {
             background: rgba(0,0,0,0.7);
             border-radius: 16px;
@@ -143,7 +140,6 @@
             box-shadow: 0 0 20px #00ffcc;
         }
         
-        /* Lista de Portais */
         .portals-list {
             max-height: 400px;
             overflow-y: auto;
@@ -212,7 +208,6 @@
             background: rgba(255,0,0,0.8);
         }
         
-        /* Coordenadas Rápidas */
         .coord-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -236,7 +231,6 @@
             transform: scale(1.02);
         }
         
-        /* Botões Export/Import */
         .export-import {
             display: flex;
             gap: 10px;
@@ -260,7 +254,6 @@
             box-shadow: 0 0 10px #ff00ff;
         }
         
-        /* BOTÃO VOLTAR - POSIÇÃO CORRIGIDA (NÃO SOBREPÕE) */
         .back-to-asura {
             position: fixed;
             bottom: 20px;
@@ -290,7 +283,12 @@
             border-color: #ff00ff;
         }
         
-        /* Info Asura */
+        body.transition-out {
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.4s ease;
+        }
+        
         .asura-info {
             text-align: center;
             padding: 15px;
@@ -305,7 +303,6 @@
             font-size: 1.3rem;
         }
         
-        /* Scrollbar cyberpunk */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -328,7 +325,6 @@
     </style>
 </head>
 <body>
-    <!-- Botão de voltar - POSICIONADO CORRETAMENTE (não sobrepõe) -->
     <button class="back-to-asura" id="backToAsuraBtn">
         ⤺ VOLTAR PARA O MUNDO DA ASURA
     </button>
@@ -402,11 +398,11 @@
             siria: { name: 'SIRIA', color: '#35ff9c', icon: '🌳' },
             merlim: { name: 'MERLIM', color: '#00d9ff', icon: '🔧' },
             astreia: { name: 'ASTREIA', color: '#287bff', icon: '👁️' },
-            umbra: { name: 'UMBRA', color: '#8b2fff', icon: '🕵️' },
+            umbra: { name: 'UMBRA', color: '#8b2fff', icon: '🥷' },
             atena: { name: 'ATENA', color: '#ffd700', icon: '🦉' },
-            victoria: { name: 'VICTORIA', color: '#ff0000', icon: '🏅' },
+            victoria: { name: 'VICTORIA', color: '#ff0000', icon: '🐉' },
             hestia: { name: 'HESTIA', color: '#fff0b3', icon: '🔮' },
-            daedala: { name: 'DAEDALA', color: '#00ffd5', icon: '⚗️' }
+            daedala: { name: 'DAEDALA', color: '#00ffd5', icon: '💡' }
         };
         
         // =========================
@@ -493,7 +489,7 @@
         }
         
         // =========================
-        // FALLBACK CYBERPUNK PARA MINI-MUNDOS INDISPONÍVEIS
+        // FALLBACK CYBERPUNK
         // =========================
         function showCyberpunkWarning(portalName, portalIcon) {
             const existingWarning = document.getElementById('cyberpunk-warning');
@@ -810,63 +806,76 @@
             input.click();
         });
         
-        // Botão Voltar
+        // =========================
+        // BOTÃO VOLTAR FÍSICO
+        // =========================
         document.getElementById('backToAsuraBtn')?.addEventListener('click', () => {
             const lastAsura = localStorage.getItem('lastAsura') || currentAsura;
-            window.location.href = BASE_URL + `worlds/${lastAsura}.html`;
+            document.body.classList.add('transition-out');
+            const corAsura = asurasConfig[lastAsura]?.color || '#00ffcc';
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, ${corAsura}, transparent);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 100000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flash);
+            requestAnimationFrame(() => {
+                flash.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = BASE_URL + `worlds/${lastAsura}.html`;
+                }, 350);
+            });
         });
+        
+        // =========================
+        // BOTÃO VOLTAR DO CELULAR (CORRIGIDO)
+        // =========================
+        function voltarParaAsura() {
+            const asuraParaVoltar = localStorage.getItem('lastAsura') || currentAsura;
+            
+            document.body.classList.add('transition-out');
+            
+            const corAsura = asurasConfig[asuraParaVoltar]?.color || '#00ffcc';
+            
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: radial-gradient(circle, ${corAsura}, transparent);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 100000;
+                pointer-events: none;
+            `;
+            document.body.appendChild(flash);
+            
+            requestAnimationFrame(() => {
+                flash.style.opacity = '0.8';
+                setTimeout(() => {
+                    window.location.href = BASE_URL + `worlds/${asuraParaVoltar}.html`;
+                }, 350);
+            });
+        }
+        
+        window.addEventListener('popstate', (event) => {
+            event.preventDefault();
+            history.pushState(null, null, window.location.href);
+            voltarParaAsura();
+        });
+        
+        history.pushState(null, null, window.location.href);
+        console.log("✅ Botão 'voltar' do celular configurado para voltar à asura!");
         
         // =========================
         // INICIAR
         // =========================
         loadAsura();
         initAsuraSelector();
-
-// ... (código existente do portal-system)
-
-// =========================
-// BOTÃO VOLTAR (CELULAR E NAVEGADOR) - VOLTA PARA A ASURA
-// =========================
-function voltarParaAsura() {
-    document.body.classList.add('transition-out');
-    
-    // Pega a cor da asura atual para o flash
-    const corAsura = asurasConfig[currentAsura]?.color || '#00ffcc';
-    
-    const flash = document.createElement('div');
-    flash.style.cssText = `
-        position: fixed;
-        inset: 0;
-        background: radial-gradient(circle, ${corAsura}, transparent);
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        z-index: 100000;
-        pointer-events: none;
-    `;
-    document.body.appendChild(flash);
-    
-    requestAnimationFrame(() => {
-        flash.style.opacity = '0.8';
-        setTimeout(() => {
-            // VOLTA PARA O MUNDO DA ASURA ATUAL
-            window.location.href = `../worlds/${currentAsura}.html`;
-        }, 350);
-    });
-}
-
-// Detecta o botão "voltar" do celular/navegador
-window.addEventListener('popstate', (event) => {
-    event.preventDefault();
-    history.pushState(null, null, window.location.href);
-    voltarParaAsura();
-});
-
-// Adiciona um estado inicial no histórico
-history.pushState(null, null, window.location.href);
-console.log("✅ Botão 'voltar' do celular configurado para voltar à asura!");
-
-
-
     </script>
 </body>
 </html>
