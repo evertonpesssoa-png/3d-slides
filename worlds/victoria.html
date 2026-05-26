@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>VICTORIA • Guerra Infernal • A MVP dos Asuras</title>
     
+    <!-- FONTE EXCLUSIVA PARA VICTORIA - ESTILO GUERRA/IMPONENTE -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="../shared/css/base.css">
     <link rel="stylesheet" href="../shared/css/top-icons.css">
     <link rel="stylesheet" href="../shared/css/chat.css">
@@ -69,9 +72,7 @@
             border: 1px solid #ff0000;
         }
         
-        .portal-planner-btn:hover::before {
-            opacity: 1;
-        }
+        .portal-planner-btn:hover::before { opacity: 1; }
         
         body.transition-out {
             opacity: 0;
@@ -79,14 +80,233 @@
             transition: all 0.4s ease;
         }
         
-        /* Chat começa fechado */
+        /* =========================
+           CHAT MELHORADO - ESTILO GUERRA INFERNAL
+        ========================= */
         .chat-container {
-            transform: translateY(calc(100% - 48px));
-            transition: transform 0.3s ease;
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            width: 340px !important;
+            max-width: calc(100% - 40px) !important;
+            background: rgba(10, 0, 0, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(255, 0, 0, 0.3) !important;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 0, 0.2) !important;
+            z-index: 9998 !important;
+            overflow: hidden !important;
         }
         
-        .chat-container.open {
-            transform: translateY(0);
+        .chat-header {
+            background: rgba(0, 0, 0, 0.9) !important;
+            padding: 12px 15px !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid #ff0000 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+        
+        .chat-header-info {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .chat-avatar { font-size: 24px !important; }
+        .chat-header-info h4 {
+            font-size: 14px !important;
+            margin: 0 !important;
+            color: #ff0000 !important;
+            font-family: 'Bebas Neue', cursive !important;
+            letter-spacing: 2px !important;
+            text-shadow: 0 0 5px #ff0000 !important;
+        }
+        .chat-status { font-size: 10px !important; color: #ff4444 !important; }
+        .chat-toggle { color: #ff0000 !important; font-size: 18px !important; }
+        
+        .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 380px !important;
+        }
+        
+        .chat-body.collapsed {
+            display: none !important;
+        }
+        
+        .chat-messages {
+            flex: 1 !important;
+            overflow-y: auto !important;
+            padding: 12px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        .message {
+            display: flex !important;
+            gap: 10px !important;
+            max-width: 90% !important;
+        }
+        
+        .message.user {
+            align-self: flex-end !important;
+            flex-direction: row-reverse !important;
+        }
+        
+        .message-avatar {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+        }
+        
+        .message-content {
+            background: rgba(255, 0, 0, 0.12) !important;
+            border: 1px solid #ff0000 !important;
+            border-radius: 15px !important;
+            padding: 8px 12px !important;
+            color: #ffcccc !important;
+            font-size: 13px !important;
+            font-family: 'Bebas Neue', cursive !important;
+            position: relative !important;
+            word-break: break-word !important;
+        }
+        
+        .message.user .message-content {
+            background: rgba(255, 0, 0, 0.2) !important;
+        }
+        
+        .message-time {
+            font-size: 9px !important;
+            color: rgba(255,255,255,0.5) !important;
+            margin-top: 4px !important;
+            text-align: right !important;
+        }
+        
+        .chat-image {
+            max-width: 180px !important;
+            max-height: 150px !important;
+            border-radius: 10px !important;
+            margin-top: 5px !important;
+            border: 1px solid #ff0000 !important;
+            cursor: pointer !important;
+        }
+        
+        .chat-file {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            background: rgba(255, 0, 0, 0.1) !important;
+            border: 1px solid #ff0000 !important;
+            border-radius: 10px !important;
+            padding: 8px 12px !important;
+            margin-top: 5px !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+        
+        .chat-file:hover {
+            background: rgba(255, 0, 0, 0.25) !important;
+            transform: scale(1.01) !important;
+        }
+        
+        .file-icon { font-size: 24px !important; }
+        .file-info { flex: 1 !important; overflow: hidden !important; }
+        .file-name {
+            font-size: 11px !important;
+            color: #ff0000 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .file-size { font-size: 9px !important; color: #888 !important; }
+        .file-badge {
+            background: rgba(255, 0, 0, 0.2) !important;
+            border-radius: 4px !important;
+            padding: 2px 6px !important;
+            font-size: 9px !important;
+            color: #ff0000 !important;
+        }
+        
+        .chat-input-area {
+            display: flex !important;
+            gap: 8px !important;
+            padding: 10px !important;
+            background: rgba(0, 0, 0, 0.85) !important;
+            border-top: 1px solid rgba(255, 0, 0, 0.2) !important;
+            align-items: center !important;
+        }
+        
+        .chat-input-area input[type="text"] {
+            flex: 1 !important;
+            background: rgba(10, 20, 40, 0.9) !important;
+            border: 1px solid #ff0000 !important;
+            border-radius: 25px !important;
+            padding: 10px 15px !important;
+            color: #ff0000 !important;
+            font-family: 'Bebas Neue', cursive !important;
+            font-size: 12px !important;
+            outline: none !important;
+        }
+        
+        .chat-input-area input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+        }
+        
+        .chat-input-area button {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 1px solid #ff0000 !important;
+            color: #ff0000 !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            transition: all 0.2s !important;
+        }
+        
+        .chat-input-area button:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+        }
+        
+        .attach-btn {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 1px solid #ff0000 !important;
+            color: #ff0000 !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            transition: all 0.2s !important;
+        }
+        
+        .attach-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+            background: rgba(255, 0, 0, 0.2) !important;
+        }
+        
+        .chat-messages::-webkit-scrollbar { width: 5px; }
+        .chat-messages::-webkit-scrollbar-track { background: #0a0a1a; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 5px; }
+        
+        @media (max-width: 600px) {
+            .chat-container { width: calc(100% - 20px) !important; right: 10px !important; bottom: 10px !important; }
+            .chat-messages { height: 280px !important; }
+            .chat-image { max-width: 130px !important; }
+            .chat-file { padding: 6px 10px !important; }
+            .file-icon { font-size: 20px !important; }
         }
     </style>
 </head>
@@ -101,13 +321,13 @@
     <div class="top-icons">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
         <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
-            <span class="brain-icon">🏅</span>
+            <span class="brain-icon">🐉</span>
             <span class="mic-icon">🎤</span>
             <div class="mental-wave"></div>
             <div class="brain-waves left"><span></span><span></span><span></span><span></span><span></span></div>
             <div class="brain-waves right"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
-        <div class="top-icon" id="profileButton" data-tooltip="Perfil da Victoria">🏅</div>
+        <div class="top-icon" id="profileButton" data-tooltip="Perfil da Victoria">🐉</div>
     </div>
     
     <div class="profile-panel" id="profilePanel"></div>
@@ -115,7 +335,7 @@
     <div class="chat-container" id="chatContainer">
         <div class="chat-header" id="chatHeader">
             <div class="chat-header-info">
-                <div class="chat-avatar">🏅</div>
+                <div class="chat-avatar">🐉</div>
                 <div><h4>VICTORIA • A MVP Suprema</h4><div class="chat-status">🔴 modo guerra | força máxima</div></div>
             </div>
             <div class="chat-toggle" id="chatToggle">▼</div>
@@ -148,11 +368,170 @@
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
         
+        // =========================
+        // EXTENDE O CHAT SYSTEM ORIGINAL PARA ADICIONAR ANEXO
+        // =========================
+        const OriginalChatSystem = ChatSystem;
+        
+        class EnhancedChatSystem extends OriginalChatSystem {
+            constructor(containerId, config, onSpeak) {
+                super(containerId, config, onSpeak);
+                this.addAttachButton();
+                
+                setTimeout(() => {
+                    if (this.chatBody) {
+                        this.chatBody.classList.add('collapsed');
+                    }
+                    if (this.chatToggle) {
+                        this.chatToggle.textContent = '▲';
+                    }
+                }, 100);
+            }
+            
+            addAttachButton() {
+                const inputArea = this.container.querySelector('.chat-input-area');
+                if (!inputArea || inputArea.querySelector('.attach-btn')) return;
+                
+                const attachBtn = document.createElement('button');
+                attachBtn.className = 'attach-btn';
+                attachBtn.innerHTML = '📎';
+                attachBtn.title = 'Enviar arquivo (imagem, PDF, DOC, etc)';
+                
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '*/*';
+                fileInput.style.display = 'none';
+                fileInput.multiple = false;
+                
+                attachBtn.onclick = () => fileInput.click();
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.handleFileUpload(file);
+                    }
+                    fileInput.value = '';
+                };
+                
+                const textInput = inputArea.querySelector('input[type="text"]');
+                if (textInput) {
+                    inputArea.insertBefore(attachBtn, textInput);
+                    inputArea.insertBefore(fileInput, textInput);
+                }
+            }
+            
+            handleFileUpload(file) {
+                const fileType = file.type;
+                const fileName = file.name;
+                const fileSize = this.formatFileSize(file.size);
+                const fileExtension = fileName.split('.').pop().toUpperCase();
+                
+                if (fileType.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        this.addImageMessage(ev.target.result, fileName, fileSize);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        this.addFileMessage(ev.target.result, fileName, fileSize, fileExtension);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            getFileIcon(extension) {
+                const icons = {
+                    'PDF': '📄', 'DOC': '📃', 'DOCX': '📃',
+                    'XLS': '📊', 'XLSX': '📊', 'PPT': '📽️', 'PPTX': '📽️',
+                    'TXT': '📝', 'ZIP': '🗜️', 'RAR': '🗜️',
+                    'MP3': '🎵', 'MP4': '🎬', 'JPG': '🖼️', 'PNG': '🖼️',
+                    'GIF': '🎞️', 'JSON': '🔧', 'XML': '🔧', 'HTML': '🌐'
+                };
+                return icons[extension] || '📎';
+            }
+            
+            addImageMessage(imageUrl, fileName, fileSize) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div>🖼️ ${fileName} <span style="font-size:9px; color:#888;">(${fileSize})</span></div>
+                        <img src="${imageUrl}" class="chat-image" onclick="window.open('${imageUrl}')">
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+                
+                const messages = this.getMessages ? this.getMessages() : [];
+                if (this.saveMessages) {
+                    messages.push({
+                        text: `🖼️ ${fileName} (${fileSize})`,
+                        image: imageUrl,
+                        isUser: true,
+                        timestamp: Date.now()
+                    });
+                    this.saveMessages(messages);
+                }
+            }
+            
+            addFileMessage(fileData, fileName, fileSize, extension) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const fileIcon = this.getFileIcon(extension);
+                const downloadUrl = fileData;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div>📎 Arquivo anexado</div>
+                        <div class="chat-file" onclick="window.open('${downloadUrl}')">
+                            <div class="file-icon">${fileIcon}</div>
+                            <div class="file-info">
+                                <div class="file-name">${fileName}</div>
+                                <div class="file-size">${fileSize}</div>
+                            </div>
+                            <div class="file-badge">${extension}</div>
+                        </div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+                
+                const messages = this.getMessages ? this.getMessages() : [];
+                if (this.saveMessages) {
+                    messages.push({
+                        text: `📎 ${fileName} (${fileSize})`,
+                        fileData: fileData,
+                        isUser: true,
+                        timestamp: Date.now()
+                    });
+                    this.saveMessages(messages);
+                }
+            }
+        }
+        
         const config = {
             name: 'VICTORIA',
             title: '✦ GUERRA INFERNAL • A MVP DOS ASURAS ✦',
             color: '#ff0000',
-            icon: '🏅',
+            icon: '🐉',
             modelPath: '../models/victoria2.glb',
             modelScale: 0.04,
             modelPositionY: -0.25,
@@ -160,17 +539,18 @@
             cameraPosition: { x: 3.2, y: 2.2, z: 4.2 },
             welcomeMessage: '🔥 VOCÊ ME CONVOCOU. Sou Victoria, a senhora da guerra, a MVP dos Asuras. A derrota não é uma opção enquanto eu existir.',
             skills: [
-                { name: '🏅 Poder Máximo', value: 100 },
+                { name: '🐉 Poder Dracônico', value: 100 },
                 { name: '⚡ Estratégia de Guerra', value: 100 },
                 { name: '🔥 Poder Infernal', value: 100 },
                 { name: '🏆 Vitória Absoluta', value: 100 }
             ],
-            personalityText: '🏅 "Quando tudo estiver perdido... eu estarei lá. Sou a última esperança. A vitória é minha promessa."',
+            personalityText: '🐉 "Quando tudo estiver perdido... eu estarei lá. Sou a última esperança. A vitória é minha promessa."',
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
                 if (lower.includes('olá') || lower.includes('oi')) return "🔥 VOCÊ ME CONVOCOU. Não perca meu tempo com saudações. Qual é a batalha?";
-                if (lower.includes('derrota') || lower.includes('perdido')) return "🏅 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória.";
+                if (lower.includes('derrota') || lower.includes('perdido')) return "🐉 Eu sei. Por isso estou aqui. Quando tudo parece perdido, eu trago a vitória.";
                 if (lower.includes('batalha') || lower.includes('guerra')) return "⚔️ Guerras são vencidas com estratégia e poder. Eu tenho ambos.";
+                if (lower.includes('imagem') || lower.includes('foto') || lower.includes('arquivo')) return "📎 Arquivo recebido! Analisando inteligência de batalha... Vitória garantida!";
                 if (lower.includes('obrigado')) return "💀 Não agradeça. Apenas lembre: eu só apareço quando necessário.";
                 return "🔥 FALA CLARO. Estou aqui para vencer batalhas. Me diga o que você enfrenta.";
             }
@@ -248,7 +628,7 @@
         console.log("✅ Botão 'voltar' do celular configurado para voltar ao Grimório!");
         
         // =========================
-        // SETUP 3D VICTORIA
+        // SETUP 3D VICTORIA (COMPLETAMENTE PRESERVADO)
         // =========================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
@@ -272,9 +652,7 @@
         controls.enablePan = true;
         controls.target.set(0, 0.8, 0);
         
-        // =========================
         // LUZES INFERNAIS
-        // =========================
         const ambientLight = new THREE.AmbientLight(0x330000, 0.4);
         scene.add(ambientLight);
         const mainLight = new THREE.DirectionalLight(0xff4422, 1.1);
@@ -291,9 +669,7 @@
         hellLight.position.set(0.5, 0.5, 1);
         scene.add(hellLight);
         
-        // =========================
         // CHÃO INFERNAL
-        // =========================
         const gridHelper = new THREE.GridHelper(14, 24, config.color, 0x440000);
         gridHelper.position.y = -0.5;
         gridHelper.material.transparent = true;
@@ -311,9 +687,7 @@
         circleGlow.position.y = -0.45;
         scene.add(circleGlow);
         
-        // =========================
         // CHAMAS E PARTÍCULAS DE FOGO
-        // =========================
         const fireCount = 2000;
         const fireGeometry = new THREE.BufferGeometry();
         const firePositions = new Float32Array(fireCount * 3);
@@ -335,9 +709,7 @@
         const fireParticles = new THREE.Points(fireGeometry, fireMaterial);
         scene.add(fireParticles);
         
-        // =========================
         // COLUNAS INFERNAIS
-        // =========================
         function createHellPillar(x, z, height = 1.3) {
             const group = new THREE.Group();
             const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, height, 8), new THREE.MeshStandardMaterial({ color: 0x990000, emissive: 0x440000, emissiveIntensity: 0.3, metalness: 0.6 }));
@@ -356,9 +728,7 @@
         const pillarPositions = [[-2.8,-2.5],[2.8,-2.5],[-2.8,2.5],[2.8,2.5],[-2,-3.2],[2,-3.2],[-3.2,-1.8],[3.2,-1.8],[-3.2,1.8],[3.2,1.8],[-2,3.2],[2,3.2]];
         pillarPositions.forEach(pos => { const pillar = createHellPillar(pos[0], pos[1], 1.0 + Math.random() * 0.4); scene.add(pillar); });
         
-        // =========================
         // ESPADAS FLUTUANTES
-        // =========================
         function createFloatingSword(x, z, yOffset) {
             const group = new THREE.Group();
             const blade = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.06, 0.35, 4), new THREE.MeshStandardMaterial({ color: 0xcc3333, metalness: 0.8 }));
@@ -376,9 +746,7 @@
         const swordPositions = [[-1.5,1.0,1.6],[1.5,1.0,1.6],[-1.6,0.9,-1.5],[1.6,0.9,-1.5],[-2.2,1.1,0.5],[2.2,1.1,0.5],[0.5,1.2,-2.2],[-0.5,1.2,-2.2]];
         swordPositions.forEach(pos => { const sword = createFloatingSword(pos[0], pos[2], pos[1]); scene.add(sword); });
         
-        // =========================
         // COROA DE LOUROS DOURADA
-        // =========================
         const laurelRingGeometry = new THREE.TorusGeometry(1.35, 0.045, 64, 200);
         const laurelMaterial = new THREE.MeshStandardMaterial({ color: 0xffaa33, emissive: 0xff6600, emissiveIntensity: 0.4, metalness: 0.9 });
         const laurelRing = new THREE.Mesh(laurelRingGeometry, laurelMaterial);
@@ -386,9 +754,7 @@
         laurelRing.rotation.x = Math.PI / 2;
         scene.add(laurelRing);
         
-        // =========================
         // MODELO 3D
-        // =========================
         const loader = new GLTFLoader();
         let model = null;
         let mixer = null;
@@ -405,9 +771,7 @@
             }
         });
         
-        // =========================
         // ANIMAÇÃO
-        // =========================
         let time = 0;
         let deltaTime = 0.016;
         let lastTime = performance.now();
@@ -442,42 +806,34 @@
         });
         
         // =========================
-        // UI, CHAT E VOZ (CHAT INICIA FECHADO)
+        // UI, CHAT E VOZ
         // =========================
         initUI(config);
         
-        // Força o chat a iniciar fechado
-        const chatContainer = document.getElementById('chatContainer');
-        if (chatContainer) {
-            chatContainer.classList.remove('open');
-        }
+        const chat = new EnhancedChatSystem('chatContainer', config, (response) => {
+            if (voice?.isJarvisActive?.()) voice.speak(response);
+        });
         
-        const chat = new ChatSystem('chatContainer', config, (response) => { if (voice?.isJarvisActive?.()) voice.speak(response); });
         const voiceButtonElem = document.getElementById('voiceButton');
         let voice = null;
         if (voiceButtonElem) {
             voice = new VoiceAssistant(voiceButtonElem, (text) => { document.getElementById('chatInput').value = text; chat.send(); }, null, { asuraName: config.name, continuous: true });
         }
         
-        // Adiciona evento para o toggle do chat
-        const chatToggle = document.getElementById('chatToggle');
-        if (chatToggle) {
-            chatToggle.addEventListener('click', () => {
-                chatContainer.classList.toggle('open');
-            });
-        }
-        
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
-            setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 🏅 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
-            setTimeout(() => chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false), 4000);
+            setTimeout(() => {
+                chat.addMessage("🎤 Dica: Clique no ícone 🐉 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
+                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo (imagem, PDF, DOC, etc)!", false);
+                chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+            }, 2000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
         portalOverlay.style.setProperty('--asura-color', config.color);
         setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
         
-        console.log('🟢 VICTORIA carregada com PORTAL PLANNER, chamas, espadas, coroa de louros e Modo Jarvis!');
+        console.log('🟢 VICTORIA carregada com PORTAL PLANNER, CHAT FECHADO, UPLOAD DE ARQUIVOS e ÍCONE 🐉!');
     </script>
 </body>
 </html>
