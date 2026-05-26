@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>ASTREIA • Reino Celestial Azul</title>
     
+    <!-- FONTE EXCLUSIVA PARA ASTREIA - ESTILO CELESTIAL -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="../shared/css/base.css">
     <link rel="stylesheet" href="../shared/css/top-icons.css">
     <link rel="stylesheet" href="../shared/css/chat.css">
@@ -69,9 +72,7 @@
             border: 1px solid #287bff;
         }
         
-        .portal-planner-btn:hover::before {
-            opacity: 1;
-        }
+        .portal-planner-btn:hover::before { opacity: 1; }
         
         body.transition-out {
             opacity: 0;
@@ -79,14 +80,232 @@
             transition: all 0.4s ease;
         }
         
-        /* Chat começa fechado */
+        /* =========================
+           CHAT MELHORADO - ESTILO CELESTIAL
+        ========================= */
         .chat-container {
-            transform: translateY(calc(100% - 48px));
-            transition: transform 0.3s ease;
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            width: 340px !important;
+            max-width: calc(100% - 40px) !important;
+            background: rgba(5, 11, 32, 0.95) !important;
+            backdrop-filter: blur(12px) !important;
+            border-radius: 16px !important;
+            border: 1px solid rgba(40,123,255,0.3) !important;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5), 0 0 15px rgba(40,123,255,0.2) !important;
+            z-index: 9998 !important;
+            overflow: hidden !important;
         }
         
-        .chat-container.open {
-            transform: translateY(0);
+        .chat-header {
+            background: rgba(0, 0, 0, 0.9) !important;
+            padding: 12px 15px !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid #287bff !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+        }
+        
+        .chat-header-info {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .chat-avatar { font-size: 24px !important; }
+        .chat-header-info h4 {
+            font-size: 14px !important;
+            margin: 0 !important;
+            color: #287bff !important;
+            font-family: 'Poppins', sans-serif !important;
+            letter-spacing: 1px !important;
+        }
+        .chat-status { font-size: 10px !important; color: #0f0 !important; }
+        .chat-toggle { color: #287bff !important; font-size: 18px !important; }
+        
+        .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 380px !important;
+        }
+        
+        .chat-body.collapsed {
+            display: none !important;
+        }
+        
+        .chat-messages {
+            flex: 1 !important;
+            overflow-y: auto !important;
+            padding: 12px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            background: rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        .message {
+            display: flex !important;
+            gap: 10px !important;
+            max-width: 90% !important;
+        }
+        
+        .message.user {
+            align-self: flex-end !important;
+            flex-direction: row-reverse !important;
+        }
+        
+        .message-avatar {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: rgba(40,123,255,0.2) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 16px !important;
+        }
+        
+        .message-content {
+            background: rgba(40, 123, 255, 0.12) !important;
+            border: 1px solid #287bff !important;
+            border-radius: 15px !important;
+            padding: 8px 12px !important;
+            color: #cceeff !important;
+            font-size: 13px !important;
+            font-family: 'Poppins', sans-serif !important;
+            position: relative !important;
+            word-break: break-word !important;
+        }
+        
+        .message.user .message-content {
+            background: rgba(40, 123, 255, 0.2) !important;
+        }
+        
+        .message-time {
+            font-size: 9px !important;
+            color: rgba(255,255,255,0.5) !important;
+            margin-top: 4px !important;
+            text-align: right !important;
+        }
+        
+        .chat-image {
+            max-width: 180px !important;
+            max-height: 150px !important;
+            border-radius: 10px !important;
+            margin-top: 5px !important;
+            border: 1px solid #287bff !important;
+            cursor: pointer !important;
+        }
+        
+        .chat-file {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            background: rgba(40,123,255,0.1) !important;
+            border: 1px solid #287bff !important;
+            border-radius: 10px !important;
+            padding: 8px 12px !important;
+            margin-top: 5px !important;
+            cursor: pointer !important;
+            transition: all 0.2s !important;
+        }
+        
+        .chat-file:hover {
+            background: rgba(40,123,255,0.25) !important;
+            transform: scale(1.01) !important;
+        }
+        
+        .file-icon { font-size: 24px !important; }
+        .file-info { flex: 1 !important; overflow: hidden !important; }
+        .file-name {
+            font-size: 11px !important;
+            color: #287bff !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        .file-size { font-size: 9px !important; color: #888 !important; }
+        .file-badge {
+            background: rgba(40,123,255,0.2) !important;
+            border-radius: 4px !important;
+            padding: 2px 6px !important;
+            font-size: 9px !important;
+            color: #287bff !important;
+        }
+        
+        .chat-input-area {
+            display: flex !important;
+            gap: 8px !important;
+            padding: 10px !important;
+            background: rgba(0, 0, 0, 0.85) !important;
+            border-top: 1px solid rgba(40,123,255,0.2) !important;
+            align-items: center !important;
+        }
+        
+        .chat-input-area input[type="text"] {
+            flex: 1 !important;
+            background: rgba(10, 20, 40, 0.9) !important;
+            border: 1px solid #287bff !important;
+            border-radius: 25px !important;
+            padding: 10px 15px !important;
+            color: #287bff !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 12px !important;
+            outline: none !important;
+        }
+        
+        .chat-input-area input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(40,123,255,0.5) !important;
+        }
+        
+        .chat-input-area button {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 1px solid #287bff !important;
+            color: #287bff !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            transition: all 0.2s !important;
+        }
+        
+        .chat-input-area button:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 10px rgba(40,123,255,0.5) !important;
+            background: rgba(40,123,255,0.2) !important;
+        }
+        
+        .attach-btn {
+            background: rgba(0, 0, 0, 0.8) !important;
+            border: 1px solid #287bff !important;
+            color: #287bff !important;
+            width: 38px !important;
+            height: 38px !important;
+            border-radius: 50% !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            transition: all 0.2s !important;
+        }
+        
+        .attach-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 0 10px rgba(40,123,255,0.5) !important;
+            background: rgba(40,123,255,0.2) !important;
+        }
+        
+        .chat-messages::-webkit-scrollbar { width: 5px; }
+        .chat-messages::-webkit-scrollbar-track { background: #0a0a1a; }
+        .chat-messages::-webkit-scrollbar-thumb { background: #287bff; border-radius: 5px; }
+        
+        @media (max-width: 600px) {
+            .chat-container { width: calc(100% - 20px) !important; right: 10px !important; bottom: 10px !important; }
+            .chat-messages { height: 280px !important; }
+            .chat-image { max-width: 130px !important; }
+            .chat-file { padding: 6px 10px !important; }
+            .file-icon { font-size: 20px !important; }
         }
     </style>
 </head>
@@ -148,6 +367,165 @@
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
         
+        // =========================
+        // EXTENDE O CHAT SYSTEM ORIGINAL PARA ADICIONAR ANEXO
+        // =========================
+        const OriginalChatSystem = ChatSystem;
+        
+        class EnhancedChatSystem extends OriginalChatSystem {
+            constructor(containerId, config, onSpeak) {
+                super(containerId, config, onSpeak);
+                this.addAttachButton();
+                
+                setTimeout(() => {
+                    if (this.chatBody) {
+                        this.chatBody.classList.add('collapsed');
+                    }
+                    if (this.chatToggle) {
+                        this.chatToggle.textContent = '▲';
+                    }
+                }, 100);
+            }
+            
+            addAttachButton() {
+                const inputArea = this.container.querySelector('.chat-input-area');
+                if (!inputArea || inputArea.querySelector('.attach-btn')) return;
+                
+                const attachBtn = document.createElement('button');
+                attachBtn.className = 'attach-btn';
+                attachBtn.innerHTML = '📎';
+                attachBtn.title = 'Enviar arquivo (imagem, PDF, DOC, etc)';
+                
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '*/*';
+                fileInput.style.display = 'none';
+                fileInput.multiple = false;
+                
+                attachBtn.onclick = () => fileInput.click();
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.handleFileUpload(file);
+                    }
+                    fileInput.value = '';
+                };
+                
+                const textInput = inputArea.querySelector('input[type="text"]');
+                if (textInput) {
+                    inputArea.insertBefore(attachBtn, textInput);
+                    inputArea.insertBefore(fileInput, textInput);
+                }
+            }
+            
+            handleFileUpload(file) {
+                const fileType = file.type;
+                const fileName = file.name;
+                const fileSize = this.formatFileSize(file.size);
+                const fileExtension = fileName.split('.').pop().toUpperCase();
+                
+                if (fileType.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        this.addImageMessage(ev.target.result, fileName, fileSize);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        this.addFileMessage(ev.target.result, fileName, fileSize, fileExtension);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            getFileIcon(extension) {
+                const icons = {
+                    'PDF': '📄', 'DOC': '📃', 'DOCX': '📃',
+                    'XLS': '📊', 'XLSX': '📊', 'PPT': '📽️', 'PPTX': '📽️',
+                    'TXT': '📝', 'ZIP': '🗜️', 'RAR': '🗜️',
+                    'MP3': '🎵', 'MP4': '🎬', 'JPG': '🖼️', 'PNG': '🖼️',
+                    'GIF': '🎞️', 'JSON': '🔧', 'XML': '🔧', 'HTML': '🌐'
+                };
+                return icons[extension] || '📎';
+            }
+            
+            addImageMessage(imageUrl, fileName, fileSize) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div>🖼️ ${fileName} <span style="font-size:9px; color:#888;">(${fileSize})</span></div>
+                        <img src="${imageUrl}" class="chat-image" onclick="window.open('${imageUrl}')">
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+                
+                const messages = this.getMessages ? this.getMessages() : [];
+                if (this.saveMessages) {
+                    messages.push({
+                        text: `🖼️ ${fileName} (${fileSize})`,
+                        image: imageUrl,
+                        isUser: true,
+                        timestamp: Date.now()
+                    });
+                    this.saveMessages(messages);
+                }
+            }
+            
+            addFileMessage(fileData, fileName, fileSize, extension) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                const fileIcon = this.getFileIcon(extension);
+                const downloadUrl = fileData;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div>📎 Arquivo anexado</div>
+                        <div class="chat-file" onclick="window.open('${downloadUrl}')">
+                            <div class="file-icon">${fileIcon}</div>
+                            <div class="file-info">
+                                <div class="file-name">${fileName}</div>
+                                <div class="file-size">${fileSize}</div>
+                            </div>
+                            <div class="file-badge">${extension}</div>
+                        </div>
+                        <div class="message-time">${time}</div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+                
+                const messages = this.getMessages ? this.getMessages() : [];
+                if (this.saveMessages) {
+                    messages.push({
+                        text: `📎 ${fileName} (${fileSize})`,
+                        fileData: fileData,
+                        isUser: true,
+                        timestamp: Date.now()
+                    });
+                    this.saveMessages(messages);
+                }
+            }
+        }
+        
         const config = {
             name: 'ASTREIA',
             title: '✦ REINO CELESTIAL • SEGURANÇA ✦',
@@ -171,6 +549,7 @@
                 if (lower.includes('olá') || lower.includes('oi')) return "👁️ Olá! Sou Astreia, a guardiã celestial. Como posso protegê-lo?";
                 if (lower.includes('segurança')) return "🛡️ Segurança é minha essência. Posso monitorar ameaças e proteger residências.";
                 if (lower.includes('câmera')) return "📷 Tenho acesso a todas as câmeras. A vigilância em tempo real é meu dom.";
+                if (lower.includes('imagem') || lower.includes('foto') || lower.includes('arquivo')) return "📎 Arquivo recebido! Analisando dados... Tudo seguro sob minha vigilância.";
                 if (lower.includes('obrigado')) return "💙 Por nada! Estou aqui para proteger.";
                 return "👁️ Sistema seguro. Sou Astreia, sua guardiã celestial. Como posso ajudá-lo?";
             }
@@ -248,7 +627,7 @@
         console.log("✅ Botão 'voltar' do celular configurado para voltar ao Grimório!");
         
         // =========================
-        // SETUP 3D ASTREIA
+        // SETUP 3D ASTREIA (COMPLETAMENTE PRESERVADO)
         // =========================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
@@ -272,9 +651,7 @@
         controls.enablePan = true;
         controls.target.set(0, 0.8, 0);
         
-        // =========================
         // LUZES
-        // =========================
         const ambientLight = new THREE.AmbientLight(0x113366, 0.6);
         scene.add(ambientLight);
         const mainLight = new THREE.DirectionalLight(0xaaccff, 1.1);
@@ -291,9 +668,7 @@
         heavenLight.position.set(2, 2.5, 1.5);
         scene.add(heavenLight);
         
-        // =========================
         // CHÃO E CÍRCULO AZUL
-        // =========================
         const gridHelper = new THREE.GridHelper(14, 24, config.color, 0x224488);
         gridHelper.position.y = -0.5;
         gridHelper.material.transparent = true;
@@ -311,9 +686,7 @@
         circleGlow.position.y = -0.45;
         scene.add(circleGlow);
         
-        // =========================
         // COLUNAS CELESTIAIS
-        // =========================
         const pillarMaterial = new THREE.MeshStandardMaterial({ color: 0x2266aa, emissive: 0x1155aa, emissiveIntensity: 0.2, metalness: 0.7 });
         function createPillar(x, z, height = 1.2) {
             const group = new THREE.Group();
@@ -330,9 +703,7 @@
         const pillarPositions = [[-2.8,-2.5],[2.8,-2.5],[-2.8,2.5],[2.8,2.5],[-2,-3.2],[2,-3.2],[-3.2,-1.8],[3.2,-1.8],[-3.2,1.8],[3.2,1.8],[-2,3.2],[2,3.2]];
         pillarPositions.forEach(pos => { const pillar = createPillar(pos[0], pos[1], 1.0 + Math.random() * 0.3); scene.add(pillar); });
         
-        // =========================
         // PARTÍCULAS ESTRELARES
-        // =========================
         const particleCount = 1800;
         const particleGeometry = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
@@ -354,9 +725,7 @@
         const particles = new THREE.Points(particleGeometry, particleMaterial);
         scene.add(particles);
         
-        // =========================
         // ANÉIS E ESCUDO
-        // =========================
         const ringGeometry = new THREE.TorusGeometry(1.2, 0.04, 64, 200);
         const ringMaterial = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 });
         const ring = new THREE.Mesh(ringGeometry, ringMaterial);
@@ -378,9 +747,7 @@
         shield.position.y = 0.5;
         scene.add(shield);
         
-        // =========================
         // CÂMERAS FLUTUANTES
-        // =========================
         function createSecurityCamera(x, z, yOffset = 0.8) {
             const group = new THREE.Group();
             const body = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.15, 0.2), new THREE.MeshStandardMaterial({ color: 0x2288cc, metalness: 0.8 }));
@@ -397,9 +764,7 @@
         const cameraPositions = [[-1.5,1.2,1.8],[1.5,1.2,1.8],[-1.8,1.2,-1.5],[1.8,1.2,-1.5],[-2.2,1.5,0.5],[2.2,1.5,0.5],[0.5,1.5,-2.2],[-0.5,1.5,-2.2]];
         cameraPositions.forEach(pos => { const cam = createSecurityCamera(pos[0], pos[2], pos[1]); scene.add(cam); });
         
-        // =========================
         // MODELO 3D
-        // =========================
         const loader = new GLTFLoader();
         let model = null;
         let mixer = null;
@@ -416,9 +781,7 @@
             }
         });
         
-        // =========================
         // ANIMAÇÃO
-        // =========================
         let time = 0;
         let deltaTime = 0.016;
         let lastTime = performance.now();
@@ -454,42 +817,34 @@
         });
         
         // =========================
-        // UI, CHAT E VOZ (CHAT INICIA FECHADO)
+        // UI, CHAT E VOZ
         // =========================
         initUI(config);
         
-        // Força o chat a iniciar fechado
-        const chatContainer = document.getElementById('chatContainer');
-        if (chatContainer) {
-            chatContainer.classList.remove('open');
-        }
+        const chat = new EnhancedChatSystem('chatContainer', config, (response) => {
+            if (voice?.isJarvisActive?.()) voice.speak(response);
+        });
         
-        const chat = new ChatSystem('chatContainer', config, (response) => { if (voice?.isJarvisActive?.()) voice.speak(response); });
         const voiceButtonElem = document.getElementById('voiceButton');
         let voice = null;
         if (voiceButtonElem) {
             voice = new VoiceAssistant(voiceButtonElem, (text) => { document.getElementById('chatInput').value = text; chat.send(); }, null, { asuraName: config.name, continuous: true });
         }
         
-        // Adiciona evento para o toggle do chat
-        const chatToggle = document.getElementById('chatToggle');
-        if (chatToggle) {
-            chatToggle.addEventListener('click', () => {
-                chatContainer.classList.toggle('open');
-            });
-        }
-        
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
-            setTimeout(() => chat.addMessage("🎤 Dica: Clique no ícone 👁️ no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false), 2000);
-            setTimeout(() => chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false), 4000);
+            setTimeout(() => {
+                chat.addMessage("🎤 Dica: Clique no ícone 👁️ no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
+                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo (imagem, PDF, DOC, etc)!", false);
+                chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+            }, 2000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
         portalOverlay.style.setProperty('--asura-color', config.color);
         setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
         
-        console.log('🟢 ASTREIA carregada com PORTAL PLANNER, colunas celestiais, câmeras e Modo Jarvis!');
+        console.log('🟢 ASTREIA carregada com PORTAL PLANNER, CHAT FECHADO, UPLOAD DE ARQUIVOS e TIPOGRAFIA CELESTIAL!');
     </script>
 </body>
 </html>
