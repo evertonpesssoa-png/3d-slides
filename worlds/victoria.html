@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>VICTORIA • Guerra Infernal • A MVP dos Asuras</title>
     
-    <!-- FONTE EXCLUSIVA PARA VICTORIA - ESTILO GUERRA/IMPONENTE -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../shared/css/base.css">
@@ -20,11 +19,8 @@
             --asura-glow: rgba(255, 0, 0, 0.6);
             --asura-gradient: linear-gradient(135deg, #ff0000, #cc0000);
         }
-        body { background: radial-gradient(circle at 30% 20%, #0a0000, #030108); }
+        body { background: radial-gradient(circle at 30% 20%, #0a0000, #030108); margin: 0; overflow-x: hidden; }
         
-        /* =========================
-           BOTÃO DO PORTAL - TOPO ESQUERDO
-        ========================= */
         .portal-planner-btn {
             position: fixed;
             top: 20px;
@@ -45,7 +41,6 @@
             box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
-            font-family: monospace;
         }
         
         .portal-planner-btn:hover {
@@ -80,22 +75,62 @@
             transition: all 0.4s ease;
         }
         
-        /* =========================
-           CHAT MELHORADO - ESTILO GUERRA INFERNAL
-        ========================= */
+        /* ============================================
+           CHAT 3 NÍVEIS - ESTILO GUERRA INFERNAL
+        ============================================ */
         .chat-container {
             position: fixed !important;
             bottom: 20px !important;
             right: 20px !important;
-            width: 340px !important;
-            max-width: calc(100% - 40px) !important;
             background: rgba(10, 0, 0, 0.95) !important;
             backdrop-filter: blur(12px) !important;
             border-radius: 16px !important;
             border: 1px solid rgba(255, 0, 0, 0.3) !important;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.5), 0 0 15px rgba(255, 0, 0, 0.2) !important;
             z-index: 9998 !important;
             overflow: hidden !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .chat-container.level-0 {
+            width: 320px !important;
+            height: 52px !important;
+        }
+        .chat-container.level-0 .chat-body {
+            display: none !important;
+        }
+        
+        .chat-container.level-1 {
+            width: 380px !important;
+            height: 500px !important;
+        }
+        .chat-container.level-1 .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: calc(100% - 52px) !important;
+        }
+        
+        .chat-container.level-2 {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+            z-index: 99999 !important;
+        }
+        .chat-container.level-2 .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: calc(100% - 52px) !important;
+        }
+        .chat-container.level-2 .chat-messages {
+            flex: 1 !important;
+            min-height: 0 !important;
+        }
+        .chat-container.level-2 .chat-input-area {
+            flex-shrink: 0 !important;
         }
         
         .chat-header {
@@ -106,12 +141,15 @@
             display: flex !important;
             justify-content: space-between !important;
             align-items: center !important;
+            height: 52px !important;
+            box-sizing: border-box !important;
         }
         
         .chat-header-info {
             display: flex !important;
             align-items: center !important;
             gap: 10px !important;
+            flex: 1 !important;
         }
         
         .chat-avatar { font-size: 24px !important; }
@@ -120,20 +158,33 @@
             margin: 0 !important;
             color: #ff0000 !important;
             font-family: 'Bebas Neue', cursive !important;
-            letter-spacing: 2px !important;
             text-shadow: 0 0 5px #ff0000 !important;
         }
         .chat-status { font-size: 10px !important; color: #ff4444 !important; }
-        .chat-toggle { color: #ff0000 !important; font-size: 18px !important; }
+        
+        .chat-header-actions {
+            display: flex !important;
+            gap: 8px !important;
+            align-items: center !important;
+        }
+        
+        .chat-header-actions button {
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer !important;
+            font-size: 18px !important;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+            color: #ff0000 !important;
+        }
+        .chat-header-actions button:hover {
+            background: rgba(255, 0, 0, 0.2) !important;
+        }
         
         .chat-body {
             display: flex !important;
             flex-direction: column !important;
-            height: 380px !important;
-        }
-        
-        .chat-body.collapsed {
-            display: none !important;
+            overflow: hidden !important;
         }
         
         .chat-messages {
@@ -144,6 +195,7 @@
             flex-direction: column !important;
             gap: 10px !important;
             background: rgba(0, 0, 0, 0.5) !important;
+            min-height: 0 !important;
         }
         
         .message {
@@ -151,7 +203,6 @@
             gap: 10px !important;
             max-width: 90% !important;
         }
-        
         .message.user {
             align-self: flex-end !important;
             flex-direction: row-reverse !important;
@@ -176,10 +227,8 @@
             color: #ffcccc !important;
             font-size: 13px !important;
             font-family: 'Bebas Neue', cursive !important;
-            position: relative !important;
             word-break: break-word !important;
         }
-        
         .message.user .message-content {
             background: rgba(255, 0, 0, 0.2) !important;
         }
@@ -210,22 +259,16 @@
             padding: 8px 12px !important;
             margin-top: 5px !important;
             cursor: pointer !important;
-            transition: all 0.2s !important;
         }
-        
         .chat-file:hover {
             background: rgba(255, 0, 0, 0.25) !important;
-            transform: scale(1.01) !important;
         }
         
         .file-icon { font-size: 24px !important; }
-        .file-info { flex: 1 !important; overflow: hidden !important; }
+        .file-info { flex: 1 !important; }
         .file-name {
             font-size: 11px !important;
             color: #ff0000 !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
         }
         .file-size { font-size: 9px !important; color: #888 !important; }
         .file-badge {
@@ -243,6 +286,7 @@
             background: rgba(0, 0, 0, 0.85) !important;
             border-top: 1px solid rgba(255, 0, 0, 0.2) !important;
             align-items: center !important;
+            flex-shrink: 0 !important;
         }
         
         .chat-input-area input[type="text"] {
@@ -256,7 +300,6 @@
             font-size: 12px !important;
             outline: none !important;
         }
-        
         .chat-input-area input[type="text"]:focus {
             box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
         }
@@ -270,12 +313,8 @@
             border-radius: 50% !important;
             cursor: pointer !important;
             font-size: 16px !important;
-            transition: all 0.2s !important;
         }
-        
         .chat-input-area button:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
             background: rgba(255, 0, 0, 0.2) !important;
         }
         
@@ -288,12 +327,8 @@
             border-radius: 50% !important;
             cursor: pointer !important;
             font-size: 16px !important;
-            transition: all 0.2s !important;
         }
-        
         .attach-btn:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
             background: rgba(255, 0, 0, 0.2) !important;
         }
         
@@ -302,23 +337,18 @@
         .chat-messages::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 5px; }
         
         @media (max-width: 600px) {
-            .chat-container { width: calc(100% - 20px) !important; right: 10px !important; bottom: 10px !important; }
-            .chat-messages { height: 280px !important; }
+            .chat-container.level-1 { width: calc(100% - 20px) !important; }
+            .chat-container.level-0 { width: calc(100% - 20px) !important; }
             .chat-image { max-width: 130px !important; }
-            .chat-file { padding: 6px 10px !important; }
-            .file-icon { font-size: 20px !important; }
         }
     </style>
 </head>
 <body>
-    <div id="canvas-container"></div>
+    <div id="canvas-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
     
-    <!-- BOTÃO DO PORTAL PLANNER -->
-    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">
-        🗺️
-    </div>
+    <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">🗺️</div>
     
-    <div class="top-icons">
+    <div class="top-icons" style="z-index: 100;">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
         <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
             <span class="brain-icon">🐉</span>
@@ -332,11 +362,14 @@
     
     <div class="profile-panel" id="profilePanel"></div>
     
-    <div class="chat-container" id="chatContainer">
+    <div class="chat-container" id="chatContainer" style="z-index: 200;">
         <div class="chat-header" id="chatHeader">
             <div class="chat-header-info">
                 <div class="chat-avatar">🐉</div>
-                <div><h4>VICTORIA • A MVP Suprema</h4><div class="chat-status">🔴 modo guerra | força máxima</div></div>
+                <div>
+                    <h4>VICTORIA • A MVP Suprema</h4>
+                    <div class="chat-status">🔴 modo guerra | força máxima</div>
+                </div>
             </div>
             <div class="chat-toggle" id="chatToggle">▼</div>
         </div>
@@ -368,24 +401,83 @@
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
         
-        // =========================
-        // EXTENDE O CHAT SYSTEM ORIGINAL PARA ADICIONAR ANEXO
-        // =========================
-        const OriginalChatSystem = ChatSystem;
-        
-        class EnhancedChatSystem extends OriginalChatSystem {
+        // ============================================
+        // ENHANCED CHAT SYSTEM COM 3 NÍVEIS
+        // ============================================
+        class EnhancedChatSystem extends ChatSystem {
             constructor(containerId, config, onSpeak) {
                 super(containerId, config, onSpeak);
                 this.addAttachButton();
+                setTimeout(() => this.setupThreeLevels(), 100);
+            }
+            
+            setupThreeLevels() {
+                const header = this.container.querySelector('.chat-header');
+                if (!header) return;
                 
-                setTimeout(() => {
-                    if (this.chatBody) {
-                        this.chatBody.classList.add('collapsed');
+                const oldToggle = this.container.querySelector('.chat-toggle');
+                if (oldToggle) oldToggle.style.display = 'none';
+                
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'chat-header-actions';
+                
+                const fsBtn = document.createElement('button');
+                fsBtn.className = 'fullscreen-toggle';
+                fsBtn.innerHTML = '⛶';
+                fsBtn.title = 'Tela cheia';
+                
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = 'chat-toggle';
+                toggleBtn.innerHTML = '▲';
+                toggleBtn.title = 'Expandir';
+                
+                actionsDiv.appendChild(fsBtn);
+                actionsDiv.appendChild(toggleBtn);
+                header.appendChild(actionsDiv);
+                
+                let level = 0;
+                
+                const setLevel = (newLevel) => {
+                    level = newLevel;
+                    this.container.classList.remove('level-0', 'level-1', 'level-2');
+                    this.container.classList.add(`level-${level}`);
+                    
+                    toggleBtn.innerHTML = level === 0 ? '▲' : '▼';
+                    toggleBtn.title = level === 0 ? 'Expandir' : 'Minimizar';
+                    fsBtn.innerHTML = level === 2 ? '✖' : '⛶';
+                    fsBtn.title = level === 2 ? 'Sair da tela cheia' : 'Tela cheia';
+                    
+                    if (level === 2) {
+                        if (!this._escHandler) {
+                            this._escHandler = (e) => {
+                                if (e.key === 'Escape') setLevel(1);
+                            };
+                            document.addEventListener('keydown', this._escHandler);
+                        }
+                    } else {
+                        if (this._escHandler) {
+                            document.removeEventListener('keydown', this._escHandler);
+                            this._escHandler = null;
+                        }
                     }
-                    if (this.chatToggle) {
-                        this.chatToggle.textContent = '▲';
-                    }
-                }, 100);
+                };
+                
+                fsBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    setLevel(level === 2 ? 1 : 2);
+                };
+                
+                toggleBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    setLevel(level === 0 ? 1 : 0);
+                };
+                
+                header.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    setLevel(level === 0 ? 1 : 0);
+                };
+                
+                setLevel(0);
             }
             
             addAttachButton() {
@@ -395,20 +487,16 @@
                 const attachBtn = document.createElement('button');
                 attachBtn.className = 'attach-btn';
                 attachBtn.innerHTML = '📎';
-                attachBtn.title = 'Enviar arquivo (imagem, PDF, DOC, etc)';
+                attachBtn.title = 'Enviar arquivo';
                 
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
-                fileInput.accept = '*/*';
                 fileInput.style.display = 'none';
-                fileInput.multiple = false;
                 
                 attachBtn.onclick = () => fileInput.click();
                 fileInput.onchange = (e) => {
                     const file = e.target.files[0];
-                    if (file) {
-                        this.handleFileUpload(file);
-                    }
+                    if (file) this.handleFileUpload(file);
                     fileInput.value = '';
                 };
                 
@@ -423,7 +511,6 @@
                 const fileType = file.type;
                 const fileName = file.name;
                 const fileSize = this.formatFileSize(file.size);
-                const fileExtension = fileName.split('.').pop().toUpperCase();
                 
                 if (fileType.startsWith('image/')) {
                     const reader = new FileReader();
@@ -434,7 +521,7 @@
                 } else {
                     const reader = new FileReader();
                     reader.onload = (ev) => {
-                        this.addFileMessage(ev.target.result, fileName, fileSize, fileExtension);
+                        this.addFileMessage(ev.target.result, fileName, fileSize);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -446,17 +533,6 @@
                 const sizes = ['Bytes', 'KB', 'MB', 'GB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-            
-            getFileIcon(extension) {
-                const icons = {
-                    'PDF': '📄', 'DOC': '📃', 'DOCX': '📃',
-                    'XLS': '📊', 'XLSX': '📊', 'PPT': '📽️', 'PPTX': '📽️',
-                    'TXT': '📝', 'ZIP': '🗜️', 'RAR': '🗜️',
-                    'MP3': '🎵', 'MP4': '🎬', 'JPG': '🖼️', 'PNG': '🖼️',
-                    'GIF': '🎞️', 'JSON': '🔧', 'XML': '🔧', 'HTML': '🌐'
-                };
-                return icons[extension] || '📎';
             }
             
             addImageMessage(imageUrl, fileName, fileSize) {
@@ -472,35 +548,22 @@
                         <div class="message-time">${time}</div>
                     </div>
                 `;
-                
                 this.messagesContainer.appendChild(messageDiv);
                 this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
-                
-                const messages = this.getMessages ? this.getMessages() : [];
-                if (this.saveMessages) {
-                    messages.push({
-                        text: `🖼️ ${fileName} (${fileSize})`,
-                        image: imageUrl,
-                        isUser: true,
-                        timestamp: Date.now()
-                    });
-                    this.saveMessages(messages);
-                }
             }
             
-            addFileMessage(fileData, fileName, fileSize, extension) {
+            addFileMessage(fileData, fileName, fileSize) {
+                const extension = fileName.split('.').pop().toUpperCase();
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message user';
                 const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const fileIcon = this.getFileIcon(extension);
-                const downloadUrl = fileData;
                 
                 messageDiv.innerHTML = `
                     <div class="message-avatar">👤</div>
                     <div class="message-content">
                         <div>📎 Arquivo anexado</div>
-                        <div class="chat-file" onclick="window.open('${downloadUrl}')">
-                            <div class="file-icon">${fileIcon}</div>
+                        <div class="chat-file" onclick="window.open('${fileData}')">
+                            <div class="file-icon">📄</div>
                             <div class="file-info">
                                 <div class="file-name">${fileName}</div>
                                 <div class="file-size">${fileSize}</div>
@@ -510,20 +573,8 @@
                         <div class="message-time">${time}</div>
                     </div>
                 `;
-                
                 this.messagesContainer.appendChild(messageDiv);
                 this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
-                
-                const messages = this.getMessages ? this.getMessages() : [];
-                if (this.saveMessages) {
-                    messages.push({
-                        text: `📎 ${fileName} (${fileSize})`,
-                        fileData: fileData,
-                        isUser: true,
-                        timestamp: Date.now()
-                    });
-                    this.saveMessages(messages);
-                }
             }
         }
         
@@ -556,65 +607,41 @@
             }
         };
         
-        // =========================
-        // BOTÃO PORTAL PLANNER
-        // =========================
+        // ============================================
+        // PORTAL PLANNER
+        // ============================================
         const portalPlannerBtn = document.getElementById('portalPlannerBtn');
         
         function openPortalPlanner() {
             localStorage.setItem('lastAsura', 'victoria');
             document.body.classList.add('transition-out');
             const flashOverlay = document.createElement('div');
-            flashOverlay.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: radial-gradient(circle, #ff0000, transparent);
-                opacity: 0;
-                transition: opacity 0.5s ease;
-                z-index: 10000;
-                pointer-events: none;
-            `;
+            flashOverlay.style.cssText = `position:fixed;inset:0;background:radial-gradient(circle,#ff0000,transparent);opacity:0;transition:opacity 0.5s;z-index:10000;pointer-events:none;`;
             document.body.appendChild(flashOverlay);
             requestAnimationFrame(() => {
                 flashOverlay.style.opacity = '0.8';
-                setTimeout(() => {
-                    window.location.href = '../shared/portals/portal-system.html?asura=victoria';
-                }, 400);
+                setTimeout(() => window.location.href = '../shared/portals/portal-system.html?asura=victoria', 400);
             });
         }
         
         if (portalPlannerBtn) {
             portalPlannerBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 openPortalPlanner();
             });
-            console.log("✅ Botão do portal configurado para VICTORIA!");
         }
         
-        // =========================
-        // BOTÃO VOLTAR DO CELULAR (ASURA → GRIMÓRIO)
-        // =========================
+        // ============================================
+        // VOLTAR AO GRIMÓRIO
+        // ============================================
         function voltarAoGrimorio() {
             document.body.classList.add('transition-out');
-            
             const flash = document.createElement('div');
-            flash.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: radial-gradient(circle, ${config.color}, transparent);
-                opacity: 0;
-                transition: opacity 0.4s ease;
-                z-index: 100000;
-                pointer-events: none;
-            `;
+            flash.style.cssText = `position:fixed;inset:0;background:radial-gradient(circle,${config.color},transparent);opacity:0;transition:opacity 0.4s;z-index:100000;pointer-events:none;`;
             document.body.appendChild(flash);
-            
             requestAnimationFrame(() => {
                 flash.style.opacity = '0.8';
-                setTimeout(() => {
-                    window.location.href = '../index.html';
-                }, 350);
+                setTimeout(() => window.location.href = '../index.html', 350);
             });
         }
         
@@ -623,13 +650,11 @@
             history.pushState(null, null, window.location.href);
             voltarAoGrimorio();
         });
-        
         history.pushState(null, null, window.location.href);
-        console.log("✅ Botão 'voltar' do celular configurado para voltar ao Grimório!");
         
-        // =========================
-        // SETUP 3D VICTORIA (COMPLETAMENTE PRESERVADO)
-        // =========================
+        // ============================================
+        // CENA 3D COMPLETA - VICTORIA
+        // ============================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(config.bgColor);
@@ -726,7 +751,7 @@
             return group;
         }
         const pillarPositions = [[-2.8,-2.5],[2.8,-2.5],[-2.8,2.5],[2.8,2.5],[-2,-3.2],[2,-3.2],[-3.2,-1.8],[3.2,-1.8],[-3.2,1.8],[3.2,1.8],[-2,3.2],[2,3.2]];
-        pillarPositions.forEach(pos => { const pillar = createHellPillar(pos[0], pos[1], 1.0 + Math.random() * 0.4); scene.add(pillar); });
+        pillarPositions.forEach(pos => { scene.add(createHellPillar(pos[0], pos[1], 1.0 + Math.random() * 0.4)); });
         
         // ESPADAS FLUTUANTES
         function createFloatingSword(x, z, yOffset) {
@@ -744,7 +769,7 @@
             return group;
         }
         const swordPositions = [[-1.5,1.0,1.6],[1.5,1.0,1.6],[-1.6,0.9,-1.5],[1.6,0.9,-1.5],[-2.2,1.1,0.5],[2.2,1.1,0.5],[0.5,1.2,-2.2],[-0.5,1.2,-2.2]];
-        swordPositions.forEach(pos => { const sword = createFloatingSword(pos[0], pos[2], pos[1]); scene.add(sword); });
+        swordPositions.forEach(pos => { scene.add(createFloatingSword(pos[0], pos[2], pos[1])); });
         
         // COROA DE LOUROS DOURADA
         const laurelRingGeometry = new THREE.TorusGeometry(1.35, 0.045, 64, 200);
@@ -763,7 +788,7 @@
             model = gltf.scene;
             model.position.set(0, config.modelPositionY, 0);
             model.scale.set(config.modelScale, config.modelScale, config.modelScale);
-            model.traverse((node) => { if (node.isMesh) { node.castShadow = true; } });
+            model.traverse((node) => { if (node.isMesh) node.castShadow = true; });
             scene.add(model);
             if (gltf.animations && gltf.animations.length > 0) {
                 mixer = new THREE.AnimationMixer(model);
@@ -805,9 +830,9 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
         
-        // =========================
-        // UI, CHAT E VOZ
-        // =========================
+        // ============================================
+        // INICIALIZAÇÃO UI, CHAT E VOZ
+        // ============================================
         initUI(config);
         
         const chat = new EnhancedChatSystem('chatContainer', config, (response) => {
@@ -817,23 +842,37 @@
         const voiceButtonElem = document.getElementById('voiceButton');
         let voice = null;
         if (voiceButtonElem) {
-            voice = new VoiceAssistant(voiceButtonElem, (text) => { document.getElementById('chatInput').value = text; chat.send(); }, null, { asuraName: config.name, continuous: true });
+            voice = new VoiceAssistant(voiceButtonElem, (text) => { 
+                document.getElementById('chatInput').value = text; 
+                chat.send(); 
+            }, null, { asuraName: config.name, continuous: true });
         }
         
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => {
-                chat.addMessage("🎤 Dica: Clique no ícone 🐉 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
-                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo (imagem, PDF, DOC, etc)!", false);
-                chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+                chat.addMessage("🎤 Dica: Clique no ícone 🐉 no topo para ativar o MODO JARVIS.", false);
+                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo.", false);
+                chat.addMessage("🗺️ Dica: Clique no botão 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+                chat.addMessage("🖥️ Dica: Clique em ⛶ para tela cheia! ESC para sair.", false);
             }, 2000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
-        portalOverlay.style.setProperty('--asura-color', config.color);
-        setTimeout(() => { portalOverlay.style.opacity = '0.6'; setTimeout(() => { portalOverlay.style.opacity = '0'; setTimeout(() => { portalOverlay.style.display = 'none'; }, 800); }, 500); }, 50);
+        if (portalOverlay) {
+            portalOverlay.style.setProperty('--asura-color', config.color);
+            setTimeout(() => { 
+                portalOverlay.style.opacity = '0.6'; 
+                setTimeout(() => { 
+                    portalOverlay.style.opacity = '0'; 
+                    setTimeout(() => { 
+                        portalOverlay.style.display = 'none'; 
+                    }, 800); 
+                }, 500); 
+            }, 50);
+        }
         
-        console.log('🟢 VICTORIA carregada com PORTAL PLANNER, CHAT FECHADO, UPLOAD DE ARQUIVOS e ÍCONE 🐉!');
+        console.log('✅ VICTORIA carregada com 3 NÍVEIS no chat e mundo 3D completo!');
     </script>
 </body>
 </html>
