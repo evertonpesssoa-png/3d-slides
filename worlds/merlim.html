@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>MERLIM • Reino Tecnológico Azul</title>
     
-    <!-- FONTE EXCLUSIVA PARA MERLIM - ESTILO TECNOLÓGICO -->
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../shared/css/base.css">
@@ -20,11 +19,8 @@
             --asura-glow: rgba(0, 217, 255, 0.6);
             --asura-gradient: linear-gradient(135deg, #00d9ff, #00aaff);
         }
-        body { background: radial-gradient(circle at 30% 20%, #050a18, #030108); }
+        body { background: radial-gradient(circle at 30% 20%, #050a18, #030108); margin: 0; overflow-x: hidden; }
         
-        /* =========================
-           BOTÃO DO PORTAL - TOPO ESQUERDO
-        ========================= */
         .portal-planner-btn {
             position: fixed;
             top: 20px;
@@ -45,7 +41,6 @@
             box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
             transition: all 0.3s ease;
             cursor: pointer;
-            font-family: monospace;
         }
         
         .portal-planner-btn:hover {
@@ -80,22 +75,62 @@
             transition: all 0.4s ease;
         }
         
-        /* =========================
-           CHAT MELHORADO - ESTILO TECNOLÓGICO
-        ========================= */
+        /* ============================================
+           CHAT 3 NÍVEIS - ESTILO TECNOLÓGICO
+        ============================================ */
         .chat-container {
             position: fixed !important;
             bottom: 20px !important;
             right: 20px !important;
-            width: 340px !important;
-            max-width: calc(100% - 40px) !important;
             background: rgba(5, 10, 24, 0.95) !important;
             backdrop-filter: blur(12px) !important;
             border-radius: 16px !important;
             border: 1px solid rgba(0,217,255,0.3) !important;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.5), 0 0 15px rgba(0,217,255,0.2) !important;
             z-index: 9998 !important;
             overflow: hidden !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .chat-container.level-0 {
+            width: 320px !important;
+            height: 52px !important;
+        }
+        .chat-container.level-0 .chat-body {
+            display: none !important;
+        }
+        
+        .chat-container.level-1 {
+            width: 380px !important;
+            height: 500px !important;
+        }
+        .chat-container.level-1 .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: calc(100% - 52px) !important;
+        }
+        
+        .chat-container.level-2 {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 0 !important;
+            z-index: 99999 !important;
+        }
+        .chat-container.level-2 .chat-body {
+            display: flex !important;
+            flex-direction: column !important;
+            height: calc(100% - 52px) !important;
+        }
+        .chat-container.level-2 .chat-messages {
+            flex: 1 !important;
+            min-height: 0 !important;
+        }
+        .chat-container.level-2 .chat-input-area {
+            flex-shrink: 0 !important;
         }
         
         .chat-header {
@@ -106,12 +141,15 @@
             display: flex !important;
             justify-content: space-between !important;
             align-items: center !important;
+            height: 52px !important;
+            box-sizing: border-box !important;
         }
         
         .chat-header-info {
             display: flex !important;
             align-items: center !important;
             gap: 10px !important;
+            flex: 1 !important;
         }
         
         .chat-avatar { font-size: 24px !important; }
@@ -120,19 +158,32 @@
             margin: 0 !important;
             color: #00d9ff !important;
             font-family: 'Courier Prime', monospace !important;
-            letter-spacing: 1px !important;
         }
         .chat-status { font-size: 10px !important; color: #0f0 !important; }
-        .chat-toggle { color: #00d9ff !important; font-size: 18px !important; }
+        
+        .chat-header-actions {
+            display: flex !important;
+            gap: 8px !important;
+            align-items: center !important;
+        }
+        
+        .chat-header-actions button {
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer !important;
+            font-size: 18px !important;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+            color: #00d9ff !important;
+        }
+        .chat-header-actions button:hover {
+            background: rgba(0, 217, 255, 0.2) !important;
+        }
         
         .chat-body {
             display: flex !important;
             flex-direction: column !important;
-            height: 380px !important;
-        }
-        
-        .chat-body.collapsed {
-            display: none !important;
+            overflow: hidden !important;
         }
         
         .chat-messages {
@@ -143,6 +194,7 @@
             flex-direction: column !important;
             gap: 10px !important;
             background: rgba(0, 0, 0, 0.5) !important;
+            min-height: 0 !important;
         }
         
         .message {
@@ -150,7 +202,6 @@
             gap: 10px !important;
             max-width: 90% !important;
         }
-        
         .message.user {
             align-self: flex-end !important;
             flex-direction: row-reverse !important;
@@ -175,10 +226,8 @@
             color: #cceeff !important;
             font-size: 13px !important;
             font-family: 'Courier Prime', monospace !important;
-            position: relative !important;
             word-break: break-word !important;
         }
-        
         .message.user .message-content {
             background: rgba(0, 217, 255, 0.2) !important;
         }
@@ -190,7 +239,15 @@
             text-align: right !important;
         }
         
-        /* Arquivos enviados (PDF, DOC, etc) */
+        .chat-image {
+            max-width: 180px !important;
+            max-height: 150px !important;
+            border-radius: 10px !important;
+            margin-top: 5px !important;
+            border: 1px solid #00d9ff !important;
+            cursor: pointer !important;
+        }
+        
         .chat-file {
             display: flex !important;
             align-items: center !important;
@@ -201,52 +258,24 @@
             padding: 8px 12px !important;
             margin-top: 5px !important;
             cursor: pointer !important;
-            transition: all 0.2s !important;
         }
-        
         .chat-file:hover {
             background: rgba(0,217,255,0.25) !important;
-            transform: scale(1.01) !important;
         }
         
-        .file-icon {
-            font-size: 24px !important;
-        }
-        
-        .file-info {
-            flex: 1 !important;
-            overflow: hidden !important;
-        }
-        
+        .file-icon { font-size: 24px !important; }
+        .file-info { flex: 1 !important; }
         .file-name {
             font-size: 11px !important;
             color: #00d9ff !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
         }
-        
-        .file-size {
-            font-size: 9px !important;
-            color: #888 !important;
-        }
-        
+        .file-size { font-size: 9px !important; color: #888 !important; }
         .file-badge {
             background: rgba(0,217,255,0.2) !important;
             border-radius: 4px !important;
             padding: 2px 6px !important;
             font-size: 9px !important;
             color: #00d9ff !important;
-        }
-        
-        /* Imagens enviadas */
-        .chat-image {
-            max-width: 180px !important;
-            max-height: 150px !important;
-            border-radius: 10px !important;
-            margin-top: 5px !important;
-            border: 1px solid #00d9ff !important;
-            cursor: pointer !important;
         }
         
         .chat-input-area {
@@ -256,6 +285,7 @@
             background: rgba(0, 0, 0, 0.85) !important;
             border-top: 1px solid rgba(0,217,255,0.2) !important;
             align-items: center !important;
+            flex-shrink: 0 !important;
         }
         
         .chat-input-area input[type="text"] {
@@ -269,7 +299,6 @@
             font-size: 12px !important;
             outline: none !important;
         }
-        
         .chat-input-area input[type="text"]:focus {
             box-shadow: 0 0 10px rgba(0,217,255,0.5) !important;
         }
@@ -283,12 +312,8 @@
             border-radius: 50% !important;
             cursor: pointer !important;
             font-size: 16px !important;
-            transition: all 0.2s !important;
         }
-        
         .chat-input-area button:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 10px rgba(0,217,255,0.5) !important;
             background: rgba(0,217,255,0.2) !important;
         }
         
@@ -301,12 +326,8 @@
             border-radius: 50% !important;
             cursor: pointer !important;
             font-size: 16px !important;
-            transition: all 0.2s !important;
         }
-        
         .attach-btn:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 10px rgba(0,217,255,0.5) !important;
             background: rgba(0,217,255,0.2) !important;
         }
         
@@ -315,20 +336,18 @@
         .chat-messages::-webkit-scrollbar-thumb { background: #00d9ff; border-radius: 5px; }
         
         @media (max-width: 600px) {
-            .chat-container { width: calc(100% - 20px) !important; right: 10px !important; bottom: 10px !important; }
-            .chat-messages { height: 280px !important; }
+            .chat-container.level-1 { width: calc(100% - 20px) !important; }
+            .chat-container.level-0 { width: calc(100% - 20px) !important; }
             .chat-image { max-width: 130px !important; }
-            .chat-file { padding: 6px 10px !important; }
-            .file-icon { font-size: 20px !important; }
         }
     </style>
 </head>
 <body>
-    <div id="canvas-container"></div>
+    <div id="canvas-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;"></div>
     
     <div class="portal-planner-btn" id="portalPlannerBtn" title="Abrir Portal Planner">🗺️</div>
     
-    <div class="top-icons">
+    <div class="top-icons" style="z-index: 100;">
         <div class="top-icon" id="backButton" data-tooltip="Voltar ao Grimório">←</div>
         <div class="top-icon voice-icon" id="voiceButton" data-tooltip="Modo Jarvis (clique para ativar)">
             <span class="brain-icon">💻</span>
@@ -342,11 +361,14 @@
     
     <div class="profile-panel" id="profilePanel"></div>
     
-    <div class="chat-container" id="chatContainer">
+    <div class="chat-container" id="chatContainer" style="z-index: 200;">
         <div class="chat-header" id="chatHeader">
             <div class="chat-header-info">
                 <div class="chat-avatar">🔧</div>
-                <div><h4>MERLIM • Arquiteta Mágica</h4><div class="chat-status">🟢 online | engenharia arcana</div></div>
+                <div>
+                    <h4>MERLIM • Arquiteta Mágica</h4>
+                    <div class="chat-status">🟢 online | engenharia arcana</div>
+                </div>
             </div>
             <div class="chat-toggle" id="chatToggle">▼</div>
         </div>
@@ -378,24 +400,83 @@
         import { ChatSystem } from '../shared/js/chat.js';
         import { VoiceAssistant } from '../shared/js/voice-assistant.js';
         
-        // =========================
-        // EXTENDE O CHAT SYSTEM ORIGINAL PARA ADICIONAR ANEXO DE QUALQUER ARQUIVO
-        // =========================
-        const OriginalChatSystem = ChatSystem;
-        
-        class EnhancedChatSystem extends OriginalChatSystem {
+        // ============================================
+        // ENHANCED CHAT SYSTEM COM 3 NÍVEIS
+        // ============================================
+        class EnhancedChatSystem extends ChatSystem {
             constructor(containerId, config, onSpeak) {
                 super(containerId, config, onSpeak);
                 this.addAttachButton();
+                setTimeout(() => this.setupThreeLevels(), 100);
+            }
+            
+            setupThreeLevels() {
+                const header = this.container.querySelector('.chat-header');
+                if (!header) return;
                 
-                setTimeout(() => {
-                    if (this.chatBody) {
-                        this.chatBody.classList.add('collapsed');
+                const oldToggle = this.container.querySelector('.chat-toggle');
+                if (oldToggle) oldToggle.style.display = 'none';
+                
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'chat-header-actions';
+                
+                const fsBtn = document.createElement('button');
+                fsBtn.className = 'fullscreen-toggle';
+                fsBtn.innerHTML = '⛶';
+                fsBtn.title = 'Tela cheia';
+                
+                const toggleBtn = document.createElement('button');
+                toggleBtn.className = 'chat-toggle';
+                toggleBtn.innerHTML = '▲';
+                toggleBtn.title = 'Expandir';
+                
+                actionsDiv.appendChild(fsBtn);
+                actionsDiv.appendChild(toggleBtn);
+                header.appendChild(actionsDiv);
+                
+                let level = 0;
+                
+                const setLevel = (newLevel) => {
+                    level = newLevel;
+                    this.container.classList.remove('level-0', 'level-1', 'level-2');
+                    this.container.classList.add(`level-${level}`);
+                    
+                    toggleBtn.innerHTML = level === 0 ? '▲' : '▼';
+                    toggleBtn.title = level === 0 ? 'Expandir' : 'Minimizar';
+                    fsBtn.innerHTML = level === 2 ? '✖' : '⛶';
+                    fsBtn.title = level === 2 ? 'Sair da tela cheia' : 'Tela cheia';
+                    
+                    if (level === 2) {
+                        if (!this._escHandler) {
+                            this._escHandler = (e) => {
+                                if (e.key === 'Escape') setLevel(1);
+                            };
+                            document.addEventListener('keydown', this._escHandler);
+                        }
+                    } else {
+                        if (this._escHandler) {
+                            document.removeEventListener('keydown', this._escHandler);
+                            this._escHandler = null;
+                        }
                     }
-                    if (this.chatToggle) {
-                        this.chatToggle.textContent = '▲';
-                    }
-                }, 100);
+                };
+                
+                fsBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    setLevel(level === 2 ? 1 : 2);
+                };
+                
+                toggleBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    setLevel(level === 0 ? 1 : 0);
+                };
+                
+                header.onclick = (e) => {
+                    if (e.target.closest('button')) return;
+                    setLevel(level === 0 ? 1 : 0);
+                };
+                
+                setLevel(0);
             }
             
             addAttachButton() {
@@ -405,20 +486,16 @@
                 const attachBtn = document.createElement('button');
                 attachBtn.className = 'attach-btn';
                 attachBtn.innerHTML = '📎';
-                attachBtn.title = 'Enviar arquivo (imagem, PDF, DOC, etc)';
+                attachBtn.title = 'Enviar arquivo';
                 
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
-                fileInput.accept = '*/*'; // ACEITA QUALQUER TIPO DE ARQUIVO
                 fileInput.style.display = 'none';
-                fileInput.multiple = false;
                 
                 attachBtn.onclick = () => fileInput.click();
                 fileInput.onchange = (e) => {
                     const file = e.target.files[0];
-                    if (file) {
-                        this.handleFileUpload(file);
-                    }
+                    if (file) this.handleFileUpload(file);
                     fileInput.value = '';
                 };
                 
@@ -433,9 +510,7 @@
                 const fileType = file.type;
                 const fileName = file.name;
                 const fileSize = this.formatFileSize(file.size);
-                const fileExtension = fileName.split('.').pop().toUpperCase();
                 
-                // Para imagens, mostra pré-visualização
                 if (fileType.startsWith('image/')) {
                     const reader = new FileReader();
                     reader.onload = (ev) => {
@@ -443,10 +518,9 @@
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    // Para outros arquivos (PDF, DOC, TXT, etc), mostra como link para download
                     const reader = new FileReader();
                     reader.onload = (ev) => {
-                        this.addFileMessage(ev.target.result, fileName, fileSize, fileExtension);
+                        this.addFileMessage(ev.target.result, fileName, fileSize);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -458,17 +532,6 @@
                 const sizes = ['Bytes', 'KB', 'MB', 'GB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-            
-            getFileIcon(extension) {
-                const icons = {
-                    'PDF': '📄', 'DOC': '📃', 'DOCX': '📃',
-                    'XLS': '📊', 'XLSX': '📊', 'PPT': '📽️', 'PPTX': '📽️',
-                    'TXT': '📝', 'ZIP': '🗜️', 'RAR': '🗜️',
-                    'MP3': '🎵', 'MP4': '🎬', 'JPG': '🖼️', 'PNG': '🖼️',
-                    'GIF': '🎞️', 'JSON': '🔧', 'XML': '🔧', 'HTML': '🌐'
-                };
-                return icons[extension] || '📎';
             }
             
             addImageMessage(imageUrl, fileName, fileSize) {
@@ -484,37 +547,22 @@
                         <div class="message-time">${time}</div>
                     </div>
                 `;
-                
                 this.messagesContainer.appendChild(messageDiv);
                 this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
-                
-                const messages = this.getMessages ? this.getMessages() : [];
-                if (this.saveMessages) {
-                    messages.push({
-                        text: `🖼️ ${fileName} (${fileSize})`,
-                        image: imageUrl,
-                        isUser: true,
-                        timestamp: Date.now()
-                    });
-                    this.saveMessages(messages);
-                }
             }
             
-            addFileMessage(fileData, fileName, fileSize, extension) {
+            addFileMessage(fileData, fileName, fileSize) {
+                const extension = fileName.split('.').pop().toUpperCase();
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message user';
                 const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                const fileIcon = this.getFileIcon(extension);
-                
-                // Cria um link para download do arquivo
-                const downloadUrl = fileData;
                 
                 messageDiv.innerHTML = `
                     <div class="message-avatar">👤</div>
                     <div class="message-content">
                         <div>📎 Arquivo anexado</div>
-                        <div class="chat-file" onclick="window.open('${downloadUrl}')">
-                            <div class="file-icon">${fileIcon}</div>
+                        <div class="chat-file" onclick="window.open('${fileData}')">
+                            <div class="file-icon">📄</div>
                             <div class="file-info">
                                 <div class="file-name">${fileName}</div>
                                 <div class="file-size">${fileSize}</div>
@@ -524,26 +572,10 @@
                         <div class="message-time">${time}</div>
                     </div>
                 `;
-                
                 this.messagesContainer.appendChild(messageDiv);
                 this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
-                
-                const messages = this.getMessages ? this.getMessages() : [];
-                if (this.saveMessages) {
-                    messages.push({
-                        text: `📎 ${fileName} (${fileSize})`,
-                        fileData: fileData,
-                        isUser: true,
-                        timestamp: Date.now()
-                    });
-                    this.saveMessages(messages);
-                }
             }
         }
-        
-        // =========================
-        // CONFIGURAÇÃO ESPECÍFICA DO MERLIM
-        // =========================
         
         const config = {
             name: 'MERLIM',
@@ -562,7 +594,7 @@
                 { name: '🛠️ Mecânica do Sistema', value: 94 },
                 { name: '✨ Magia da Engenharia', value: 98 }
             ],
-            personalityText: '🔧 "Código é magia, engenharia é arte. Eu construo mundos."<br>Merlim é a arquiteta do sistema, une tecnologia e misticismo.',
+            personalityText: '🔧 "Código é magia, engenharia é arte. Eu construo mundos."',
             getResponse: (msg) => {
                 const lower = msg.toLowerCase();
                 if (lower.includes('olá') || lower.includes('oi')) return "✨ Olá! Sou Merlim, a engenheira mágica. Código é minha poesia. Como posso te ajudar a construir algo incrível?";
@@ -575,65 +607,41 @@
             }
         };
         
-        // =========================
-        // BOTÃO PORTAL PLANNER
-        // =========================
+        // ============================================
+        // PORTAL PLANNER
+        // ============================================
         const portalPlannerBtn = document.getElementById('portalPlannerBtn');
         
         function openPortalPlanner() {
             localStorage.setItem('lastAsura', 'merlim');
             document.body.classList.add('transition-out');
             const flashOverlay = document.createElement('div');
-            flashOverlay.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: radial-gradient(circle, #00d9ff, transparent);
-                opacity: 0;
-                transition: opacity 0.5s ease;
-                z-index: 10000;
-                pointer-events: none;
-            `;
+            flashOverlay.style.cssText = `position:fixed;inset:0;background:radial-gradient(circle,#00d9ff,transparent);opacity:0;transition:opacity 0.5s;z-index:10000;pointer-events:none;`;
             document.body.appendChild(flashOverlay);
             requestAnimationFrame(() => {
                 flashOverlay.style.opacity = '0.8';
-                setTimeout(() => {
-                    window.location.href = '../shared/portals/portal-system.html?asura=merlim';
-                }, 400);
+                setTimeout(() => window.location.href = '../shared/portals/portal-system.html?asura=merlim', 400);
             });
         }
         
         if (portalPlannerBtn) {
             portalPlannerBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                e.stopPropagation();
                 openPortalPlanner();
             });
-            console.log("✅ Botão do portal configurado para MERLIM!");
         }
         
-        // =========================
-        // BOTÃO VOLTAR DO CELULAR (ASURA → GRIMÓRIO)
-        // =========================
+        // ============================================
+        // VOLTAR AO GRIMÓRIO
+        // ============================================
         function voltarAoGrimorio() {
             document.body.classList.add('transition-out');
-            
             const flash = document.createElement('div');
-            flash.style.cssText = `
-                position: fixed;
-                inset: 0;
-                background: radial-gradient(circle, ${config.color}, transparent);
-                opacity: 0;
-                transition: opacity 0.4s ease;
-                z-index: 100000;
-                pointer-events: none;
-            `;
+            flash.style.cssText = `position:fixed;inset:0;background:radial-gradient(circle,${config.color},transparent);opacity:0;transition:opacity 0.4s;z-index:100000;pointer-events:none;`;
             document.body.appendChild(flash);
-            
             requestAnimationFrame(() => {
                 flash.style.opacity = '0.8';
-                setTimeout(() => {
-                    window.location.href = '../index.html';
-                }, 350);
+                setTimeout(() => window.location.href = '../index.html', 350);
             });
         }
         
@@ -642,14 +650,11 @@
             history.pushState(null, null, window.location.href);
             voltarAoGrimorio();
         });
-        
         history.pushState(null, null, window.location.href);
-        console.log("✅ Botão 'voltar' do celular configurado para voltar ao Grimório!");
         
-        // =========================
-        // SETUP 3D COMPLETO COM EFEITOS (PRESERVADO)
-        // =========================
-        
+        // ============================================
+        // CENA 3D COMPLETA - MERLIM
+        // ============================================
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(config.bgColor);
@@ -659,7 +664,7 @@
         camera.position.set(config.cameraPosition.x, config.cameraPosition.y, config.cameraPosition.z);
         camera.lookAt(0, 0.8, 0);
         
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.shadowMap.enabled = true;
@@ -668,15 +673,11 @@
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.autoRotate = false;
         controls.enableZoom = true;
         controls.enablePan = true;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-        controls.rotateSpeed = 1.0;
         controls.target.set(0, 0.8, 0);
         
-        // Luzes
+        // LUZES
         const ambientLight = new THREE.AmbientLight(0x112244, 0.6);
         scene.add(ambientLight);
         const mainLight = new THREE.DirectionalLight(0xaaddff, 1.1);
@@ -692,29 +693,22 @@
         techLight.position.set(2, 1.5, 1.5);
         scene.add(techLight);
         
-        // Chão
+        // CHÃO
         const gridHelper = new THREE.GridHelper(14, 24, config.color, 0x2266aa);
         gridHelper.position.y = -0.5;
         scene.add(gridHelper);
         
-        const groundPlane = new THREE.Mesh(
-            new THREE.PlaneGeometry(9, 9),
-            new THREE.MeshStandardMaterial({ color: 0x0a1030, roughness: 0.4, metalness: 0.5, transparent: true, opacity: 0.5 })
-        );
+        const groundPlane = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), new THREE.MeshStandardMaterial({ color: 0x0a1030, roughness: 0.4, metalness: 0.5, transparent: true, opacity: 0.5 }));
         groundPlane.rotation.x = -Math.PI / 2;
         groundPlane.position.y = -0.5;
         scene.add(groundPlane);
         
-        // Círculo de energia
-        const circleGlow = new THREE.Mesh(
-            new THREE.CircleGeometry(1.3, 32),
-            new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, transparent: true, opacity: 0.6, side: THREE.DoubleSide })
-        );
+        const circleGlow = new THREE.Mesh(new THREE.CircleGeometry(1.3, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, transparent: true, opacity: 0.6, side: THREE.DoubleSide }));
         circleGlow.rotation.x = -Math.PI / 2;
         circleGlow.position.y = -0.45;
         scene.add(circleGlow);
         
-        // Anel holográfico
+        // ANEL HOLOGRÁFICO
         const hologramRingGeometry = new THREE.TorusGeometry(1.5, 0.03, 64, 200);
         const hologramMaterial = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.4, transparent: true, opacity: 0.7 });
         const hologramRing = new THREE.Mesh(hologramRingGeometry, hologramMaterial);
@@ -722,7 +716,7 @@
         hologramRing.rotation.x = Math.PI / 2;
         scene.add(hologramRing);
         
-        // Torres tecnológicas
+        // TORRES TECNOLÓGICAS
         const towerMaterial = new THREE.MeshStandardMaterial({ color: 0x2288cc, emissive: 0x1155aa, emissiveIntensity: 0.2, metalness: 0.8, roughness: 0.2 });
         
         function createTechTower(x, z, height = 1.3) {
@@ -742,18 +736,10 @@
             return group;
         }
         
-        const towerPositions = [
-            [-2.8, -2.5], [2.8, -2.5], [-2.8, 2.5], [2.8, 2.5],
-            [-2, -3.2], [2, -3.2], [-3.2, -1.8], [3.2, -1.8],
-            [-3.2, 1.8], [3.2, 1.8], [-2, 3.2], [2, 3.2]
-        ];
+        const towerPositions = [[-2.8,-2.5],[2.8,-2.5],[-2.8,2.5],[2.8,2.5],[-2,-3.2],[2,-3.2],[-3.2,-1.8],[3.2,-1.8],[-3.2,1.8],[3.2,1.8],[-2,3.2],[2,3.2]];
+        towerPositions.forEach(pos => { scene.add(createTechTower(pos[0], pos[1], 1.0 + Math.random() * 0.4)); });
         
-        towerPositions.forEach(pos => {
-            const tower = createTechTower(pos[0], pos[1], 1.0 + Math.random() * 0.4);
-            scene.add(tower);
-        });
-        
-        // Partículas
+        // PARTÍCULAS
         const particleCount = 1800;
         const particleGeometry = new THREE.BufferGeometry();
         const particlePositions = new Float32Array(particleCount * 3);
@@ -763,31 +749,19 @@
             particlePositions[i*3+2] = (Math.random() - 0.5) * 13;
         }
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        
         const particleColors = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount; i++) {
             const colorType = Math.random();
-            if (colorType < 0.5) {
-                particleColors[i*3] = 0.0;
-                particleColors[i*3+1] = 0.7 + Math.random() * 0.3;
-                particleColors[i*3+2] = 0.8 + Math.random() * 0.2;
-            } else if (colorType < 0.75) {
-                particleColors[i*3] = 0.8 + Math.random() * 0.2;
-                particleColors[i*3+1] = 0.8 + Math.random() * 0.2;
-                particleColors[i*3+2] = 1.0;
-            } else {
-                particleColors[i*3] = 0.5 + Math.random() * 0.5;
-                particleColors[i*3+1] = 0.5 + Math.random() * 0.5;
-                particleColors[i*3+2] = 0.8 + Math.random() * 0.2;
-            }
+            if (colorType < 0.5) { particleColors[i*3]=0.0; particleColors[i*3+1]=0.7+Math.random()*0.3; particleColors[i*3+2]=0.8+Math.random()*0.2; }
+            else if (colorType < 0.75) { particleColors[i*3]=0.8+Math.random()*0.2; particleColors[i*3+1]=0.8+Math.random()*0.2; particleColors[i*3+2]=1.0; }
+            else { particleColors[i*3]=0.5+Math.random()*0.5; particleColors[i*3+1]=0.5+Math.random()*0.5; particleColors[i*3+2]=0.8+Math.random()*0.2; }
         }
         particleGeometry.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
-        
         const particleMaterial = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.55 });
         const particles = new THREE.Points(particleGeometry, particleMaterial);
         scene.add(particles);
         
-        // Anéis de energia
+        // ANÉIS DE ENERGIA
         const ringGeometry1 = new THREE.TorusGeometry(1.2, 0.035, 64, 200);
         const ringMaterial1 = new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 });
         const ring1 = new THREE.Mesh(ringGeometry1, ringMaterial1);
@@ -808,10 +782,8 @@
         ring3.rotation.x = Math.PI / 2 - 0.2;
         scene.add(ring3);
         
-        // Símbolos de código
+        // SÍMBOLOS DE CÓDIGO
         const codeSymbols = ['{', '}', '</>', '[]', '()', ';', '#', '~', 'const', 'let', 'function', '=>', 'class'];
-        const symbols = [];
-        
         for (let i = 0; i < 40; i++) {
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
@@ -821,40 +793,25 @@
             context.font = 'Bold 36px monospace';
             context.textAlign = 'center';
             context.fillText(codeSymbols[Math.floor(Math.random() * codeSymbols.length)], canvas.width/2, canvas.height/2);
-            
             const texture = new THREE.CanvasTexture(canvas);
             const material = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.3 });
             const sprite = new THREE.Sprite(material);
             sprite.scale.set(0.4, 0.2, 1);
-            sprite.position.set(
-                (Math.random() - 0.5) * 6,
-                Math.random() * 3,
-                (Math.random() - 0.5) * 6
-            );
+            sprite.position.set((Math.random() - 0.5) * 6, Math.random() * 3, (Math.random() - 0.5) * 6);
             scene.add(sprite);
-            symbols.push(sprite);
         }
         
-        // Engrenagens
+        // ENGRENAGENS
         const gearMaterial = new THREE.MeshStandardMaterial({ color: 0x44aaff, metalness: 0.9, roughness: 0.2 });
-        
         function createGear(x, z, yOffset, size = 0.15) {
             const gear = new THREE.Mesh(new THREE.CylinderGeometry(size, size, 0.05, 12), gearMaterial);
             gear.position.set(x, yOffset, z);
             return gear;
         }
+        const gearPositions = [[-1.2,0.4,1.5],[1.2,0.4,1.5],[-1.5,0.6,-1.2],[1.5,0.6,-1.2],[-0.8,0.3,2.2],[0.8,0.3,2.2],[2.2,0.5,-0.8],[-2.2,0.5,0.8]];
+        gearPositions.forEach(pos => { scene.add(createGear(pos[0], pos[2], pos[1], 0.12 + Math.random() * 0.08)); });
         
-        const gearPositions = [
-            [-1.2, 0.4, 1.5], [1.2, 0.4, 1.5], [-1.5, 0.6, -1.2], [1.5, 0.6, -1.2],
-            [-0.8, 0.3, 2.2], [0.8, 0.3, 2.2], [2.2, 0.5, -0.8], [-2.2, 0.5, 0.8]
-        ];
-        
-        gearPositions.forEach(pos => {
-            const gear = createGear(pos[0], pos[2], pos[1], 0.12 + Math.random() * 0.08);
-            scene.add(gear);
-        });
-        
-        // Modelo 3D
+        // MODELO 3D
         const loader = new GLTFLoader();
         let merlimModel = null;
         let mixer = null;
@@ -863,35 +820,20 @@
             merlimModel = gltf.scene;
             merlimModel.position.set(0, config.modelPositionY, 0);
             merlimModel.scale.set(config.modelScale, config.modelScale, config.modelScale);
-            merlimModel.traverse((node) => {
-                if (node.isMesh) {
-                    node.castShadow = true;
-                    node.receiveShadow = false;
-                }
-            });
+            merlimModel.traverse((node) => { if (node.isMesh) node.castShadow = true; });
             scene.add(merlimModel);
-            
             if (gltf.animations && gltf.animations.length > 0) {
                 mixer = new THREE.AnimationMixer(merlimModel);
-                gltf.animations.forEach((clip) => {
-                    mixer.clipAction(clip).play();
-                });
-                console.log(`✅ ${gltf.animations.length} animação(ões) ativada(s)`);
+                gltf.animations.forEach(clip => mixer.clipAction(clip).play());
             }
-            
-            console.log('✅ Modelo do MERLIM carregado');
         }, undefined, (error) => {
-            console.error('❌ Erro ao carregar modelo:', error);
-            const fallbackModel = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.2 }));
+            console.error('Erro ao carregar modelo:', error);
+            const fallbackModel = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), new THREE.MeshStandardMaterial({ color: config.color, emissive: config.color, emissiveIntensity: 0.5 }));
             fallbackModel.position.set(0, 0.2, 0);
             scene.add(fallbackModel);
-            const techRing = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.04, 32, 60), new THREE.MeshStandardMaterial({ color: 0x66eeff, emissive: config.color, emissiveIntensity: 0.4 }));
-            techRing.position.set(0, 0.5, 0);
-            techRing.rotation.x = Math.PI / 2;
-            scene.add(techRing);
         });
         
-        // Animação
+        // ANIMAÇÃO
         let time = 0;
         let deltaTime = 0.016;
         let lastTime = performance.now();
@@ -907,31 +849,19 @@
         function animate() {
             requestAnimationFrame(animate);
             time += 0.008;
-            
             if (mixer) mixer.update(deltaTime);
-            
             particles.rotation.y = time * 0.06;
             particles.rotation.x = Math.sin(time * 0.12) * 0.08;
-            
             ring1.rotation.z = time * 0.35;
             ring2.rotation.z = -time * 0.28;
             ring3.rotation.z = time * 0.2;
             hologramRing.rotation.z = time * 0.15;
-            
-            symbols.forEach((symbol, idx) => {
-                symbol.material.opacity = 0.25 + Math.sin(time * 1.5 + idx) * 0.15;
-                symbol.position.y += 0.001;
-                if (symbol.position.y > 2.5) symbol.position.y = 0;
-            });
-            
             fillLight.intensity = 0.6 + Math.sin(time * 2.8) * 0.2;
             circleGlow.material.emissiveIntensity = 0.3 + Math.sin(time * 2.2) * 0.2;
             hologramRing.material.emissiveIntensity = 0.3 + Math.sin(time * 1.5) * 0.15;
-            
             controls.update();
             renderer.render(scene, camera);
         }
-        
         animate();
         
         window.addEventListener('resize', () => {
@@ -940,55 +870,49 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
         
-        // =========================
-        // UI E CHAT
-        // =========================
-        
+        // ============================================
+        // INICIALIZAÇÃO UI, CHAT E VOZ
+        // ============================================
         initUI(config);
         
         const chat = new EnhancedChatSystem('chatContainer', config, (response) => {
-            if (voice && voice.isJarvisActive && voice.isJarvisActive()) {
-                voice.speak(response);
-            }
+            if (voice?.isJarvisActive?.()) voice.speak(response);
         });
         
-        const voiceButton = document.getElementById('voiceButton');
+        const voiceButtonElem = document.getElementById('voiceButton');
         let voice = null;
-        
-        if (voiceButton) {
-            voice = new VoiceAssistant(
-                voiceButton,
-                (text, isContinuous) => {
-                    document.getElementById('chatInput').value = text;
-                    chat.send();
-                },
-                null,
-                { asuraName: config.name, continuous: true }
-            );
+        if (voiceButtonElem) {
+            voice = new VoiceAssistant(voiceButtonElem, (text) => { 
+                document.getElementById('chatInput').value = text; 
+                chat.send(); 
+            }, null, { asuraName: config.name, continuous: true });
         }
         
         setTimeout(() => {
             chat.addMessage(config.welcomeMessage, false);
             setTimeout(() => {
-                chat.addMessage("🎤 Dica: Clique no ícone 💻 no topo para ativar o MODO JARVIS. Vou ficar sempre ouvindo!", false);
-                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo (imagem, PDF, DOC, etc)!", false);
-                chat.addMessage("🗺️ Dica: Clique no botão do mapa 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+                chat.addMessage("🎤 Dica: Clique no ícone 💻 no topo para ativar o MODO JARVIS.", false);
+                chat.addMessage("📎 Dica: Clique no ícone 📎 para enviar qualquer arquivo.", false);
+                chat.addMessage("🗺️ Dica: Clique no botão 🗺️ no TOPO ESQUERDO para acessar o PORTAL PLANNER!", false);
+                chat.addMessage("🖥️ Dica: Clique em ⛶ para tela cheia! ESC para sair.", false);
             }, 2000);
         }, 500);
         
         const portalOverlay = document.getElementById('portalOverlay');
-        portalOverlay.style.setProperty('--asura-color', config.color);
-        setTimeout(() => {
-            portalOverlay.style.opacity = '0.6';
-            setTimeout(() => {
-                portalOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    portalOverlay.style.display = 'none';
-                }, 800);
-            }, 500);
-        }, 50);
+        if (portalOverlay) {
+            portalOverlay.style.setProperty('--asura-color', config.color);
+            setTimeout(() => { 
+                portalOverlay.style.opacity = '0.6'; 
+                setTimeout(() => { 
+                    portalOverlay.style.opacity = '0'; 
+                    setTimeout(() => { 
+                        portalOverlay.style.display = 'none'; 
+                    }, 800); 
+                }, 500); 
+            }, 50);
+        }
         
-        console.log('🟢 MERLIM carregado com UPLOAD DE QUALQUER ARQUIVO!');
+        console.log('✅ MERLIM carregada com 3 NÍVEIS no chat e mundo 3D completo!');
     </script>
 </body>
 </html>
